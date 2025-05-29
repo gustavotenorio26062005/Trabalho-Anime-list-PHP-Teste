@@ -1,0 +1,132 @@
+<style>
+/* Basic theming inspired by images - move to your style.css for better organization */
+body {
+    background-color: #1A202C; /* Dark background for the page */
+    color: #E2E8F0; /* Light text color */
+}
+
+.hero-section {
+    background-color: #202833; /* Slightly different dark for hero */
+    padding: 60px 0;
+    color: white;
+}
+
+.hero-section .hero-logo {
+    font-size: 4rem; /* Example size */
+    color: #68D391; /* Teal accent from image */
+    text-align: center;
+    margin-bottom: 20px;
+}
+ .hero-section .hero-logo img { /* Style for an actual image logo */
+    max-width: 150px; /* Adjust as needed */
+    height: auto;
+}
+
+
+.hero-section h1 {
+    font-weight: bold;
+    font-size: 2.8rem;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.hero-section .lead {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+}
+
+.hero-section .lead-center {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.hero-section .btn-custom-join {
+    background-color: #68D391; /* Teal accent */
+    border-color: #68D391;
+    color: #1A202C; /* Dark text on button for contrast */
+    font-weight: bold;
+    padding: 12px 30px;
+    font-size: 1.2rem;
+}
+.hero-section .btn-custom-join:hover {
+    background-color: #4AAE7A;
+    border-color: #4AAE7A;
+}
+
+.search-filter-section {
+    background-color: #2D3748; /* Darker shade for this section */
+    padding: 30px 0;
+    margin-bottom: 30px;
+}
+.search-filter-section .form-control,
+.search-filter-section .form-select {
+    background-color: #4A5568;
+    color: white;
+    border: 1px solid #718096;
+}
+.search-filter-section .form-control::placeholder {
+    color: #A0AEC0;
+}
+.search-filter-section .form-control:focus,
+.search-filter-section .form-select:focus {
+    background-color: #4A5568;
+    color: white;
+    border-color: #68D391; /* Accent color on focus */
+    box-shadow: 0 0 0 0.25rem rgba(104, 211, 145, 0.25); /* Accent shadow on focus */
+}
+.search-filter-section .btn-add-filter {
+    background-color: #68D391; /* Teal accent */
+    color: #1A202C;
+    border: none;
+    font-size: 1.2rem; /* Adjusted plus icon button size */
+    padding: 0.6rem 1rem; /* Padding for the button */
+}
+
+.genre-section h2 {
+    color: #A0AEC0; /* Lighter heading for genres */
+    margin-bottom: 20px;
+    border-bottom: 1px solid #4A5568;
+    padding-bottom: 10px;
+}
+
+.anime-card-row {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to new line */
+    overflow-x: auto; /* Allow horizontal scrolling */
+    padding-bottom: 15px; /* Space for scrollbar if needed */
+    gap: 15px; /* Space between cards */
+}
+
+.anime-card {
+    background-color: #5F86B3; /* Blue from image_4875b1.png */
+    border: none;
+    min-width: 200px; /* Adjust as needed */
+    /* margin-right removed, using gap in .anime-card-row instead */
+    color: white;
+    flex-shrink: 0; /* Prevent cards from shrinking */
+}
+.anime-card img {
+    height: 280px; /* Fixed height for consistency */
+    object-fit: cover;
+}
+.anime-card .card-title {
+    font-size: 0.9rem;
+    font-weight: bold;
+    margin-bottom: 0; /* Adjust if you have other elements in card-body */
+}
+.anime-card .card-body {
+    padding: 0.8rem; /* Slightly reduced padding */
+}
+
+
+.footer {
+    background-color: #202833;
+    color: #A0AEC0;
+    padding: 20px 0;
+    text-align: center;
+}
+
+</style>
