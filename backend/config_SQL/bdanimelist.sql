@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS Avaliacoes (
     id_avaliacao INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
     id_anime INT NOT NULL,
-    nota ENUM('Recomendo', 'Não Recomendo') NOT NULL,
+    nota boolean NOT NULL,
     comentario TEXT,
     data_avaliacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -420,20 +420,7 @@ CREATE TRIGGER trg_after_insert_genero
 AFTER INSERT ON Generos
 FOR EACH ROW
 BEGIN
-    INSERT INTO Generos_Log (nome_genero, usuario_responsavel)
-    VALUES (NEW.nome_genero, USER());
-END;
-//
-DELIMITER ;
-
-#log de adição de Gênero de anime
-
-DELIMITER //
-CREATE TRIGGER trg_after_insert_genero
-AFTER INSERT ON Generos
-FOR EACH ROW
-BEGIN
-    INSERT INTO Generos_Log (nome_genero, usuario_responsavel)
+    INSERT INTO Generos_Log (nome_genero)
     VALUES (NEW.nome_genero, USER());
 END;
 //
@@ -452,8 +439,7 @@ BEGIN
         ano_lancamento,
         sinopse,
         capa_url,
-        data_cadastro_original,
-        usuario_responsavel_remocao
+        data_cadastro_original
     )
     VALUES (
         OLD.id_anime,
@@ -511,4 +497,4 @@ END //
 
 DELIMITER ;
 
-SELECT fn_contar_recomendacoes_anime(1) AS total_recomendacoes_anime_1;
+SELECT fn_contar_recomendacoes_anime(1) AS total_recomendacoes_anime_1; 
