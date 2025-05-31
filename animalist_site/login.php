@@ -1,11 +1,21 @@
 <?php
-require_once 'includes/db_connect.php'; // Conexão com o banco e início da sessão
-require_once 'includes/header.php';
+// 1. INCLUIR CONEXÃO COM O BANCO E INICIAR LÓGICA DE PROCESSAMENTO
+require_once 'includes/db_connect.php'; // Este arquivo não deve produzir output se chamar session_start()
 
 $message = '';
 $message_type = '';
 
+// 2. PROCESSAR O FORMULÁRIO DE LOGIN (SE SUBMETIDO) ANTES DE QUALQUER HTML
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Iniciar a sessão AQUI se ainda não foi iniciada e se você vai definir variáveis de sessão
+    // antes de incluir o header.php (que também tenta iniciar a sessão).
+    // O header.php já tem session_start() no topo, o que é bom.
+    // Mas se você redirecionar COM header() ANTES de incluir header.php,
+    // você precisa garantir que a sessão está ativa para definir $_SESSION.
+    if (session_status() == PHP_SESSION_NONE) {
+        session_start();
+    }
+
     $email = trim($_POST['email']);
     $senha = $_POST['senha'];
 
@@ -13,26 +23,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "E-mail e senha são obrigatórios.";
         $message_type = "error";
     } else {
-        // Prepara a query para buscar o usuário pelo e-mail
         $stmt = $conn->prepare("SELECT id_usuario, nome, email, senha, tipo_usuario FROM Usuarios WHERE email = ?");
-        $stmt->bind_param("s", $email); // 's' para um parâmetro string
+        $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
 
         if ($result->num_rows > 0) {
             $user = $result->fetch_assoc();
-            // Verifica a senha (compare o hash)
             if (password_verify($senha, $user['senha'])) {
-                // Senha correta, inicia a sessão
+                // Sessão já deve estar iniciada pelo bloco acima ou pelo header.php se não redirecionar.
                 $_SESSION['user_id'] = $user['id_usuario'];
                 $_SESSION['user_name'] = $user['nome'];
                 $_SESSION['user_email'] = $user['email'];
                 $_SESSION['user_type'] = $user['tipo_usuario'];
 
-                $message = "Login realizado com sucesso! Redirecionando...";
-                $message_type = "success";
-                header("Refresh: 2; url=index.php"); // Redireciona após 2 segundos
-                exit();
+                // Redirecionamento direto. A mensagem de "sucesso" não será vista.
+                // Se você quer mostrar mensagem ANTES de redirecionar, não use header() assim.
+                header("Location: index.php");
+                exit(); // É crucial chamar exit() após um header de redirecionamento.
+
             } else {
                 $message = "E-mail ou senha incorretos.";
                 $message_type = "error";
@@ -44,11 +53,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt->close();
     }
 }
+
+// 3. AGORA, SE NÃO HOUVE REDIRECIONAMENTO, INCLUIR O HEADER E MOSTRAR O RESTANTE DA PÁGINA
+// O header.php (nosso arquivo fundido) já contém session_start() no topo dele,
+// o que é correto e necessário para que ele possa ler as variáveis de sessão
+// para exibir os links corretos (Perfil/Sair ou Login/Cadastro).
+require_once 'includes/header.php'; // Ou header_integrado.php, o nome que você deu ao arquivo fundido.
 ?>
 
 <h2>Login</h2>
 <div class="form-container">
-    <?php if ($message): ?>
+    <?php if ($message): // Esta mensagem só será exibida se o login falhar (pois se tiver sucesso, redireciona) ?>
         <div class="message <?php echo $message_type; ?>"><?php echo htmlspecialchars($message); ?></div>
     <?php endif; ?>
     <form action="login.php" method="POST">
@@ -65,9 +80,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </form>
     <p>Ainda não tem uma conta? <a href="cadastro.php">Cadastre-se aqui</a>.</p>
-    </div>
+</div>
 
 <?php
 require_once 'includes/footer.php';
-$conn->close();
+if (isset($conn)) { // Boa prática verificar se $conn existe antes de fechar
+    $conn->close();
+}
 ?>
