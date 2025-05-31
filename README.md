@@ -1,3 +1,5 @@
+>> dar tutorial de como rodar (xampp, mysql + especificar root caso precisar)
+
 Organização dos arquivos:
 
 backend:
