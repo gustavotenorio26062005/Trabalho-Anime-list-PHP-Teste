@@ -1,0 +1,250 @@
+/* Reset básico e configurações globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #0a1625; /* PRETO (COR DE FUNDO) */
+    color: #f0f3f6; /* BRANCO (TEXTO) */
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px; /* Largura máxima do conteúdo */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #101c2e; /* Um pouco mais claro que o body */
+    border-radius: 8px;
+}
+
+/* Cabeçalho do Perfil */
+.profile-header {
+    display: flex;
+    align-items: center;
+    padding-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #253750; /* Borda sutil escura */
+    position: relative; /* Para posicionar os botões de ação */
+}
+
+.profile-pic-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #60758b; /* CINZA (para placeholder da foto) */
+    margin-right: 20px;
+    overflow: hidden; /* Para caso a imagem seja maior */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer; /* Sugere que pode ser clicável para upload */
+}
+
+.profile-pic-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.profile-info input[type="text"],
+.profile-info textarea {
+    width: calc(100% - 20px); /* Ajuste para padding */
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #18283f; /* Fundo dos campos, mais claro que o container */
+    color: #f0f3f6; /* BRANCO (TEXTO) */
+    border: 1px solid #253750; /* Borda sutil escura */
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.profile-info input[type="text"] {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.profile-info textarea {
+    min-height: 60px;
+    resize: vertical; /* Permite redimensionar verticalmente */
+}
+
+.profile-actions {
+    display: flex;
+    flex-direction: column; /* Botões um abaixo do outro como na imagem */
+    align-items: center;
+    margin-left: 20px; /* Espaço entre info e botões */
+}
+
+.profile-actions button {
+    background-color: #65ebba; /* COR ACENTUADA / DESTAQUE (VERDE) */
+    color: #0a1625; /* Texto PRETO para contraste com VERDE claro */
+    border: none;
+    padding: 10px;
+    margin-bottom: 10px; /* Espaço entre os botões */
+    border-radius: 50%; /* Botão redondo */
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-actions button#deleteProfileBtn {
+    background-color: #eb2c4c; /* COR ACENTUADA 2 (VERMELHO) */
+    color: #f0f3f6; /* Texto BRANCO para contraste com VERMELHO */
+}
+
+.profile-actions button:hover {
+    opacity: 0.8;
+}
+
+/* Área de Conteúdo Principal */
+.content-area {
+    display: flex;
+    gap: 20px; /* Espaço entre a lista de animes e a barra lateral */
+}
+
+.anime-lists-section {
+    flex: 3; /* Ocupa mais espaço */
+}
+
+.anime-list-category {
+    margin-bottom: 30px;
+    background-color: #18283f; /* Fundo para cada categoria */
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #253750; /* Borda sutil escura */
+}
+
+.list-header h2 {
+    color: #65ebba; /* COR ACENTUADA / DESTAQUE (VERDE) para o título da lista */
+    font-size: 1.4em;
+}
+
+.list-header .view-all {
+    color: #60758b; /* CINZA (Texto menos destacado) */
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.list-header .view-all:hover {
+    text-decoration: underline;
+    color: #65ebba; /* Hover com a cor de destaque VERDE */
+}
+
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Grid responsivo */
+    gap: 15px;
+}
+
+.anime-poster {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.anime-poster:hover {
+    transform: scale(1.05);
+}
+
+.poster-placeholder {
+    width: 100%;
+    padding-bottom: 140%; /* Proporção de um pôster (altura ~1.4x largura) */
+    background-color: #65ebba; /* COR ACENTUADA / DESTAQUE (VERDE) */
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* Se for usar imagem:
+    background-size: cover;
+    background-position: center;
+    */
+}
+
+/* Classe para esconder animes inicialmente para "Ver Tudo" */
+.anime-grid .anime-poster.initially-hidden {
+    display: none;
+}
+
+/* Estilo para o link "Ver Tudo" quando não há itens para expandir */
+.view-all.hidden-link {
+    display: none !important;
+}
+
+/* Barra Lateral de Detalhes */
+.sidebar-details {
+    flex: 1; /* Ocupa menos espaço */
+    background-color: #18283f; /* Fundo da barra lateral */
+    padding: 15px;
+    border-radius: 6px;
+    max-height: 80vh; /* Altura máxima com scroll caso necessário */
+    overflow-y: auto;
+}
+
+.anime-detail-card {
+    background-color: #101c2e; /* Fundo do card de detalhe, igual ao .container para distinção */
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #253750; /* Borda sutil escura */
+}
+
+.anime-detail-card h3 {
+    color: #f0f3f6; /* BRANCO (TEXTO) */
+    margin-bottom: 8px;
+    font-size: 1.1em;
+}
+
+.anime-detail-card p {
+    font-size: 0.9em;
+    color: #60758b; /* CINZA (Texto menos destacado) */
+}
+
+/* Responsividade básica */
+@media (max-width: 768px) {
+    .content-area {
+        flex-direction: column;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .profile-actions {
+        flex-direction: row; /* Botões lado a lado em telas menores */
+        margin-top: 15px;
+        margin-left: 0;
+        width: 100%;
+        justify-content: flex-start;
+    }
+     .profile-actions button {
+        margin-right: 10px; /* Espaço entre botões na horizontal */
+        margin-bottom: 0;
+    }
+
+    .profile-info {
+        width: 100%;
+    }
+     .profile-info input[type="text"],
+    .profile-info textarea {
+        width: 100%;
+    }
+}
