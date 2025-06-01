@@ -34,7 +34,8 @@ if (session_status() == PHP_SESSION_NONE) {
                 </a>
                 <ul class="lista-links-navegacao">
                     <li><a href="index.php" class="link-nav">Home</a></li>
-                    <li><a href="animes.php" class="link-nav">Animes</a></li> <!-- Anteriormente "Pesquisar" -->
+                    <li><a href="#animes" class="link-nav">Animes</a></li> 
+                    <li><a href="pesquisar.php" class="link-nav">Pesquisar</a></li>
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <li><a href="perfil.php" class="link-nav">Perfil</a></li>
                         <!-- Se você tiver uma página "Sua Lista" separada, adicione aqui: -->
