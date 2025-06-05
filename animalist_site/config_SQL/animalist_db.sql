@@ -4,6 +4,12 @@ CREATE DATABASE IF NOT EXISTS animalist_db;
 
 USE animalist_db;
 
+
+CREATE TABLE IF NOT EXISTS TipoUsuario (
+    id_tipo_usuario INT PRIMARY KEY AUTO_INCREMENT,
+    tipo ENUM('usuario_comum', 'administrador') UNIQUE NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS Usuarios (
     id_usuario INT PRIMARY KEY AUTO_INCREMENT,
     nome VARCHAR(255) NOT NULL,
@@ -13,9 +19,10 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     foto_perfil_url VARCHAR(2048),
     fundo_perfil_url VARCHAR(2048),
     descricao TEXT,
-    tipo_usuario ENUM('usuario_comum', 'administrador') DEFAULT 'usuario_comum',
+    id_tipo_usuario INT NOT NULL,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    data_ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    data_ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_tipo_usuario) REFERENCES TipoUsuario(id_tipo_usuario) ON DELETE RESTRICT # nao deixa alguem deletar os tipos pois esse elemento é filho
 );
 
 CREATE INDEX idx_usuario_email ON Usuarios(email);
@@ -28,10 +35,14 @@ CREATE TABLE IF NOT EXISTS Animes (
     capa_url VARCHAR(2048),
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT uq_anime_nome UNIQUE (nome),
     CONSTRAINT chk_ano_lancamento CHECK (ano_lancamento >= 1900 AND ano_lancamento <= 2030)
 );
 
 CREATE FULLTEXT INDEX idx_anime_nome ON Animes(nome);
+
+
+
 
 CREATE TABLE IF NOT EXISTS Generos (
     id_genero INT PRIMARY KEY AUTO_INCREMENT,
@@ -122,15 +133,17 @@ END;
 //
 DELIMITER ;
 
-INSERT INTO Usuarios (nome, email, celular, senha, tipo_usuario, foto_perfil_url, fundo_perfil_url, descricao) VALUES
-('Gabriel Dias', 'gabriel.dias@example.com', '11987654321', 'senha123', 'administrador', 'https://via.placeholder.com/150/0000FF/FFFFFF?text=G.D.', 'https://via.placeholder.com/800x200/FF0000/FFFFFF?text=Fundo+G.D.', 'Admin principal do Animalist. Gosto de tudo que é otimizado.'),
-('Gustavo Barros', 'gustavo.barros@example.com', '11998765432', 'senha123', 'administrador', 'https://via.placeholder.com/150/00FF00/FFFFFF?text=G.B.', 'https://via.placeholder.com/800x200/00FF00/FFFFFF?text=Fundo+G.B.', 'Admin e especialista em usabilidade. Paixão por animes de fantasia.'),
-('Luiz Gonçalves', 'luiz.goncalves@example.com', '11976543210', 'senha123', 'usuario_comum', 'https://via.placeholder.com/150/FFFF00/000000?text=L.G.', 'https://via.placeholder.com/800x200/FFFF00/000000?text=Fundo+L.G.', 'Fã de animes de ação e aventura, sempre em busca da próxima grande batalha.'),
-('Maycon Cabral', 'maycon.cabral@example.com', '11965432109', 'senha123', 'usuario_comum', 'https://via.placeholder.com/150/FF00FF/FFFFFF?text=M.C.', 'https://via.placeholder.com/800x200/FF00FF/FFFFFF?text=Fundo+M.C.', 'Adora animes de fantasia e slice of life, para relaxar e se inspirar.'),
-('Renan Rodrigues', 'renan.rodrigues@example.com', '11954321098', 'senha123', 'usuario_comum', 'https://via.placeholder.com/150/00FFFF/000000?text=R.R.', 'https://via.placeholder.com/800x200/00FFFF/000000?text=Fundo+R.R.', 'Crítico de animes e mangás, sempre com uma opinião sincera e bem fundamentada.'),
-('Ana Santos', 'ana.santos@example.com', '21912345678', 'senha123', 'usuario_comum', NULL, NULL, 'Gosta de animes mais antigos e cult, buscando sempre novas pérolas.'),
-('Pedro Lima', 'pedro.lima@example.com', '31909876543', 'senha123', 'usuario_comum', NULL, NULL, 'Em busca de novos animes para assistir, aberto a todos os gêneros.');
 
+INSERT INTO tipousuario (tipo) VALUES
+('administrador'),
+('usuario_comum');
+
+INSERT INTO Usuarios (nome, email, celular, senha, id_tipo_usuario, foto_perfil_url, fundo_perfil_url, descricao) VALUES
+('Gabriel Dias', 'gabriel.dias@example.com', '11987654321', 'senha123', 1, 'https://via.placeholder.com/150/0000FF/FFFFFF?text=G.D.', 'https://via.placeholder.com/800x200/FF0000/FFFFFF?text=Fundo+G.D.', 'Admin principal do Animalist. Gosto de tudo que é otimizado.'),
+('Gustavo Barros', 'gustavo.barros@example.com', '11998765432', 'senha123', 1, 'https://via.placeholder.com/150/00FF00/FFFFFF?text=G.B.', 'https://via.placeholder.com/800x200/00FF00/FFFFFF?text=Fundo+G.B.', 'Admin e especialista em usabilidade. Paixão por animes de fantasia.'),
+('Luiz Gonçalves', 'luiz.goncalves@example.com', '11976543210', 'senha123', 2, 'https://via.placeholder.com/150/FFFF00/000000?text=L.G.', 'https://via.placeholder.com/800x200/FFFF00/000000?text=Fundo+L.G.', 'Fã de animes de ação e aventura, sempre em busca da próxima grande batalha.'),
+('Maycon Cabral', 'maycon.cabral@example.com', '11965432109', 'senha123', 2, 'https://via.placeholder.com/150/FF00FF/FFFFFF?text=M.C.', 'https://via.placeholder.com/800x200/FF00FF/FFFFFF?text=Fundo+M.C.', 'Adora animes de fantasia e slice of life, para relaxar e se inspirar.'),
+('Renan Rodrigues', 'renan.rodrigues@example.com', '11954321098', 'senha123', 2, 'https://via.placeholder.com/150/00FFFF/000000?text=R.R.', 'https://via.placeholder.com/800x200/00FFFF/000000?text=Fundo+R.R.', 'Crítico de animes e mangás, sempre com uma opinião sincera e bem fundamentada.');
 INSERT INTO Generos (nome_genero) VALUES
 ('Ação'), ('Aventura'), ('Comédia'), ('Drama'), ('Fantasia'), ('Ficção Científica'),
 ('Romance'), ('Slice of Life'), ('Suspense'), ('Mecha'), ('Esporte'), ('Terror'), ('Mistério');
@@ -196,7 +209,7 @@ WHERE u.email = 'renan.rodrigues@example.com' AND a.nome = 'Fullmetal Alchemist:
 INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime)
 SELECT u.id_usuario, a.id_anime, 'Assistindo'
 FROM Usuarios u, Animes a
-WHERE u.email = 'ana.santos@example.com' AND a.nome = 'Cowboy Bebop';
+WHERE u.email = 'renan.rodrigues@example.com' AND a.nome = 'Cowboy Bebop';
 
 INSERT INTO Avaliacoes (id_usuario, id_anime, nota, comentario)
 SELECT u.id_usuario, a.id_anime, 'Recomendo', 'Muito bom! A história é envolvente e as cenas de ação são incríveis.'
@@ -216,27 +229,7 @@ WHERE u.email = 'renan.rodrigues@example.com' AND a.nome = 'Fullmetal Alchemist:
 INSERT INTO Avaliacoes (id_usuario, id_anime, nota, comentario)
 SELECT u.id_usuario, a.id_anime, 'Recomendo', 'Engraçado e cheio de ação! A dinâmica da família é ótima.'
 FROM Usuarios u, Animes a
-WHERE u.email = 'pedro.lima@example.com' AND a.nome = 'Spy x Family';
-
-DELIMITER //
-CREATE PROCEDURE sp_obter_animes_por_genero(IN p_nome_genero VARCHAR(100))
-BEGIN
-    SELECT
-        A.nome,
-        A.ano_lancamento,
-        A.sinopse,
-        A.capa_url
-    FROM
-        Animes AS A
-    JOIN
-        AnimeGeneros AS AG ON A.id_anime = AG.id_anime
-    JOIN
-        Generos AS G ON AG.id_genero = G.id_genero
-    WHERE
-        G.nome_genero = p_nome_genero;
-END;
-//
-DELIMITER ;
+WHERE u.email = 'luiz.goncalves@example.com' AND a.nome = 'Spy x Family';
 
 CREATE VIEW vw_animes_com_generos AS
 SELECT
@@ -254,3 +247,222 @@ LEFT JOIN
     Generos AS G ON AG.id_genero = G.id_genero
 GROUP BY
     A.id_anime, A.nome, A.ano_lancamento, A.sinopse, A.capa_url;
+
+
+
+
+
+
+
+
+
+
+
+    
+##Inserindo os os generos Psicológico Sobrenatural,Magia
+INSERT INTO Generos (nome_genero) VALUES ('Psicológico');
+INSERT INTO Generos (nome_genero) VALUES ('Sobrenatural');
+INSERT INTO Generos (nome_genero) VALUES ('Magia');
+    
+
+#tabela log de mudança no perfil
+
+CREATE TABLE IF NOT EXISTS Usuarios_Nome_Log (
+    id_log INT PRIMARY KEY AUTO_INCREMENT,
+    id_usuario INT,
+    nome_antigo TEXT,
+    nome_novo TEXT,
+    data_alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE
+);
+
+
+#tabela log_adição_genero
+
+CREATE TABLE IF NOT EXISTS Generos_Log (
+    id_log INT PRIMARY KEY AUTO_INCREMENT,
+    nome_genero VARCHAR(100),
+    data_insercao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+#log de remoção de animes
+
+CREATE TABLE IF NOT EXISTS Animes_Log_Remocoes (
+    id_log INT PRIMARY KEY AUTO_INCREMENT,
+    id_anime INT,
+    nome_anime VARCHAR(255),
+    ano_lancamento INT,
+    sinopse TEXT,
+    capa_url VARCHAR(2048),
+    data_cadastro_original TIMESTAMP,
+    data_remocao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+# --- VIEWS
+
+CREATE VIEW vw_informacoes_usuario as
+select
+	U.nome as apelido,
+	U.email as email,
+	U.id_tipo_usuario as 'permissão'
+from
+	usuarios as U
+left join
+	Avaliacoes_Log as AL on U.id_usuario = AL.id_usuario
+group by
+	U.id_usuario;
+
+#view para verificar a listagem de animes:
+
+CREATE VIEW vw_lista_pessoal_usuarios_animes AS
+SELECT 
+    u.id_usuario,
+    u.nome AS nome_usuario,
+    u.email,
+    a.id_anime,
+    a.nome AS nome_anime,
+    a.ano_lancamento,
+    l.status_anime,
+    l.data_adicao,
+    l.data_ultima_atualizacao
+FROM ListaPessoalAnimes l
+JOIN Usuarios u ON l.id_usuario = u.id_usuario
+JOIN Animes a ON l.id_anime = a.id_anime;
+
+
+#view para checar avaliacoes do anime
+CREATE OR REPLACE VIEW vw_comentarios_por_anime AS
+SELECT
+    AN.id_anime,
+    AN.nome AS nome_anime,
+    U.id_usuario,
+    U.nome AS nome_usuario,
+    AV.id_avaliacao,
+    AV.nota,
+    AV.comentario,
+    AV.data_avaliacao,
+    AV.data_ultima_atualizacao AS data_ultima_atualizacao_comentario
+FROM
+    Avaliacoes AS AV
+JOIN
+    Usuarios AS U ON AV.id_usuario = U.id_usuario
+JOIN
+    Animes AS AN ON AV.id_anime = AN.id_anime
+ORDER BY
+    AN.nome ASC,
+    AV.data_avaliacao DESC;
+
+
+# --- TRIGGERS
+
+#auditoria de mudança de descrição do perfil
+
+DELIMITER //
+CREATE TRIGGER trg_log_update_nome_usuario
+BEFORE UPDATE ON Usuarios
+FOR EACH ROW
+BEGIN
+    IF OLD.nome != NEW.nome THEN
+        INSERT INTO Usuarios_Nome_Log (
+            id_usuario,
+            nome_antigo,
+            nome_novo
+        )
+        VALUES (
+            OLD.id_usuario,
+            OLD.nome,
+            NEW.nome
+        );
+    END IF;
+END;
+//
+DELIMITER ;
+
+#log de adição de Gênero de anime
+
+DELIMITER //
+CREATE TRIGGER trg_after_insert_genero
+AFTER INSERT ON Generos
+FOR EACH ROW
+BEGIN
+    INSERT INTO Generos_Log (nome_genero)
+    VALUES (NEW.nome_genero);
+END;
+//
+DELIMITER ;
+
+#trigger de remoção
+
+DELIMITER //
+CREATE TRIGGER trg_after_delete_anime
+AFTER DELETE ON Animes
+FOR EACH ROW
+BEGIN
+    INSERT INTO Animes_Log_Remocoes (
+        id_anime,
+        nome_anime,
+        ano_lancamento,
+        sinopse,
+        capa_url,
+        data_cadastro_original
+    )
+    VALUES (
+        OLD.id_anime,
+        OLD.nome,
+        OLD.ano_lancamento,
+        OLD.sinopse,
+        OLD.capa_url,
+        OLD.data_cadastro
+    );
+END;
+//
+DELIMITER ;
+
+#FUNÇÕES
+
+# 1. Função para Contar o Total de Animes na Lista de um Usuário 
+DELIMITER //
+
+CREATE FUNCTION fn_total_animes_usuario(p_id_usuario INT)
+RETURNS INT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE v_total_animes INT;
+
+    SELECT COUNT(*)
+    INTO v_total_animes
+    FROM ListaPessoalAnimes
+    WHERE id_usuario = p_id_usuario;
+
+    RETURN v_total_animes;
+END //
+
+DELIMITER ;
+
+#2. Função para Contar Quantas Vezes um Anime foi Recomendado (fn_contar_recomendacoes_anime)
+
+DELIMITER //
+
+CREATE FUNCTION fn_contar_recomendacoes_anime(p_id_anime INT)
+RETURNS INT
+DETERMINISTIC
+READS SQL DATA
+BEGIN
+    DECLARE v_total_recomendacoes INT;
+
+    SELECT COUNT(*)
+    INTO v_total_recomendacoes
+    FROM Avaliacoes
+    WHERE id_anime = p_id_anime AND nota = 'Recomendo';
+
+    RETURN v_total_recomendacoes;
+END //
+
+DELIMITER ;
+
+SELECT fn_contar_recomendacoes_anime(2) AS total_recomendacoes_anime_1; 
+
+SELECT * FROM vw_comentarios_por_anime;
+SELECT * FROM vw_comentarios_por_anime where id_anime = 1;

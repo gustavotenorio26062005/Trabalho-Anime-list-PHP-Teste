@@ -22,15 +22,7 @@ if (session_status() == PHP_SESSION_NONE) {
     <header>
         <nav class="barra-navegacao">
             <div class="container-navegacao">
-                <a href="index.php" class="logo-link-navegacao">
-                    <div class="logo-navegacao">
-                        <i class="fas fa-eye logo-olho-nav"></i>
-                        <i class="fas fa-check-circle logo-check-nav"></i>
-                        <span class="texto-logo-nav">
-                            <span class="texto-logo-anima">ANIMA</span>
-                            <span class="texto-logo-list">LIST</span>
-                        </span>
-                    </div>
+                <img src="./img/logo_site.jpg" alt="" width="100px" height="100px">
                 </a>
                 <ul class="lista-links-navegacao">
                     <li><a href="index.php" class="link-nav">Home</a></li>
