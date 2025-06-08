@@ -21,8 +21,8 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     id_tipo_usuario INT NOT NULL DEFAULT 2,
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_tipo_usuario) REFERENCES TipoUsuario(id_tipo_usuario) ON DELETE RESTRICT,
-    CONSTRAINT chk_idade_minima CHECK (TIMESTAMPDIFF(YEAR, data_nascimento, CURDATE()) >= 13)
+    FOREIGN KEY (id_tipo_usuario) REFERENCES TipoUsuario(id_tipo_usuario) ON DELETE RESTRICT
+    -- A linha abaixo foi removida: CONSTRAINT chk_idade_minima CHECK (TIMESTAMPDIFF(YEAR, data_nascimento, CURDATE()) >= 13)
 );
 
 CREATE INDEX idx_usuario_email ON Usuarios(email);
@@ -217,7 +217,7 @@ INSERT INTO Usuarios (nome, email, data_nascimento, senha, id_tipo_usuario, foto
 ('Renan Rodrigues', 'renan.rodrigues@example.com', '1994-04-30', 'senha123', 2, 'https://via.placeholder.com/150/00FFFF/000000?text=R.R.', 'https://via.placeholder.com/800x200/00FFFF/000000?text=Fundo+R.R.', 'Crítico de animes e mangás, sempre com uma opinião sincera e bem fundamentada.'),
 ('Ana Santos', 'ana.santos@example.com', '1988-08-10', 'senha123', 2, NULL, NULL, 'Gosta de animes mais antigos e cult, buscando sempre novas pérolas.'),
 ('Pedro Lima', 'pedro.lima@example.com', '1995-02-28', 'senha123', 2, NULL, NULL, 'Em busca de novos animes para assistir, aberto a todos os gêneros.'),
-('Usuario Menor', 'menor@example.com', '2015-05-10', 'senha123', 2, NULL, NULL, 'Este usuário é menor de idade (deve falhar o cadastro devido à restrição CHK_IDADE_MINIMA).');
+('Usuario Menor', 'menor@example.com', '2015-05-10', 'senha123', 2, NULL, NULL, 'Este usuário é menor de idade (deve falhar o cadastro devido à restrição CHK_IDADE_MINIMA, mas agora só será validado no PHP).');
 
 INSERT INTO Generos (nome_genero) VALUES
 ('Ação'), ('Aventura'), ('Comédia'), ('Drama'), ('Fantasia'), ('Ficção Científica'),
