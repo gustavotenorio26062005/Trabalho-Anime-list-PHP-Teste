@@ -1,0 +1,173 @@
+:root {
+    --cor-primaria: #65EBB9;
+    --cor-secundaria: #2c3e50;
+    --cor-escura: #101c2e;
+    --cor-escurinha: #18283f;
+    --cor-clara: #c9d1d9;
+}
+
+body {
+    background-color: #1a2430;
+}
+
+/* === Seção de Filtros === */
+.secao-filtros {
+    background-color: var(--cor-escura);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 15px;
+}
+.container-filtros {
+    display: flex;
+    align-items: flex-end;
+    gap: 15px;
+}
+.grupo-input {
+    display: flex;
+    flex-direction: column;
+}
+
+/* === mudar cor do texto placeholder da pesquisa */
+
+::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    var(--cor-clara);
+    opacity:  0.5;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    var();
+   opacity:  0.5;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    var(--cor-clara);
+   opacity:  0.5;
+}
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+   color:    var(--cor-clara);
+   opacity:  0.5;
+}
+::-ms-input-placeholder { /* Microsoft Edge */
+   color:    var(--cor-clara);
+   opacity:  0.5;
+}
+
+::placeholder { /* browsers modernos */
+   color:    var(--cor-clara);
+   opacity:  0.5;
+}
+
+.grupo-input label {
+    font-size: 0.8em;
+    margin-bottom: 5px;
+    color: #d5dce0;
+}
+.campo-input {
+    background-color: var(--cor-escurinha);
+    border: none;
+    border-radius: 5px;
+    padding: 10px;
+    color: #d5dce0;
+    width: 200px;
+}
+.botao-icone {
+    background-color: var(--cor-primaria);
+    color: #1a2430;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0; /* Impede que o botão encolha */
+}
+
+/* === Grade de Animes === */
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 30px;
+    padding: 20px;
+}
+.anime-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.3s ease;
+}
+.anime-link:hover {
+    transform: scale(1.05);
+}
+.anime-card-poster {
+    position: relative;
+    height: 300px; 
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    background-color: #1d2d3f;
+}
+.anime-card-poster img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease-out;
+}
+
+/* === Informações do Card === */
+.ano-anime {
+    position: absolute;  
+    bottom: 10px;         
+    right: 10px;        
+    background-color: var(--cor-primaria);
+    color: #1a2430;      
+    padding: 4px 10px;   
+    border-radius: 6px;   
+    font-size: 0.9em;     
+    font-weight: bold; 
+    z-index: 2; 
+}
+.anime-info {
+    padding-top: 12px;
+}
+.anime-info h3 {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #ecf0f1;
+    margin: 0;
+}
+.mensagem-vazio {
+    grid-column: 1 / -1;
+    text-align: center;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #161b22;
+    border-radius: 6px;
+    color: #c9d1d9;
+}
+
+
+/* === CSS Responsivo === */
+@media (max-width: 768px) {
+
+    /* --- Filtros --- */
+    .container-filtros {
+        flex-direction: column;   /* Empilha os filtros verticalmente */
+        align-items: stretch;     /* Faz os itens ocuparem a largura total */
+        width: 90%;               /* Define uma largura para o container */
+        max-width: 400px;
+    }
+    .campo-input {
+        width: 100%;              /* Faz o input ocupar 100% do seu container */
+        box-sizing: border-box;   /* Garante que o padding não aumente a largura */
+    }
+
+    /* --- Grade de Animes --- */
+    .anime-grid {
+        grid-template-columns: repeat(2, 1fr); /* Exibe exatamente 2 colunas */
+        gap: 20px;                             /* Reduz o espaçamento na versão mobile */
+    }
+}

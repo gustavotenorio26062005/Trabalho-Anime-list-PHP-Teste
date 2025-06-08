@@ -136,7 +136,7 @@ if($result_anos) $result_anos->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animalist - Home</title>
     <!-- === CSS === -->
-    <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/pesquisar.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- === FONTES === -->
      <!--<?php include __DIR__ . '/pages/constante/fontes.php' ?> -->
@@ -192,17 +192,16 @@ if($result_anos) $result_anos->close();
 
             <button type="submit" class="botao-icone botao-pesquisar" aria-label="Pesquisar"><i class="fas fa-search"></i></button>
             
-            <!-- Botão Adicionar: Exemplo de como poderia ser usado -->
-            <!-- Você pode direcionar para uma página de administração ou uma funcionalidade específica -->
-            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): // Exemplo: Apenas para admin ?>
+            <!-- Botão Adicionar - ADM -->
+            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
                  <a href="admin/adicionar_anime.php" class="botao-icone botao-adicionar" aria-label="Adicionar Anime"><i class="fas fa-plus"></i></a>
             <?php else: ?>
                  <!-- Pode estar desabilitado ou oculto para outros usuários, ou ter outra função -->
                  <!-- <button type="button" class="botao-icone botao-adicionar" aria-label="Adicionar" title="Adicionar novo anime (Admin)" disabled><i class="fas fa-plus"></i></button> -->
             <?php endif; ?>
-             <!-- Se não for usar, pode comentar/remover o de baixo. Este é um placeholder: -->
+             <!-- Se não for usar, pode comentar/remover o de baixo. Este é um placeholder: 
              <a href="#" class="botao-icone botao-adicionar" aria-label="Adicionar" onclick="alert('Funcionalidade de adicionar não implementada.'); return false;" title="Adicionar (Em breve)"><i class="fas fa-plus"></i></a>
-
+                    -->
         </div>
     </section>
 </form>
@@ -211,22 +210,34 @@ if($result_anos) $result_anos->close();
 <div class="anime-grid">
     <?php if (!empty($animes)): ?>
         <?php foreach ($animes as $anime): ?>
-            <div class="anime-card">
-                <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) ? $anime['capa_url'] : 'https://via.placeholder.com/200x250?text=Sem+Capa'); ?>" 
-                     alt="Capa de <?php echo htmlspecialchars($anime['nome']); ?>">
-                <h3><?php echo htmlspecialchars($anime['nome']); ?></h3>
-                <p>Ano: <?php echo htmlspecialchars($anime['ano_lancamento'] ?? 'N/A'); ?></p>
-                <p>Gêneros: <?php echo htmlspecialchars(!empty($anime['generos']) ? $anime['generos'] : 'N/A'); ?></p>
-                <!-- Adapte o link para a página de detalhes do anime -->
-                <a href="anime_detalhes.php?id=<?php echo $anime['id_anime']; ?>" class="details-button">Ver Detalhes</a>
-            </div>
+            <a href="anime_detalhes.php?id=<?php echo $anime['id_anime']; ?>" class="anime-link">
+
+                    <div class="anime-card-poster">
+                        <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) ? $anime['capa_url'] : 'img/logo_site.jpg'); ?>" 
+                            alt="Capa de <?php echo htmlspecialchars($anime['nome']); ?>">
+
+                        <?php if (!empty($anime['ano_lancamento'])): ?>
+                        <span class="ano-anime"><?php echo htmlspecialchars($anime['ano_lancamento']); ?></span>
+                        <?php endif; ?>
+
+                    </div>
+
+                    <div class="anime-info">
+                        <h3><?php echo htmlspecialchars($anime['nome']); ?></h3>
+                        <!-- Removido ano e gênero daqui para um visual mais limpo -->
+                    </div>
+
+
+            </a>
+            
         <?php endforeach; ?>
     <?php else: ?>
-        <p class="mensagem-vazio" style="grid-column: 1 / -1; text-align: center; margin: 20px 0; padding: 20px; background-color: #161b22; border-radius: 6px; color: #c9d1d9;">
+        <p class="mensagem-vazio">
             Nenhum anime encontrado com os filtros e termos de pesquisa aplicados. Tente ajustar sua busca.
         </p>
     <?php endif; ?>
 </div>
+
 
 <?php
 // Footer e fechar conexão

@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     foto_perfil_url VARCHAR(2048),
     fundo_perfil_url VARCHAR(2048),
     descricao TEXT,
-    id_tipo_usuario INT NOT NULL,
+    id_tipo_usuario INT NOT NULL DEFAULT 2, -- Define o ID padrão para 'usuario_comum',
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_tipo_usuario) REFERENCES TipoUsuario(id_tipo_usuario) ON DELETE RESTRICT # nao deixa alguem deletar os tipos pois esse elemento é filho
@@ -149,13 +149,13 @@ INSERT INTO Generos (nome_genero) VALUES
 ('Romance'), ('Slice of Life'), ('Suspense'), ('Mecha'), ('Esporte'), ('Terror'), ('Mistério');
 
 INSERT INTO Animes (nome, ano_lancamento, sinopse, capa_url) VALUES
-('Attack on Titan', 2013, 'A humanidade vive dentro de cidades cercadas por enormes muralhas para se proteger de gigantes humanóides devoradores de homens chamados Titãs. Uma história de sobrevivência e mistério.', 'https://upload.wikimedia.org/wikipedia/en/d/d6/Attack_on_Titan_manga_volume_1.jpeg'),
-('Jujutsu Kaisen', 2020, 'Yuji Itadori, um estudante do ensino médio, se envolve no mundo do Jujutsu ao tentar salvar um amigo de um monstro, e acaba engolindo um objeto amaldiçoado, tornando-se um receptáculo de uma maldição poderosa.', 'https://upload.wikimedia.org/wikipedia/en/7/7b/Jujutsu_Kaisen_vol_1.jpg'),
-('Fullmetal Alchemist: Brotherhood', 2009, 'Dois irmãos, Edward e Alphonse Elric, tentam usar a alquimia para trazer sua mãe de volta à vida, mas pagam um preço terrível. Agora, eles buscam a Pedra Filosofal para recuperar seus corpos.', 'https://upload.wikimedia.org/wikipedia/en/f/f9/Fullmetal_Alchemist_Brotherhood_key_visual.png'),
-('Spy x Family', 2022, 'Um espião, uma assassina e uma telepata se reúnem para formar uma família falsa para cumprir uma missão secreta, mas ninguém sabe a verdadeira identidade um do outro, levando a situações hilárias e emocionantes.', 'https://upload.wikimedia.org/wikipedia/en/thumb/4/4b/Spy_%C3%97_Family_volume_1.jpg/220px-Spy_%C3%97_Family_volume_1.jpg'),
-('My Hero Academia', 2016, 'Em um mundo onde superpoderes (Quirks) são comuns, Izuku Midoriya nasce sem um, mas sonha em se tornar um herói. Ele é escolhido pelo maior herói, All Might, para herdar seu poder.', 'https://upload.wikimedia.org/wikipedia/en/thumb/5/52/My_Hero_Academia_Volume_1.png/220px-My_Hero_Academia_Volume_1.png'),
-('Cowboy Bebop', 1998, 'Um grupo de caçadores de recompensas viaja pelo sistema solar em sua nave, a Bebop, em busca de criminosos e aventuras, enfrentando um passado que os assombra.', 'https://upload.wikimedia.org/wikipedia/en/f/f7/Cowboy_Bebop_Key_Art.jpg'),
-('Demon Slayer: Kimetsu no Yaiba', 2019, 'Tanjiro Kamado, um jovem que teve sua família massacrada por demônios, parte em uma jornada para se tornar um caçador de demônios e salvar sua irmã, que foi transformada.', 'https://upload.wikimedia.org/wikipedia/en/thumb/d/d7/Demon_Slayer_Kimetsu_no_Yaiba_manga_volume_1.jpg/220px-Demon_Slayer_Kimetsu_no_Yaiba_manga_volume_1.jpg');
+('Attack on Titan', 2013, 'A humanidade vive dentro de cidades cercadas por enormes muralhas para se proteger de gigantes humanóides devoradores de homens chamados Titãs. Uma história de sobrevivência e mistério.', 'https://i.pinimg.com/736x/e4/d3/85/e4d38524090e4b1f9d2fb31e894c6c97.jpg'),
+('Jujutsu Kaisen', 2020, 'Yuji Itadori, um estudante do ensino médio, se envolve no mundo do Jujutsu ao tentar salvar um amigo de um monstro, e acaba engolindo um objeto amaldiçoado, tornando-se um receptáculo de uma maldição poderosa.', 'https://www.ubuy.com.br/productimg/?image=aHR0cHM6Ly9tLm1lZGlhLWFtYXpvbi5jb20vaW1hZ2VzL0kvODFzK2p4RTVLRUwuX0FDX1NMMTUwMF8uanBn.jpg'),
+('Fullmetal Alchemist: Brotherhood', 2009, 'Dois irmãos, Edward e Alphonse Elric, tentam usar a alquimia para trazer sua mãe de volta à vida, mas pagam um preço terrível. Agora, eles buscam a Pedra Filosofal para recuperar seus corpos.', 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx5114-nSWCgQlmOMtj.jpg'),
+('Spy x Family', 2022, 'Um espião, uma assassina e uma telepata se reúnem para formar uma família falsa para cumprir uma missão secreta, mas ninguém sabe a verdadeira identidade um do outro, levando a situações hilárias e emocionantes.', 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx140960-Kb6R5nYQfjmP.jpg'),
+('My Hero Academia', 2016, 'Em um mundo onde superpoderes (Quirks) são comuns, Izuku Midoriya nasce sem um, mas sonha em se tornar um herói. Ele é escolhido pelo maior herói, All Might, para herdar seu poder.', 'https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21459-nYh85uj2Fuwr.jpg'),
+('Cowboy Bebop', 1998, 'Um grupo de caçadores de recompensas viaja pelo sistema solar em sua nave, a Bebop, em busca de criminosos e aventuras, enfrentando um passado que os assombra.', 'https://waru.world/cdn/shop/files/Coyboy_bebop.jpg?v=1711982673&width=1946'),
+('Demon Slayer: Kimetsu no Yaiba', 2019, 'Tanjiro Kamado, um jovem que teve sua família massacrada por demônios, parte em uma jornada para se tornar um caçador de demônios e salvar sua irmã, que foi transformada.', 'https://wallpapercat.com/w/full/0/5/8/183167-1080x2340-phone-hd-demon-slayer-kimetsu-no-yaiba-background.jpg');
 
 INSERT INTO AnimeGeneros (id_anime, id_genero) SELECT Animes.id_anime, Generos.id_genero FROM Animes, Generos WHERE Animes.nome = 'Attack on Titan' AND Generos.nome_genero = 'Ação';
 INSERT INTO AnimeGeneros (id_anime, id_genero) SELECT Animes.id_anime, Generos.id_genero FROM Animes, Generos WHERE Animes.nome = 'Attack on Titan' AND Generos.nome_genero = 'Drama';

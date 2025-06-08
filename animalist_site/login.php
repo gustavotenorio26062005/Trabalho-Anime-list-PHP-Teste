@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "E-mail e senha são obrigatórios.";
         $message_type = "error";
     } else {
-        $stmt = $conn->prepare("SELECT id_usuario, nome, email, senha, tipo_usuario FROM Usuarios WHERE email = ?");
+        $stmt = $conn->prepare("SELECT u.id_usuario, u.nome, u.email, u.senha, tu.tipo AS tipo_usuario FROM Usuarios u JOIN TipoUsuario tu ON u.id_tipo_usuario = tu.id_tipo_usuario WHERE u.email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
