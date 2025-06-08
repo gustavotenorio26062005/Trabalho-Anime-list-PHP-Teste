@@ -1,94 +1,111 @@
 <?php
 // Inclui o arquivo de conexão com o banco de dados.
-// Certifique-se de que 'includes/db_connect.php' está no caminho correto.
 require_once 'includes/db_connect.php';
-// Inclui o cabeçalho HTML, que contém a tag <html>, <head>, e o início do <body>.
+// Inclui o cabeçalho HTML.
 require_once 'includes/header.php';
 
-// Variáveis para armazenar mensagens de feedback para o usuário (sucesso ou erro)
+// Variáveis para armazenar mensagens de feedback.
 $message = '';
-$message_type = ''; // Pode ser 'success' ou 'error'
+$message_type = '';
 
-// Verifica se o formulário foi enviado usando o método POST
+// Variáveis para pré-popular o formulário em caso de erro, mantendo o que o usuário digitou.
+$nome = '';
+$email = '';
+$data_nascimento = ''; // Nova variável para a data de nascimento
+
+// Verifica se o formulário foi enviado usando o método POST.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Coleta e limpa os dados do formulário para evitar espaços em branco indesejados.
-    // htmlspecialchars() é usado para prevenir ataques XSS ao exibir os dados novamente no formulário.
+    // Coleta e limpa os dados do formulário.
     $nome = trim($_POST['nome']);
     $email = trim($_POST['email']);
-    $celular = trim($_POST['celular']); // Celular é opcional, mas trim() é bom.
-    $senha = $_POST['senha']; // Senha sem hash para fins de exemplo
+    $data_nascimento = trim($_POST['data_nascimento']); // Coleta a data de nascimento
+    $senha = $_POST['senha'];
     $confirmar_senha = $_POST['confirmar_senha'];
 
-    // --- Validações BÁSICAS no PHP ---
-    // Verifica se os campos obrigatórios (nome, email, senha, confirmar_senha) não estão vazios.
-    if (empty($nome) || empty($email) || empty($senha) || empty($confirmar_senha)) {
-        $message = "Todos os campos obrigatórios (Nome, E-mail, Senha) devem ser preenchidos.";
+    // --- Validações no PHP ---
+    // Verifica se os campos obrigatórios não estão vazios.
+    if (empty($nome) || empty($email) || empty($data_nascimento) || empty($senha) || empty($confirmar_senha)) {
+        $message = "Todos os campos obrigatórios (Nome, E-mail, Data de Nascimento, Senha) devem ser preenchidos.";
         $message_type = "error";
     }
-    // Verifica se o formato do e-mail é válido.
+    // Valida o formato do e-mail.
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $message = "Formato de e-mail inválido.";
         $message_type = "error";
     }
-    // Verifica se as senhas digitadas são iguais.
+    // Valida se as senhas coincidem.
     elseif ($senha !== $confirmar_senha) {
         $message = "As senhas não coincidem.";
         $message_type = "error";
     }
-    // Verifica se a senha tem um comprimento mínimo.
+    // Valida o comprimento mínimo da senha.
     elseif (strlen($senha) < 6) {
         $message = "A senha deve ter no mínimo 6 caracteres.";
         $message_type = "error";
     }
-    // Se todas as validações passarem, tenta inserir no banco de dados.
+    // --- Nova Validação: Idade Mínima ---
+    // Converte a data de nascimento para um objeto DateTime.
+    // Pega a data atual.
+    // Calcula a diferença em anos.
     else {
-        // A senha será salva em texto puro (ATENÇÃO: Não seguro para produção!)
-        $senha_para_salvar = $senha;
-
-        // Inicia uma transação no banco de dados.
-        // Isso garante que, se houver qualquer erro durante a inserção, todas as operações
-        // da transação sejam desfeitas (rollback), mantendo a integridade do banco.
-        $conn->begin_transaction();
-
         try {
-            // Prepara a query SQL para inserir os dados do novo usuário.
-            // Usamos prepared statements (prepare) para prevenir SQL Injection,
-            // que é uma falha de segurança comum e perigosa.
-            $stmt = $conn->prepare("INSERT INTO Usuarios (nome, email, celular, senha) VALUES (?, ?, ?, ?)");
+            $data_nasc_obj = new DateTime($data_nascimento);
+            $hoje = new DateTime();
+            $idade = $data_nasc_obj->diff($hoje)->y; // Obtém a diferença em anos
 
-            // 'ssss' indica os tipos de dados dos parâmetros: quatro strings.
-            // bind_param associa as variáveis PHP aos placeholders (?) na query.
-            $stmt->bind_param("ssss", $nome, $email, $celular, $senha_para_salvar);
+            if ($idade < 13) {
+                $message = "Você deve ter pelo menos 13 anos para se cadastrar.";
+                $message_type = "error";
+            }
+            // Verifica se a data de nascimento não está no futuro
+            elseif ($data_nasc_obj > $hoje) {
+                $message = "A data de nascimento não pode ser no futuro.";
+                $message_type = "error";
+            }
+            // Se todas as validações passarem, tenta inserir no banco de dados.
+            else {
+                $senha_para_salvar = $senha; // Senha em texto puro (não segura para produção!)
 
-            // Executa a query preparada.
-            if ($stmt->execute()) {
-                // Se a execução for bem-sucedida, confirma a transação (salva as mudanças no banco).
-                $conn->commit();
-                $message = "Cadastro realizado com sucesso! Você já pode fazer login.";
-                $message_type = "success";
-                // Limpa os campos do formulário para uma nova submissão após o sucesso.
-                $nome = $email = $celular = ''; // Define as variáveis como vazias para o formulário
-            } else {
-                // Se houver um erro na execução da query (ex: um trigger do banco rejeitou a inserção),
-                // lança uma exceção para ser capturada pelo bloco catch.
-                throw new Exception("Erro ao executar cadastro: " . $stmt->error);
+                $conn->begin_transaction(); // Inicia a transação
+
+                try {
+                    // Prepara a query SQL para inserir o usuário.
+                    // ATENÇÃO: 'sds' -> string (nome), string (email), date (data_nascimento), string (senha)
+                    // No PHP, mesmo sendo DATE no MySQL, passamos como STRING (formato 'YYYY-MM-DD').
+                    $stmt = $conn->prepare("INSERT INTO Usuarios (nome, email, data_nascimento, senha) VALUES (?, ?, ?, ?)");
+                    $stmt->bind_param("ssss", $nome, $email, $data_nascimento, $senha_para_salvar);
+
+                    if ($stmt->execute()) {
+                        $conn->commit(); // Confirma a transação
+                        $message = "Cadastro realizado com sucesso! Você já pode fazer login.";
+                        $message_type = "success";
+                        // Limpa os campos do formulário após o sucesso.
+                        $nome = $email = $data_nascimento = ''; // Reset para campos vazios
+                    } else {
+                        throw new Exception("Erro ao executar cadastro: " . $stmt->error);
+                    }
+                    $stmt->close();
+                } catch (mysqli_sql_exception $e) {
+                    $conn->rollback(); // Desfaz a transação em caso de erro SQL.
+                    if (strpos($e->getMessage(), 'E-mail informado já está cadastrado') !== false) {
+                        $message = "Este e-mail já está cadastrado. Tente outro ou faça login.";
+                    } elseif (strpos($e->getMessage(), 'chk_idade_minima') !== false) {
+                        // Este erro pode ocorrer se a validação do banco (CHECK CONSTRAINT) for ativada primeiro.
+                        $message = "Você deve ter pelo menos 13 anos para se cadastrar.";
+                    }
+                    else {
+                        $message = "Erro inesperado ao cadastrar: " . $e->getMessage();
+                    }
+                    $message_type = "error";
+                } catch (Exception $e) {
+                    $conn->rollback(); // Desfaz a transação em caso de outros erros.
+                    $message = "Ocorreu um erro: " . $e->getMessage();
+                    $message_type = "error";
+                }
             }
-            // Fecha o prepared statement.
-            $stmt->close();
-        } catch (mysqli_sql_exception $e) {
-            // Este bloco captura erros específicos do MySQL (ex: erro de sintaxe, ou erro de trigger).
-            $conn->rollback(); // Desfaz todas as operações da transação em caso de erro.
-            // Verifica se a mensagem de erro contém a indicação do trigger de e-mail duplicado.
-            if (strpos($e->getMessage(), 'E-mail informado já está cadastrado') !== false) {
-                $message = "Este e-mail já está cadastrado. Tente outro ou faça login.";
-            } else {
-                $message = "Erro inesperado ao cadastrar: " . $e->getMessage();
-            }
-            $message_type = "error";
         } catch (Exception $e) {
-            // Este bloco captura outras exceções gerais que podem ocorrer.
-            $conn->rollback(); // Desfaz todas as operações da transação.
-            $message = "Ocorreu um erro: " . $e->getMessage();
+            // Captura erros da criação de DateTime (ex: formato de data inválido)
+            $message = "Formato de data de nascimento inválido. Use AAAA-MM-DD.";
             $message_type = "error";
         }
     }
@@ -97,10 +114,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <h2>Cadastro de Usuário</h2>
 <div class="form-container">
-    <?php
-    // Exibe a mensagem de sucesso ou erro, se houver.
-    if ($message):
-    ?>
+    <?php if ($message): ?>
         <div class="message <?php echo $message_type; ?>">
             <?php echo htmlspecialchars($message); ?>
         </div>
@@ -109,15 +123,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <form action="cadastro.php" method="POST">
         <div class="form-group">
             <label for="nome">Nome Completo:</label>
-            <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($nome ?? ''); ?>" required>
+            <input type="text" id="nome" name="nome" value="<?php echo htmlspecialchars($nome); ?>" required>
         </div>
         <div class="form-group">
             <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
+            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
         </div>
         <div class="form-group">
-            <label for="celular">Celular (opcional):</label>
-            <input type="text" id="celular" name="celular" value="<?php echo htmlspecialchars($celular ?? ''); ?>">
+            <label for="data_nascimento">Data de Nascimento:</label>
+            <input type="date" id="data_nascimento" name="data_nascimento" value="<?php echo htmlspecialchars($data_nascimento); ?>" required>
         </div>
         <div class="form-group">
             <label for="senha">Senha:</label>
@@ -135,8 +149,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <?php
-// Inclui o rodapé HTML.
 require_once 'includes/footer.php';
-// Fecha a conexão com o banco de dados para liberar recursos.
 $conn->close();
 ?>
