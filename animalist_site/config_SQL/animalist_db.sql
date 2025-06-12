@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     data_nascimento DATE NOT NULL,
-    senha VARCHAR(255) NOT NULL,
+    senha VARCHAR(255) NOT NULL, #hash nesse contexto é para criptografar as senhas do banco em si
     foto_perfil_url VARCHAR(2048),
     fundo_perfil_url VARCHAR(2048),
     descricao TEXT,
@@ -22,7 +22,6 @@ CREATE TABLE IF NOT EXISTS Usuarios (
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_tipo_usuario) REFERENCES TipoUsuario(id_tipo_usuario) ON DELETE RESTRICT
-    -- A linha abaixo foi removida: CONSTRAINT chk_idade_minima CHECK (TIMESTAMPDIFF(YEAR, data_nascimento, CURDATE()) >= 13)
 );
 
 CREATE INDEX idx_usuario_email ON Usuarios(email);
@@ -58,13 +57,15 @@ CREATE TABLE IF NOT EXISTS ListaPessoalAnimes (
     id_lista INT PRIMARY KEY AUTO_INCREMENT,
     id_usuario INT NOT NULL,
     id_anime INT NOT NULL,
-    status_anime ENUM('Favorito', 'Assistindo', 'Completado', 'Planejando Assistir') NOT NULL,
+    status_anime ENUM('Assistindo', 'Completado', 'Planejando Assistir', 'Droppado') NOT NULL,
+    is_favorito BOOLEAN DEFAULT FALSE,
     data_adicao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     data_ultima_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE,
     FOREIGN KEY (id_anime) REFERENCES Animes(id_anime) ON DELETE CASCADE,
     UNIQUE (id_usuario, id_anime)
 );
+
 
 CREATE INDEX idx_lista_usuario ON ListaPessoalAnimes(id_usuario);
 
@@ -100,8 +101,7 @@ CREATE TABLE IF NOT EXISTS Usuarios_Nome_Log (
     id_usuario INT,
     nome_antigo TEXT,
     nome_novo TEXT,
-    data_alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario) ON DELETE CASCADE
+    data_alteracao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS Generos_Log (
@@ -265,28 +265,28 @@ INSERT INTO AnimeGeneros (id_anime, id_genero) SELECT Animes.id_anime, Generos.i
 INSERT INTO AnimeGeneros (id_anime, id_genero) SELECT Animes.id_anime, Generos.id_genero FROM Animes, Generos WHERE Animes.nome = 'Demon Slayer: Kimetsu no Yaiba' AND Generos.nome_genero = 'Fantasia';
 INSERT INTO AnimeGeneros (id_anime, id_genero) SELECT Animes.id_anime, Generos.id_genero FROM Animes, Generos WHERE Animes.nome = 'Demon Slayer: Kimetsu no Yaiba' AND Generos.nome_genero = 'Aventura';
 
-INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime)
-SELECT u.id_usuario, a.id_anime, 'Assistindo'
+INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime, is_favorito)
+SELECT u.id_usuario, a.id_anime, 'Assistindo', FALSE
 FROM Usuarios u, Animes a
 WHERE u.email = 'luiz.goncalves@example.com' AND a.nome = 'Jujutsu Kaisen';
 
-INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime)
-SELECT u.id_usuario, a.id_anime, 'Completado'
+INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime, is_favorito)
+SELECT u.id_usuario, a.id_anime, 'Completado', TRUE
 FROM Usuarios u, Animes a
 WHERE u.email = 'luiz.goncalves@example.com' AND a.nome = 'Attack on Titan';
 
-INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime)
-SELECT u.id_usuario, a.id_anime, 'Favorito'
+INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime, is_favorito)
+SELECT u.id_usuario, a.id_anime, 'Completado', FALSE
 FROM Usuarios u, Animes a
 WHERE u.email = 'maycon.cabral@example.com' AND a.nome = 'Spy x Family';
 
-INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime)
-SELECT u.id_usuario, a.id_anime, 'Planejando Assistir'
+INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime, is_favorito)
+SELECT u.id_usuario, a.id_anime, 'Planejando Assistir', FALSE
 FROM Usuarios u, Animes a
 WHERE u.email = 'renan.rodrigues@example.com' AND a.nome = 'Fullmetal Alchemist: Brotherhood';
 
-INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime)
-SELECT u.id_usuario, a.id_anime, 'Assistindo'
+INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime, is_favorito)
+SELECT u.id_usuario, a.id_anime, 'Assistindo', FALSE
 FROM Usuarios u, Animes a
 WHERE u.email = 'renan.rodrigues@example.com' AND a.nome = 'Cowboy Bebop';
 
@@ -391,8 +391,158 @@ DETERMINISTIC
 READS SQL DATA
 BEGIN
     DECLARE v_total_recomendacoes INT;
-    SELECT COUNT(*) INTO v_total_recomendacoes FROM Avaliacoes WHERE id_anime = p_id_anime AND nota = 'Recomendo';
+SELECT 
+    COUNT(*)
+INTO v_total_recomendacoes FROM
+    Avaliacoes
+WHERE
+    id_anime = p_id_anime
+        AND nota = 'Recomendo';
     RETURN v_total_recomendacoes;
 END //
 
+
+
 DELIMITER ;
+
+#PROCEDURES PARA ATENDER REGRAS DE NEGÓCIO
+
+
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS inserir_usuario_se_valido$$
+
+CREATE PROCEDURE inserir_usuario_se_valido(
+    IN p_nome VARCHAR(255),
+    IN p_email VARCHAR(255),
+    IN p_data_nascimento DATE,
+    IN p_senha VARCHAR(255),
+    IN p_foto_perfil_url VARCHAR(2048),
+    IN p_fundo_perfil_url VARCHAR(2048),
+    IN p_descricao TEXT,
+    IN p_id_tipo_usuario INT
+)
+BEGIN
+    DECLARE idade INT;
+
+    SET idade = TIMESTAMPDIFF(YEAR, p_data_nascimento, CURDATE());
+    
+    #ATENDENDO REGRA DE NEGÓCIO: USUÁRIO DEVE TER PELO MENOS 13 ANOS PARA SE CADASTRAR
+
+    IF idade >= 13 THEN 
+        INSERT INTO Usuarios (
+            nome, email, data_nascimento, senha,
+            foto_perfil_url, fundo_perfil_url, descricao, id_tipo_usuario
+        )
+        VALUES (
+            p_nome, p_email, p_data_nascimento, p_senha,
+            p_foto_perfil_url, p_fundo_perfil_url, p_descricao, p_id_tipo_usuario
+        );
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Usuário não pode ser cadastrado: idade menor a 13 anos.';
+    END IF;
+END$$
+
+
+DROP PROCEDURE IF EXISTS adicionar_avaliacao$$
+
+CREATE PROCEDURE adicionar_avaliacao(
+    IN p_id_usuario INT,
+    IN p_id_anime INT,
+    IN p_nota ENUM('Recomendo', 'Não Recomendo'),
+    IN p_comentario TEXT
+)
+BEGIN
+    DECLARE existe INT;
+
+    # ATENDENDO REGRA DE NEGÓCIO: USUÁRIO SÓ PODE DEIXAR UMA AVALIAÇÃO NO SISTEMA POR ANIME
+    SELECT COUNT(*) INTO existe
+    FROM Avaliacoes
+    WHERE id_usuario = p_id_usuario AND id_anime = p_id_anime;
+
+    IF existe = 0 THEN
+        INSERT INTO Avaliacoes (id_usuario, id_anime, nota, comentario, data_avaliacao)
+        VALUES (p_id_usuario, p_id_anime, p_nota, p_comentario, NOW());
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Usuário já avaliou este anime.';
+    END IF;
+END$$
+
+
+
+
+DROP PROCEDURE IF EXISTS cadastrar_anime$$
+
+DELIMITER $$
+
+CREATE PROCEDURE cadastrar_anime(
+    IN p_id_usuario INT,
+    IN p_nome VARCHAR(255),
+    IN p_ano_lancamento INT,
+    IN p_sinopse TEXT,
+    IN p_capa_url VARCHAR(2048)
+)
+BEGIN
+    DECLARE tipo_usuario INT;
+
+    # ATENDENDO REGRAS DE NEGÓCIO: SÓ ADMINISTRADOR PODE ADICIONAR ANIME + ANIME DEVE TER TODOS OS DADOS PARA SER PREENCHIDO.
+    SELECT id_tipo_usuario INTO tipo_usuario
+    FROM Usuarios
+    WHERE id_usuario = p_id_usuario;
+
+    IF tipo_usuario = 1 THEN
+        
+        IF p_nome IS NOT NULL AND p_ano_lancamento > 1900  AND p_sinopse IS NOT NULL AND p_capa_url IS NOT NULL THEN
+            INSERT INTO Animes (nome, ano_lancamento, sinopse, capa_url)
+            VALUES (p_nome, p_ano_lancamento, p_sinopse, p_capa_url);
+        ELSE
+            SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Todos os dados obrigatórios devem ser preenchidos corretamente.';
+        END IF;
+    ELSE
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Apenas administradores podem cadastrar animes.';
+    END IF;
+END$$
+
+
+
+DROP PROCEDURE IF EXISTS adicionar_atualizar_anime_listapessoal$$
+
+CREATE PROCEDURE adicionar_atualizar_anime_listapessoal(
+    IN p_id_usuario INT,
+    IN p_id_anime INT,
+    IN p_status_anime ENUM('Assistindo', 'Completado', 'Planejando Assistir', 'Droppado'),
+    IN p_is_favorito BOOLEAN
+)
+BEGIN
+    DECLARE existe_anime_na_lista INT;
+
+    SELECT COUNT(*) INTO existe_anime_na_lista
+    FROM ListaPessoalAnimes
+    WHERE id_usuario = p_id_usuario AND id_anime = p_id_anime;
+    
+    # ATENDENDO REGRAS DE NEGÓCIO: APENAS O PRÓPRIO USUÁRIO PODE ADICIONAR/ATUALIZAR ANIMES DA PRÓPRIA LISTA PESSOAL
+
+    IF existe_anime_na_lista = 0 THEN
+        INSERT INTO ListaPessoalAnimes (id_usuario, id_anime, status_anime, is_favorito)
+        VALUES (p_id_usuario, p_id_anime, p_status_anime, p_is_favorito);
+    ELSE
+        UPDATE ListaPessoalAnimes
+        SET status_anime = p_status_anime,
+            is_favorito = p_is_favorito,
+            data_ultima_atualizacao = CURRENT_TIMESTAMP
+        WHERE id_usuario = p_id_usuario AND id_anime = p_id_anime;
+    END IF;
+END$$
+
+
+
+DELIMITER ;
+
+
+
+
