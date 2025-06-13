@@ -1,76 +1,74 @@
 <?php
-// Inclui o arquivo de conexão com o banco de dados.
-// Este arquivo também inicia a sessão PHP, essencial para manter o usuário logado.
 require_once 'includes/db_connect.php';
-// Inclui o cabeçalho HTML, que contém a estrutura inicial da página e a navegação.
-require_once 'includes/header.php';
 
-// Variáveis para armazenar mensagens de feedback (sucesso ou erro) para o usuário.
+
+
+
 $message = '';
-$message_type = ''; // Pode ser 'success' ou 'error'
+$message_type = ''; 
 
-// Verifica se o formulário de login foi enviado usando o método POST.
+// Verifica se o formulário de login foi enviado usando o POST
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Coleta e limpa os dados do formulário para evitar espaços em branco indesejados.
+    
     $email = trim($_POST['email']);
-    $senha = $_POST['senha']; // A senha está sendo coletada em texto puro.
+    $senha = $_POST['senha'];
 
     // --- Validações BÁSICAS no PHP ---
-    // Verifica se os campos de e-mail e senha não estão vazios.
     if (empty($email) || empty($senha)) {
         $message = "E-mail e senha são obrigatórios.";
         $message_type = "error";
     } else {
-        // Prepara a query SQL para buscar o usuário no banco de dados pelo e-mail.
-        // Usar prepared statements previne ataques de SQL Injection.
-        $stmt = $conn->prepare("SELECT id_usuario, nome, email, senha, tipo_usuario FROM Usuarios WHERE email = ?");
-        // 's' indica que o parâmetro é uma string.
+        $stmt = $conn->prepare("SELECT id_usuario, nome, email, senha, id_tipo_usuario FROM Usuarios WHERE email = ?");
+        
         $stmt->bind_param("s", $email);
-        // Executa a query preparada.
+        
         $stmt->execute();
-        // Obtém o resultado da query.
+        
         $result = $stmt->get_result();
 
         // Verifica se algum usuário foi encontrado com o e-mail fornecido.
         if ($result->num_rows > 0) {
-            // Pega os dados do usuário encontrado.
+            
             $user = $result->fetch_assoc();
             
-            // --- ATENÇÃO: COMPARAÇÃO DE SENHA EM TEXTO PURO (MENOS SEGURA!) ---
-            // Compara a senha digitada pelo usuário diretamente com a senha salva no banco.
-            if ($senha === $user['senha']) {
-                // Se as senhas forem iguais, o login é bem-sucedido.
-                // Inicia a sessão PHP para armazenar informações do usuário logado.
+    
+                if ($senha === $user['senha']) { 
+                            
+                
+                // Armazena os dados do usuário na sessão
                 $_SESSION['user_id'] = $user['id_usuario'];
                 $_SESSION['user_name'] = $user['nome'];
                 $_SESSION['user_email'] = $user['email'];
-                $_SESSION['user_type'] = $user['tipo_usuario']; // Salva o tipo de usuário (comum/admin)
+                $_SESSION['user_type'] = $user['id_tipo_usuario'];
 
-                $message = "Login realizado com sucesso! Redirecionando...";
-                $message_type = "success";
-                // Redireciona o usuário para a página inicial (index.php) após 2 segundos.
-                header("Refresh: 2; url=index.php"); 
-                exit(); // É importante usar exit() após um header() para garantir o redirecionamento.
+               
+                header("Location: index.php"); 
+
+                exit();
+
             } else {
-                // Se as senhas não coincidirem.
-                $message = "E-mail ou senha incorretos.";
+                
+                $message = "Senha incorreta.";
                 $message_type = "error";
             }
         } else {
             // Se nenhum usuário for encontrado com o e-mail fornecido.
-            $message = "E-mail ou senha incorretos.";
+            $message = "E-mail incorreto.";
             $message_type = "error";
         }
-        // Fecha o prepared statement.
+
         $stmt->close();
     }
 }
+
+
+require_once 'includes/header.php';
 ?>
 
 <h2>Login</h2>
 <div class="form-container">
     <?php 
-    // Exibe a mensagem de sucesso ou erro, se houver.
+    
     if ($message): 
     ?>
         <div class="message <?php echo $message_type; ?>">
@@ -95,8 +93,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
 <?php
-// Inclui o rodapé HTML.
+
 require_once 'includes/footer.php';
-// Fecha a conexão com o banco de dados.
+
+
+
 $conn->close();
 ?>

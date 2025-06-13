@@ -32,7 +32,7 @@ $user_data['email'] = $_SESSION['user_email'] ?? 'usuario@exemplo.com';
 $user_data['foto_perfil_url'] = 'images/default_profile.png';
 $user_data['descricao'] = 'Grande fã de animes de todos os gêneros. Sempre procurando a próxima série para maratonar!';
 
-$stmt_user = $conn->prepare("SELECT nome, email, celular, foto_perfil_url, fundo_perfil_url, descricao FROM Usuarios WHERE id_usuario = ?");
+$stmt_user = $conn->prepare("SELECT nome, email, data_nascimento, foto_perfil_url, fundo_perfil_url, descricao FROM Usuarios WHERE id_usuario = ?");
 if ($stmt_user) {
     $stmt_user->bind_param("i", $user_id);
     $stmt_user->execute();
@@ -41,7 +41,7 @@ if ($stmt_user) {
         $db_user_data = $result_user->fetch_assoc();
         $user_data['nome'] = !empty($db_user_data['nome']) ? $db_user_data['nome'] : $user_data['nome'];
         $user_data['email'] = !empty($db_user_data['email']) ? $db_user_data['email'] : $user_data['email'];
-        $user_data['celular'] = $db_user_data['celular'] ?? '';
+        $user_data['data_nascimento'] = $db_user_data['data_nascimento'] ?? '';
         $user_data['foto_perfil_url'] = !empty($db_user_data['foto_perfil_url']) ? $db_user_data['foto_perfil_url'] : $user_data['foto_perfil_url'];
         $user_data['descricao'] = !empty($db_user_data['descricao']) ? $db_user_data['descricao'] : $user_data['descricao'];
     }
