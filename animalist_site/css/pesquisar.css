@@ -6,8 +6,24 @@
     --cor-clara: #c9d1d9;
 }
 
+/* === Reset básico e Estilo do Body === */
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Boa prática para controle de layout */
+}
+
+*, *::before, *::after {
+    box-sizing: inherit; /* Garante que todos os elementos herdem o box-sizing do html */
+}
+
 body {
+    all: unset; /* Remove todos os estilos do user-agent */
+    margin: 0;  /* Garante que a margem seja zero, mesmo após o unset */
+    padding: 0; /* Garante que o padding seja zero, mesmo após o unset */
     background-color: #1a2430;
+    font-family: sans-serif; /* Adicione uma família de fontes padrão */
+    color: var(--cor-clara); /* Cor de texto padrão para o corpo */
 }
 
 /* === Seção de Filtros === */
@@ -29,14 +45,13 @@ body {
     flex-direction: column;
 }
 
-/* === mudar cor do texto placeholder da pesquisa */
-
+/* === Cor do texto placeholder === */
 ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
     color:    var(--cor-clara);
     opacity:  0.5;
 }
 :-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-   color:    var();
+   color:    var(--cor-clara); /* Corrigido: var() estava vazio */
    opacity:  0.5;
 }
 ::-moz-placeholder { /* Mozilla Firefox 19+ */
@@ -51,8 +66,7 @@ body {
    color:    var(--cor-clara);
    opacity:  0.5;
 }
-
-::placeholder { /* browsers modernos */
+::placeholder { /* Browsers modernos */
    color:    var(--cor-clara);
    opacity:  0.5;
 }
@@ -83,7 +97,7 @@ body {
     align-items: center;
     justify-content: center;
     transition: background-color 0.3s ease;
-    flex-shrink: 0; /* Impede que o botão encolha */
+    flex-shrink: 0;
 }
 
 /* === Grade de Animes === */
@@ -104,7 +118,7 @@ body {
 }
 .anime-card-poster {
     position: relative;
-    height: 300px; 
+    height: 300px;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
@@ -119,16 +133,16 @@ body {
 
 /* === Informações do Card === */
 .ano-anime {
-    position: absolute;  
-    bottom: 10px;         
-    right: 10px;        
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
     background-color: var(--cor-primaria);
-    color: #1a2430;      
-    padding: 4px 10px;   
-    border-radius: 6px;   
-    font-size: 0.9em;     
-    font-weight: bold; 
-    z-index: 2; 
+    color: #1a2430;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: bold;
+    z-index: 2;
 }
 .anime-info {
     padding-top: 12px;
@@ -155,19 +169,19 @@ body {
 
     /* --- Filtros --- */
     .container-filtros {
-        flex-direction: column;   /* Empilha os filtros verticalmente */
-        align-items: stretch;     /* Faz os itens ocuparem a largura total */
-        width: 90%;               /* Define uma largura para o container */
+        flex-direction: column;
+        align-items: stretch;
+        width: 90%;
         max-width: 400px;
     }
     .campo-input {
-        width: 100%;              /* Faz o input ocupar 100% do seu container */
-        box-sizing: border-box;   /* Garante que o padding não aumente a largura */
+        width: 100%;
+        box-sizing: border-box;
     }
 
     /* --- Grade de Animes --- */
     .anime-grid {
-        grid-template-columns: repeat(2, 1fr); /* Exibe exatamente 2 colunas */
-        gap: 20px;                             /* Reduz o espaçamento na versão mobile */
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
     }
 }

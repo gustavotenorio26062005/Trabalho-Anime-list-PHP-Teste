@@ -1,4 +1,5 @@
 <?php
+
 // 1. Includes e inicializações
 require_once 'includes/db_connect.php'; // Conexão e session_start() (se db_connect.php fizer isso)
 require_once 'includes/header.php';     // Nosso header integrado (que também chama session_start())
@@ -9,7 +10,7 @@ $filter_year = '';
 $filter_genre = '';
 $sort_by = 'nome';     // Valor padrão para ordenação
 $sort_order = 'ASC';   // Ordem padrão
-$animes = [];
+$animes = []; 
 
 // Obter valores do GET para filtros e ordenação
 if ($_SERVER["REQUEST_METHOD"] == "GET") {
@@ -140,7 +141,11 @@ if($result_anos) $result_anos->close();
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- === FONTES === -->
      <!--<?php include __DIR__ . '/pages/constante/fontes.php' ?> -->
+
 </head>
+<body>
+    
+
 <form action="pesquisar.php" method="GET" class="form-filtros-principal">
     <section class="secao-filtros">
         <div class="container-filtros">
@@ -237,9 +242,11 @@ if($result_anos) $result_anos->close();
         </p>
     <?php endif; ?>
 </div>
+</body>
 
 
 <?php
+
 // Footer e fechar conexão
 require_once 'includes/footer.php';
 if (isset($conn)) {

@@ -2,6 +2,7 @@
 require_once 'includes/db_connect.php';
 require_once 'includes/header.php';
 
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -19,7 +20,7 @@ function get_mock_anime_data($count, $base_name, $base_id_start, $status_prefix 
         $mock_animes[] = [
             "id_anime" => "mock_" . $id,
             "nome" => $status_prefix . " " . $base_name . " " . ($i + 1),
-            "capa_url" => "https://via.placeholder.com/100x140/202a38/65ebba?text=C" . $capa_num . " " . substr($base_name,0,1) . ($i+1),
+            "capa_url" => "https://upload.wikimedia.org/wikipedia/commons/d/d4/American-Automobile-Association-Logo.svg" . $capa_num . " " . substr($base_name,0,1) . ($i+1),
         ];
     }
     return $mock_animes;
@@ -29,7 +30,7 @@ function get_mock_anime_data($count, $base_name, $base_id_start, $status_prefix 
 $user_data = [];
 $user_data['nome'] = $_SESSION['user_name'] ?? 'Usuário Exemplo';
 $user_data['email'] = $_SESSION['user_email'] ?? 'usuario@exemplo.com';
-$user_data['foto_perfil_url'] = 'images/default_profile.png';
+$user_data['foto_perfil_url'] = 'img/perfil_default.png';
 $user_data['descricao'] = 'Grande fã de animes de todos os gêneros. Sempre procurando a próxima série para maratonar!';
 
 $stmt_user = $conn->prepare("SELECT nome, email, data_nascimento, foto_perfil_url, fundo_perfil_url, descricao FROM Usuarios WHERE id_usuario = ?");
@@ -178,7 +179,17 @@ if (!empty($avaliacoes)) {
 
 <!-- ================= PÁGINA COMEÇA AQUI ================== -->
 
-<link rel="stylesheet" href="css/perfil.css">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animalist - Home</title>
+    <!-- === CSS === -->
+    <link rel="stylesheet" href="css/perfil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
 
 <div class="container">
     <header class="profile-header">
@@ -192,7 +203,7 @@ if (!empty($avaliacoes)) {
         <div class="profile-actions">
             <button id="addContentBtn" aria-label="Adicionar novo item" title="Adicionar Anime à Lista (Em Breve)"><i class="fas fa-plus"></i></button>
             <a href="editar_perfil.php" class="profile-action-link" aria-label="Editar Perfil Completo" title="Editar Perfil Completo"
-               style="background-color: #2f81f7; color: white; border: none; padding: 10px; margin-bottom: 10px; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 1.2em;">
+               style="background-color: #2f81f7; color: white; border: none; margin-bottom: 10px; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 1.2em;">
                 <i class="fas fa-edit"></i>
             </a>
             <button id="deleteProfileBtn" aria-label="Deletar perfil" title="Deletar Conta"><i class="fas fa-trash"></i></button>
@@ -219,7 +230,7 @@ if (!empty($avaliacoes)) {
                                      data-anime-name="<?php echo htmlspecialchars($anime['nome']); ?>"
                                      data-anime-id="<?php echo htmlspecialchars($anime['id_anime']); ?>">
                                     <div class="poster-placeholder">
-                                        <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) && $anime['capa_url'] !== 'images/poster_placeholder.png' ? $anime['capa_url'] : 'https://via.placeholder.com/100x140/253750/65ebba?text=' . urlencode(substr($anime['nome'], 0, 1))); ?>" 
+                                        <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) && $anime['capa_url'] !== 'images/poster_placeholder.png' ? $anime['capa_url'] : 'https://upload.wikimedia.org/wikipedia/commons/d/d4/American-Automobile-Association-Logo.svg' . urlencode(substr($anime['nome'], 0, 1))); ?>" 
                                              alt="<?php echo htmlspecialchars($anime['nome']); ?>"
                                              style="width:100%; height:100%; object-fit:cover; border-radius: 4px;">
                                     </div>
@@ -245,8 +256,10 @@ if (!empty($avaliacoes)) {
     </main>
 
 </div>
+</body>
 
 <script src="js/perfil.js"></script>
+</html>
 
 <?php
 require_once 'includes/footer.php';

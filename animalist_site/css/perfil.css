@@ -1,15 +1,14 @@
-/* Reset básico e configurações globais */
+
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
+
 }
 
 body {
     font-family: Arial, sans-serif;
-    background-color: #0a1625; /* PRETO (COR DE FUNDO) */
-    color: #f0f3f6; /* BRANCO (TEXTO) */
-    line-height: 1.6;
+    background-color: #0a1625; 
+    color: #f0f3f6; 
 }
 
 .container {
@@ -18,6 +17,7 @@ body {
     padding: 20px;
     background-color: #101c2e; /* Um pouco mais claro que o body */
     border-radius: 8px;
+    box-sizing: border-box;
 }
 
 /* Cabeçalho do Perfil */

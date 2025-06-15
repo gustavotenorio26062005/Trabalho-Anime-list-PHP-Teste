@@ -18,56 +18,29 @@
     padding: 0 20px; /* Espaçamento nas laterais do conteúdo da navbar */
 }
 
-.logo-link-navegacao {
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-}
-
-.logo-navegacao {
-    display: flex;
-    align-items: center;
-    position: relative; /* Para posicionar o check dentro do olho */
-}
-
-.logo-olho-nav {
-    font-size: 40px; /* Tamanho do ícone do olho */
-    color: #58a6ff; /* Cor do olho (azul claro/turquesa da imagem) */
-    margin-right: -18px; /* Sobrepor um pouco o texto */
-    z-index: 1;
-}
-
-.logo-check-nav {
-    position: absolute;
-    font-size: 18px; /* Tamanho do ícone de check */
-    color: #0d1117; /* Cor do check (para contrastar com o fundo do olho) */
-    background-color: #58a6ff; /* Fundo do check (cor do olho) */
+.foto-perfil {
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
-    padding: 2px;
-    left: 11px; /* Ajuste fino da posição horizontal */
-    top: 50%;
-    transform: translateY(-50%);
-    z-index: 2; /* Para ficar sobre o olho */
-}
-
-.texto-logo-nav {
+    margin-right: 20px;
+    overflow: hidden; 
     display: flex;
-    flex-direction: column;
-    margin-left: 25px; /* Espaço após o ícone do olho */
-    line-height: 1;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: 0.2s ease-in-out; 
 }
 
-.texto-logo-anima {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #58a6ff; /* Cor do texto "ANIMA" */
+.foto-perfil img {
+    width: inherit;
+    height: inherit;
+    object-fit: cover;  
 }
 
-.texto-logo-list {
-    font-size: 1.4em;
-    font-weight: bold;
-    color: #ffffff; /* Cor do texto "LIST" */
+.foto-perfil:hover{
+    opacity: 50%;
 }
+
 
 .lista-links-navegacao {
     list-style: none;
