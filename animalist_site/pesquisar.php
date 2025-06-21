@@ -138,6 +138,7 @@ if($result_anos) $result_anos->close();
     <title>Animalist - Home</title>
     <!-- === CSS === -->
     <link rel="stylesheet" href="css/pesquisar.css">
+    <link rel="stylesheet" href="css/universal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- === FONTES === -->
      <!--<?php include __DIR__ . '/pages/constante/fontes.php' ?> -->

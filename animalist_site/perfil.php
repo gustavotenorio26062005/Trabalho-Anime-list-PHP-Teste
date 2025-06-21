@@ -212,7 +212,7 @@ if (!empty($avaliacoes)) {
     </header>
 
     <main class="content-area">
-        <section class="anime-lists-section">
+        <section class="anime-lists-section" id="lista">
             <?php if (!empty($anime_lists_display)): ?>
                 <?php foreach ($anime_lists_display as $list_title => $animes_in_list): ?>
                     <?php if (empty($animes_in_list) && !in_array($list_title, ["Favoritos", "Assistindo", "Completado", "Parou/Droppado", "Planejado"])) { continue; } // Não mostra categorias não fixas se vazias ?>
