@@ -1,0 +1,14 @@
+/* css/teste.css */
+
+body {
+    padding-top: 0 !important;
+    margin-top: 0 !important;
+    background-color: purple !important; /* Cor drástica para garantir que o arquivo foi carregado */
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    font-size: 40px;
+    padding-top: 100px;
+}

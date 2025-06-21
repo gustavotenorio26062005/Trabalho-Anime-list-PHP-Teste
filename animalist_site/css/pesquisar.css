@@ -20,7 +20,6 @@ html {
 body {
     margin: 0;  
     padding: 0; 
-    padding-top: 80px;
     background-color: #1a2430;
     font-family: sans-serif; /* Adicione uma família de fontes padrão */
     color: var(--cor-clara); /* Cor de texto padrão para o corpo */
