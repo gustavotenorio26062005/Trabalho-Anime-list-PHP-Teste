@@ -95,7 +95,8 @@ if (empty($animes_pessoais_raw)) { // Se não houver dados do banco, usa mock
         if ($status == 'assistindo') $animes_por_status["Assistindo"][] = $anime_data_for_list;
         elseif ($status == 'completo' || $status == 'completado') $animes_por_status["Completado"][] = $anime_data_for_list;
         elseif ($status == 'dropado' || $status == 'parado' || $status == 'pausado') $animes_por_status["Parou/Droppado"][] = $anime_data_for_list;
-        elseif ($status == 'planejado' || $status == 'planejo assistir') $animes_por_status["Planejado"][] = $anime_data_for_list;
+        // CORREÇÃO: Corrigido o status para corresponder ao valor do banco de dados 'planejando assistir'.
+        elseif ($status == 'planejando assistir') $animes_por_status["Planejado"][] = $anime_data_for_list;
         // Adicione sua lógica para "Favoritos" aqui se tiver um campo específico no banco.
         // Por enquanto, se "Favoritos" do banco estiver vazio, adicionamos mock para visualização.
     }
@@ -134,7 +135,7 @@ if (empty($avaliacoes)) { // Mock para avaliações
         $avaliacoes[] = [
             'id_anime' => 'mock_eval_' . $i,
             'nome_anime' => 'Anime Mock Avaliado ' . ($i + 1),
-            'nota' => rand(7, 10),
+            'nota' => 'Recomendo', // Mock ajustado para o tipo de dado correto (string)
             'comentario' => 'Este é um comentário de exemplo para o anime mock ' . ($i + 1) . '. Uma obra interessante com altos e baixos, mas que vale a pena conferir pela sua originalidade.'
         ];
     }
@@ -152,13 +153,15 @@ if (!empty($avaliacoes)) {
         else $avaliacoes_html_sidebar .= '<div class="review-item-sidebar" style="background-color: #101c2e; padding: 10px; border-radius: 4px; border: 1px solid #253750;">';
         
         $avaliacoes_html_sidebar .= '<h4 style="color: #65ebba; margin-bottom: 5px; font-size: 1em;">';
-        $avaliacoes_html_sidebar .= '<a href="anime_detalhes.php?id=' . ($anime_item['id_anime'] ?? $avaliacao['id_anime']) . '" style="color: #65ebba; text-decoration: none;">' . htmlspecialchars($avaliacao['nome_anime']) . '</a>';
+        // CORREÇÃO: O ID do anime agora é pego da variável $avaliacao, que está no escopo do loop atual.
+        $avaliacoes_html_sidebar .= '<a href="anime_detalhes.php?id=' . $avaliacao['id_anime'] . '" style="color: #65ebba; text-decoration: none;">' . htmlspecialchars($avaliacao['nome_anime']) . '</a>';
         $avaliacoes_html_sidebar .= '</h4>';
         $avaliacoes_html_sidebar .= '<p style="margin-bottom: 5px; font-size: 0.9em;"><strong>Nota:</strong> ';
-        for($s = 0; $s < 5; $s++) {
-            $avaliacoes_html_sidebar .= '<i class="fas fa-star" style="color:' . ($s < round($avaliacao['nota'] / 2) ? '#ffc107' : '#3a4e68') . ';"></i>';
-        }
-        $avaliacoes_html_sidebar .= ' (' . htmlspecialchars($avaliacao['nota']) . '/10)</p>';
+        
+        // CORREÇÃO: Removida a operação matemática na string 'nota'. Agora exibe o texto da nota com uma cor.
+        $nota_cor = ($avaliacao['nota'] == 'Recomendo') ? '#65ebba' : '#eb2c4c'; // Verde para Recomendo, Vermelho para Não
+        $avaliacoes_html_sidebar .= '<span style="color: ' . $nota_cor . '; font-weight: bold;">' . htmlspecialchars($avaliacao['nota']) . '</span></p>';
+
         if (!empty($avaliacao['comentario'])) {
             $avaliacoes_html_sidebar .= '<p style="font-size: 0.85em; color: #aebac3;"><em>"' . nl2br(htmlspecialchars($avaliacao['comentario'])) . '"</em></p>';
         }
@@ -177,15 +180,12 @@ if (!empty($avaliacoes)) {
 ?>
 
 
-<!-- ================= PÁGINA COMEÇA AQUI ================== -->
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Animalist - Home</title>
-    <!-- === CSS === -->
     <link rel="stylesheet" href="css/perfil.css">
     <link rel="stylesheet" href="css/universal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">

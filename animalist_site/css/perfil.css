@@ -1,4 +1,3 @@
-
 * {
     margin: 0;
     padding: 0;
@@ -151,8 +150,11 @@ body {
 
 .anime-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); /*Grid responsivo*/
+    /* ALTERAÇÃO AQUI: Define colunas de tamanho fixo para não esticarem */
+    grid-template-columns: repeat(auto-fill, 125px);
     gap: 15px;
+    /* ALTERAÇÃO AQUI: Alinha a grade à esquerda */
+    justify-content: start;
 }
 
 .anime-poster {
@@ -165,17 +167,23 @@ body {
 }
 
 .poster-placeholder {
+    /* ALTERAÇÃO AQUI: Adicionado position: relative e overflow: hidden */
+    position: relative;
+    overflow: hidden;
     width: 100%;
-    padding-bottom: 140%; /* Proporção de um pôster (altura ~1.4x largura) */
-    background-color: #65ebba; /* COR ACENTUADA / DESTAQUE (VERDE) */
+    padding-bottom: 140%;
+    background-color: #65ebba; 
     border-radius: 4px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    /* Se for usar imagem:
-    background-size: cover;
-    background-position: center;
-    */
+}
+
+/* NOVA REGRA: Posiciona a imagem para cobrir o placeholder */
+.poster-placeholder img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 /* Classe para esconder animes inicialmente para "Ver Tudo" */
