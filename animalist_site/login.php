@@ -65,6 +65,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 require_once 'includes/header.php';
 ?>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- === CSS === -->
+    <link rel="stylesheet" href="css/universal.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- === FONTES === -->
+     <!--<?php include __DIR__ . '/pages/constante/fontes.php' ?> -->
+</head>
 <h2>Login</h2>
 <div class="form-container">
     <?php 
