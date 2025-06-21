@@ -1,0 +1,145 @@
+body{
+    padding-top: 80px;
+}
+
+/* Rodapé */
+
+/* css/rodape.css ou seu arquivo CSS principal */
+
+.rodape-principal {
+    background-color: #0d1117; /* Cor de fundo escura, similar ao GitHub dark ou da imagem */
+    color: #c9d1d9;       /* Cor de texto clara padrão */
+    padding: 40px 20px;
+    font-family: Arial, sans-serif; /* Use a família de fontes do seu site */
+    border-top: 1px solid #21262d; /* Linha sutil no topo, opcional */
+}
+
+.container-rodape {
+    max-width: 1200px; /* Largura máxima do conteúdo do rodapé */
+    margin: 0 auto;    /* Centraliza o container */
+    display: flex;
+    flex-wrap: wrap;   /* Permite que as colunas quebrem em telas menores */
+    justify-content: space-between;
+    gap: 20px;         /* Espaço entre as colunas */
+}
+
+.coluna-logo-rodape {
+    flex-basis: 250px; /* Largura base para a coluna do logo */
+    flex-grow: 1;
+    margin-right: 30px; /* Espaço à direita da coluna do logo */
+    text-align: left; /* Alinhamento padrão, mas pode ser center se preferir */
+}
+
+.logo-rodape-img {
+    max-width: 150px; /* Ajuste o tamanho do logo conforme necessário */
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.copyright-rodape,
+.direitos-rodape {
+    font-size: 0.9em;
+    color: #8b949e; /* Cor um pouco mais escura para o copyright */
+    line-height: 1.4;
+}
+
+.direitos-rodape {
+    margin-top: 5px;
+}
+
+.coluna-links-rodape,
+.coluna-contato-rodape {
+    flex-basis: 180px; /* Largura base para as colunas de links e contato */
+    flex-grow: 1;
+    min-width: 160px; /* Largura mínima antes de quebrar */
+}
+
+.titulo-coluna-rodape {
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #ffffff; /* Títulos um pouco mais destacados */
+    margin-bottom: 15px;
+    margin-top: 0; /* Remove margem superior padrão do h4 */
+}
+
+.lista-icones-sociais {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 15px; /* Espaço entre os ícones */
+}
+
+.lista-icones-sociais li a {
+    color: #c9d1d9;
+    font-size: 1.5em; /* Tamanho dos ícones */
+    transition: color 0.3s ease;
+}
+
+.lista-icones-sociais li a:hover {
+    color: #58a6ff; /* Cor de hover, exemplo azul do GitHub */
+}
+
+.lista-links-uteis {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lista-links-uteis li {
+    margin-bottom: 8px;
+}
+
+.lista-links-uteis li a {
+    color: #c9d1d9;
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: color 0.3s ease;
+}
+
+.lista-links-uteis li a:hover {
+    color: #ffffff;
+    text-decoration: underline;
+}
+
+.coluna-contato-rodape p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin-bottom: 12px;
+    color: #c9d1d9;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container-rodape {
+        flex-direction: column; /* Empilha as colunas */
+        align-items: center;    /* Centraliza o conteúdo quando empilhado */
+        text-align: center;     /* Centraliza o texto nas colunas */
+    }
+
+    .coluna-logo-rodape {
+        margin-right: 0;
+        margin-bottom: 30px;
+        text-align: center; /* Garante que o logo e texto fiquem centralizados */
+    }
+    
+    .logo-rodape-img {
+        margin-left: auto;
+        margin-right: auto; /* Centraliza a imagem do logo */
+    }
+
+    .coluna-links-rodape,
+    .coluna-contato-rodape {
+        flex-basis: 100%; /* Colunas ocupam toda a largura */
+        margin-bottom: 20px;
+        text-align: center; /* Centraliza o texto nas colunas de links/contato */
+    }
+
+    .lista-icones-sociais {
+        justify-content: center; /* Centraliza os ícones sociais */
+    }
+
+    .lista-links-uteis {
+        text-align: center; /* Centraliza os links úteis */
+    }
+}
