@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;700&display=swap');
+
+:root {
+    --cor-primaria: #65EBB9;
+    --cor-escura: #101c2e;
+    --cor-escura-alt: #1a2430;
+    --cor-clara: #c9d1d9;
+    --cor-recomendo: #28a745;
+    --cor-nao-recomendo: #dc3545;
+    --cor-borda: #253750;
+    --sombra-card: 0 4px 15px rgba(0, 0, 0, 0.2);
+    --transition-suave: all 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+body {
+    background-color: var(--cor-escura);
+    color: var(--cor-clara);
+    font-family: 'Jost', sans-serif;
+    line-height: 1.6;
+}
+
+.card {
+    background-color: var(--cor-escura-alt);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: var(--sombra-card);
+    transition: var(--transition-suave);
+    animation: fadeIn 0.5s ease-out forwards;
+}
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+}
+
+/* --- CABEÇALHO DO ANIME --- */
+.anime-header { width: 100%; position: relative; }
+.anime-header .banner {
+    height: 400px; width: 100%; background-size: cover;
+    background-position: center; filter: brightness(0.4) blur(3px);
+}
+.header-content-wrapper {
+    max-width: 1200px; margin: 0 auto; padding: 0 20px;
+    position: relative; margin-top: -250px;
+}
+.header-content { display: flex; gap: 40px; align-items: flex-end; }
+.poster-container img {
+    width: 250px; object-fit: cover; border-radius: 12px;
+    border: 4px solid var(--cor-clara); box-shadow: var(--sombra-card);
+}
+.info { color: #fff; padding-bottom: 20px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+.info h1 { font-size: 3.5em; font-weight: 700; margin: 0; color: #fff; }
+.meta-info { display: flex; gap: 20px; font-size: 1.1em; margin: 10px 0 20px; }
+.meta-info .fa-icon { color: var(--cor-primaria); margin-right: 8px; }
+.sinopse { font-size: 1em; max-width: 800px; }
+
+/* --- SEÇÃO DE AÇÕES DO USUÁRIO --- */
+.main-container { max-width: 1200px; margin: 0 auto; padding: 20px; animation: fadeIn 0.5s 0.2s ease-out forwards; opacity: 0;}
+.user-actions-container { display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: var(--cor-escura-alt); border-radius: 12px; margin-top: 40px; }
+.lista-pessoal-controls { display: flex; gap: 10px; }
+.status-btn, .favorite-btn {
+    background-color: var(--cor-borda); color: var(--cor-clara); border: none; padding: 10px 20px;
+    border-radius: 20px; cursor: pointer; transition: var(--transition-suave); font-weight: 500;
+}
+.status-btn:hover, .favorite-btn:hover { background-color: #31445e; }
+.status-btn.active, .favorite-btn.active { background-color: var(--cor-primaria); color: var(--cor-escura); }
+.favorite-btn .fa-heart { margin-right: 8px; }
+
+/* --- SEÇÃO DE AVALIAÇÕES --- */
+.reviews-section { margin-top: 40px; }
+.section-title { font-size: 2em; color: var(--cor-primaria); border-bottom: 2px solid var(--cor-primaria); padding-bottom: 10px; margin-bottom: 30px; }
+
+/* --- FORMULÁRIO DE REVIEW --- */
+.review-form-container { margin-bottom: 40px; }
+.review-form-container h3 { margin-top: 0; font-size: 1.5em; }
+.review-form-container textarea { width: 100%; min-height: 120px; background-color: var(--cor-escura); border: 1px solid var(--cor-borda); color: var(--cor-clara); padding: 15px; border-radius: 8px; margin-bottom: 15px; box-sizing: border-box; }
+.form-actions { display: flex; justify-content: flex-end; gap: 15px; }
+.btn-recomendo, .btn-nao-recomendo {
+    border: none; padding: 12px 25px; border-radius: 8px; color: #fff;
+    font-weight: bold; cursor: pointer; transition: var(--transition-suave);
+}
+.btn-recomendo { background-color: var(--cor-recomendo); }
+.btn-nao-recomendo { background-color: var(--cor-nao-recomendo); }
+.btn-recomendo:hover { background-color: #218838; }
+.btn-nao-recomendo:hover { background-color: #c82333; }
+.login-prompt { text-align: center; }
+.login-prompt a { color: var(--cor-primaria); font-weight: bold; }
+
+/* --- GRID DE REVIEWS --- */
+.reviews-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 25px; }
+.review-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.review-author { display: flex; align-items: center; gap: 15px; }
+.review-author img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; }
+.review-author span { font-weight: 700; font-size: 1.1em; }
+.review-rating { display: flex; align-items: center; gap: 8px; font-weight: bold; padding: 5px 15px; border-radius: 20px; font-size: 0.9em; }
+.review-rating.recomendo { background-color: rgba(40, 167, 69, 0.2); color: var(--cor-recomendo); }
+.review-rating.nao-recomendo { background-color: rgba(220, 53, 69, 0.2); color: var(--cor-nao-recomendo); }
+.review-comment { margin: 0 0 15px 0; color: #b0b8c4; }
+.review-footer { display: flex; justify-content: space-between; align-items: center; color: #777; font-size: 0.8em; }
+.btn-delete { background: none; border: none; color: #666; cursor: pointer; transition: var(--transition-suave); }
+.btn-delete:hover { color: var(--cor-nao-recomendo); }
