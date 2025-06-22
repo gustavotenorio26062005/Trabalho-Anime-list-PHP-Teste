@@ -104,3 +104,67 @@ body {
 .review-footer { display: flex; justify-content: space-between; align-items: center; color: #777; font-size: 0.8em; }
 .btn-delete { background: none; border: none; color: #666; cursor: pointer; transition: var(--transition-suave); }
 .btn-delete:hover { color: var(--cor-nao-recomendo); }
+
+.user-actions-container {
+    background-color: rgba(13, 17, 23, 0.7); /* Fundo escuro semi-transparente */
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 20px;
+    margin: 40px auto;
+    max-width: 1100px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    backdrop-filter: blur(5px); /* Efeito de vidro fosco no fundo */
+    animation: fadeIn 0.5s ease-out; /* Animação de entrada */
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.lista-pessoal-controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.status-btn, .favorite-btn {
+    border: 1px solid #30363d;
+    background-color: #161b22;
+    color: #c9d1d9;
+    padding: 10px 20px;
+    border-radius: 20px; /* Botões arredondados em formato de pílula */
+    cursor: pointer;
+    font-weight: 500;
+    font-family: 'Jost', sans-serif;
+    transition: all 0.3s ease; /* Animação para todas as propriedades */
+}
+
+.status-btn:hover, .favorite-btn:hover {
+    border-color: #8b949e;
+    transform: translateY(-2px); /* Efeito de elevação */
+}
+
+.favorite-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* ESTILO DO BOTÃO ATIVO (FEEDBACK VISUAL) */
+.user-actions-container .status-btn.active,
+.user-actions-container .favorite-btn.active {
+    background-color: #65EBB9; /* Cor de destaque do tema */
+    color: #0d1117; /* Texto escuro para contraste */
+    border-color: #65EBB9;
+    font-weight: bold;
+    box-shadow: 0 0 15px rgba(101, 235, 185, 0.3);
+}
+
+.user-actions-container .favorite-btn.active .fa-heart {
+    color: #e44d5f; /* Cor do coração quando favoritado */
+}
