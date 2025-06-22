@@ -63,6 +63,30 @@ body {
 .main-container { max-width: 1200px; margin: 0 auto; padding: 20px; animation: fadeIn 0.5s 0.2s ease-out forwards; opacity: 0;}
 .user-actions-container { display: flex; justify-content: space-between; align-items: center; padding: 20px; background-color: var(--cor-escura-alt); border-radius: 12px; margin-top: 40px; }
 .lista-pessoal-controls { display: flex; gap: 10px; }
+
+/* BOTÃO DE EDITAR (ADMIN) */
+.btn-admin-editar-anime {
+    display: inline-block;
+    background-color: var(--cor-borda); 
+    color: var(--cor-clara); 
+    padding: 8px 15px;
+    margin-top: 10px; /* Espaço acima */
+    margin-bottom: 15px; /* Espaço abaixo */
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease;
+    border: none;
+    text-shadow: none;
+}
+.btn-admin-editar-anime:hover {
+    background-color: var(--cor-primaria); 
+    color: var(--cor-escura);
+}
+.btn-admin-editar-anime i {
+    margin-right: 6px;
+}
+
 .status-btn, .favorite-btn {
     background-color: var(--cor-borda); color: var(--cor-clara); border: none; padding: 10px 20px;
     border-radius: 20px; cursor: pointer; transition: var(--transition-suave); font-weight: 500;
