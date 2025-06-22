@@ -1,63 +1,67 @@
 <?php
-require_once 'includes/db_connect.php';
-require_once 'includes/header.php';
+require_once 'includes/db_connect.php'; // Conexão com o banco e início da sessão
+require_once 'includes/header.php';    // Inclui o cabeçalho HTML
 
-
+// Redireciona se o usuário não estiver logado
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
 $user_id = $_SESSION['user_id'];
-$initial_items_to_show = 5; 
+$initial_items_to_show = 5; // Quantidade de itens para mostrar inicialmente em cada lista de animes
 
-// --- DADOS MOCK PARA PREENCHIMENTO (PARA VISUALIZAÇÃO) ---
-function get_mock_anime_data($count, $base_name, $base_id_start, $status_prefix = '') {
-    $mock_animes = [];
-    for ($i = 0; $i < $count; $i++) {
-        $id = $base_id_start + $i;
-        $capa_num = ($i % 5) + 1; // Para variar um pouco a URL do placeholder
-        $mock_animes[] = [
-            "id_anime" => "mock_" . $id,
-            "nome" => $status_prefix . " " . $base_name . " " . ($i + 1),
-            "capa_url" => "https://upload.wikimedia.org/wikipedia/commons/d/d4/American-Automobile-Association-Logo.svg" . $capa_num . " " . substr($base_name,0,1) . ($i+1),
-        ];
-    }
-    return $mock_animes;
-}
+// Variável para verificar se o usuário é administrador (ID 1 na tabela TipoUsuario)
+$is_admin = (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 1);
 
-// --- BUSCAR DADOS DO USUÁRIO ---
+// --- Buscar DADOS DO USUÁRIO ---
 $user_data = [];
-$user_data['nome'] = $_SESSION['user_name'] ?? 'Usuário Exemplo';
+// Pega dados da sessão como fallback, caso não consiga do DB
+$user_data['nome'] = $_SESSION['user_name'] ?? 'Usuário';
 $user_data['email'] = $_SESSION['user_email'] ?? 'usuario@exemplo.com';
-$user_data['foto_perfil_url'] = 'img/perfil_default.png';
+$user_data['foto_perfil_url'] = 'img/perfil_default.png'; // Placeholder padrão
+$user_data['fundo_perfil_url'] = ''; // Placeholder para fundo de perfil
 $user_data['descricao'] = 'Grande fã de animes de todos os gêneros. Sempre procurando a próxima série para maratonar!';
+$user_data['data_nascimento'] = ''; // Inicializa a data de nascimento
+$user_data['tipo_usuario_nome'] = $_SESSION['user_type_name'] ?? 'Usuário Comum'; // Nome do tipo de usuário
 
-$stmt_user = $conn->prepare("SELECT nome, email, data_nascimento, foto_perfil_url, fundo_perfil_url, descricao FROM Usuarios WHERE id_usuario = ?");
+$stmt_user = $conn->prepare("SELECT U.nome, U.email, U.data_nascimento, U.foto_perfil_url, U.fundo_perfil_url, U.descricao, TU.tipo AS tipo_usuario_nome
+                             FROM Usuarios U
+                             JOIN TipoUsuario TU ON U.id_tipo_usuario = TU.id_tipo_usuario
+                             WHERE U.id_usuario = ?");
 if ($stmt_user) {
     $stmt_user->bind_param("i", $user_id);
     $stmt_user->execute();
     $result_user = $stmt_user->get_result();
     if ($result_user->num_rows > 0) {
         $db_user_data = $result_user->fetch_assoc();
-        $user_data['nome'] = !empty($db_user_data['nome']) ? $db_user_data['nome'] : $user_data['nome'];
-        $user_data['email'] = !empty($db_user_data['email']) ? $db_user_data['email'] : $user_data['email'];
-        $user_data['data_nascimento'] = $db_user_data['data_nascimento'] ?? '';
+        // Atualiza as variáveis com os dados do banco
+        $user_data['nome'] = $db_user_data['nome'];
+        $user_data['email'] = $db_user_data['email'];
+        $user_data['data_nascimento'] = $db_user_data['data_nascimento'];
         $user_data['foto_perfil_url'] = !empty($db_user_data['foto_perfil_url']) ? $db_user_data['foto_perfil_url'] : $user_data['foto_perfil_url'];
-        $user_data['descricao'] = !empty($db_user_data['descricao']) ? $db_user_data['descricao'] : $user_data['descricao'];
+        $user_data['fundo_perfil_url'] = $db_user_data['fundo_perfil_url'] ?? '';
+        $user_data['descricao'] = $db_user_data['descricao'];
+        $user_data['tipo_usuario_nome'] = $db_user_data['tipo_usuario_nome'];
+
+        // Atualiza a sessão caso o nome ou e-mail tenham sido editados em 'editar_perfil.php'
+        $_SESSION['user_name'] = $user_data['nome'];
+        $_SESSION['user_email'] = $user_data['email'];
+        $_SESSION['user_type_name'] = $user_data['tipo_usuario_nome'];
+
     }
     $stmt_user->close();
 }
-$user_type = $_SESSION['user_type'] ?? 'normal';
 
-// --- BUSCAR LISTA PESSOAL DE ANIMES (E APLICAR MOCK SE VAZIO) ---
+
+// --- BUSCAR LISTA PESSOAL DE ANIMES ---
 $animes_pessoais_raw = [];
 $stmt_list = $conn->prepare("
-    SELECT LA.status_anime, A.id_anime, A.nome, A.ano_lancamento, A.capa_url
+    SELECT LA.status_anime, LA.is_favorito, A.id_anime, A.nome, A.ano_lancamento, A.capa_url
     FROM ListaPessoalAnimes LA
     JOIN Animes A ON LA.id_anime = A.id_anime
     WHERE LA.id_usuario = ?
-    ORDER BY A.nome ASC
+    ORDER BY LA.status_anime, A.nome ASC
 ");
 if ($stmt_list) {
     $stmt_list->bind_param("i", $user_id);
@@ -73,52 +77,49 @@ $animes_por_status = [
     "Favoritos" => [],
     "Assistindo" => [],
     "Completado" => [],
-    "Parou/Droppado" => [],
-    "Planejado" => []
+    "Droppado" => [], // Corrigido para 'Droppado'
+    "Planejando Assistir" => [] // Corrigido para 'Planejando Assistir'
 ];
 
-if (empty($animes_pessoais_raw)) { // Se não houver dados do banco, usa mock
-    $animes_por_status["Favoritos"] = get_mock_anime_data(8, "Favorito", 100, "Mock");
-    $animes_por_status["Assistindo"] = get_mock_anime_data(10, "Assistindo", 200, "Mock");
-    $animes_por_status["Completado"] = get_mock_anime_data(12, "Completado", 300, "Mock");
-    $animes_por_status["Parou/Droppado"] = get_mock_anime_data(7, "Droppado", 400, "Mock");
-    $animes_por_status["Planejado"] = get_mock_anime_data(5, "Planejado", 500, "Mock"); // Menos de 6, não mostra "Ver Mais"
-} else {
-    // Mapeia dados reais do banco para as categorias
-    foreach ($animes_pessoais_raw as $anime_item) {
-        $status = strtolower(trim($anime_item['status_anime'] ?? ''));
-        $anime_data_for_list = [
+// Mapeia dados reais do banco para as categorias
+foreach ($animes_pessoais_raw as $anime_item) {
+    $status_key = $anime_item['status_anime'];
+    
+    // Adiciona aos favoritos se a flag estiver TRUE
+    if ($anime_item['is_favorito']) {
+        $animes_por_status["Favoritos"][] = [
             "id_anime" => $anime_item['id_anime'],
             "nome" => $anime_item['nome'],
-            "capa_url" => $anime_item['capa_url'] ?? 'images/poster_placeholder.png'
+            "capa_url" => $anime_item['capa_url'] ?? 'https://via.placeholder.com/200x250?text=Sem+Capa'
         ];
-        if ($status == 'assistindo') $animes_por_status["Assistindo"][] = $anime_data_for_list;
-        elseif ($status == 'completo' || $status == 'completado') $animes_por_status["Completado"][] = $anime_data_for_list;
-        elseif ($status == 'dropado' || $status == 'parado' || $status == 'pausado') $animes_por_status["Parou/Droppado"][] = $anime_data_for_list;
-        // CORREÇÃO: Corrigido o status para corresponder ao valor do banco de dados 'planejando assistir'.
-        elseif ($status == 'planejando assistir') $animes_por_status["Planejado"][] = $anime_data_for_list;
-        // Adicione sua lógica para "Favoritos" aqui se tiver um campo específico no banco.
-        // Por enquanto, se "Favoritos" do banco estiver vazio, adicionamos mock para visualização.
     }
-    if (empty($animes_por_status["Favoritos"])) { // Adiciona mock para favoritos se a lista do DB estiver vazia
-         $animes_por_status["Favoritos"] = get_mock_anime_data(8, "Favorito", 100, "DB Mock");
+
+    // Adiciona ao status principal
+    if (isset($animes_por_status[$status_key])) {
+        $animes_por_status[$status_key][] = [
+            "id_anime" => $anime_item['id_anime'],
+            "nome" => $anime_item['nome'],
+            "capa_url" => $anime_item['capa_url'] ?? 'https://via.placeholder.com/200x250?text=Sem+Capa'
+        ];
     }
 }
 
+// Prepara as listas para exibição, garantindo a ordem das categorias
 $anime_lists_display = [];
-$categories_order = ["Favoritos", "Assistindo", "Completado", "Parou/Droppado", "Planejado"];
+$categories_order = ["Favoritos", "Assistindo", "Completado", "Droppado", "Planejando Assistir"];
 foreach ($categories_order as $cat) {
-    if (isset($animes_por_status[$cat])) { // Garante que a chave exista
-        $anime_lists_display[$cat] = $animes_por_status[$cat];
-    }
+    $anime_lists_display[$cat] = $animes_por_status[$cat] ?? [];
 }
 
 
-// --- BUSCAR AVALIAÇÕES (E APLICAR MOCK SE VAZIO) ---
+// --- BUSCAR AVALIAÇÕES ---
 $avaliacoes = [];
 $stmt_reviews = $conn->prepare("
     SELECT AV.nota, AV.comentario, A.nome AS nome_anime, A.id_anime
-    FROM Avaliacoes AV JOIN Animes A ON AV.id_anime = A.id_anime WHERE AV.id_usuario = ? ORDER BY AV.data_avaliacao DESC
+    FROM Avaliacoes AV
+    JOIN Animes A ON AV.id_anime = A.id_anime
+    WHERE AV.id_usuario = ?
+    ORDER BY AV.data_avaliacao DESC
 ");
 if ($stmt_reviews) {
     $stmt_reviews->bind_param("i", $user_id);
@@ -130,16 +131,6 @@ if ($stmt_reviews) {
     $stmt_reviews->close();
 }
 
-if (empty($avaliacoes)) { // Mock para avaliações
-    for ($i = 0; $i < 4; $i++) {
-        $avaliacoes[] = [
-            'id_anime' => 'mock_eval_' . $i,
-            'nome_anime' => 'Anime Mock Avaliado ' . ($i + 1),
-            'nota' => 'Recomendo', // Mock ajustado para o tipo de dado correto (string)
-            'comentario' => 'Este é um comentário de exemplo para o anime mock ' . ($i + 1) . '. Uma obra interessante com altos e baixos, mas que vale a pena conferir pela sua originalidade.'
-        ];
-    }
-}
 
 // --- GERAR HTML DAS AVALIAÇÕES PARA A SIDEBAR ---
 $avaliacoes_html_sidebar = '';
@@ -149,16 +140,15 @@ if (!empty($avaliacoes)) {
     $avaliacoes_html_sidebar .= '<div class="reviews-list-sidebar" style="display: flex; flex-direction: column; gap: 15px;">';
     $count_reviews = 0;
     foreach ($avaliacoes as $avaliacao) {
-        if ($count_reviews >= 5) $avaliacoes_html_sidebar .= '<div class="review-item-sidebar initially-hidden-review" style="background-color: #101c2e; padding: 10px; border-radius: 4px; border: 1px solid #253750;">'; // Esconde avaliações extras
-        else $avaliacoes_html_sidebar .= '<div class="review-item-sidebar" style="background-color: #101c2e; padding: 10px; border-radius: 4px; border: 1px solid #253750;">';
+        // Esconde avaliações extras além de 5
+        $hidden_class = ($count_reviews >= 5) ? 'initially-hidden-review' : '';
+        $avaliacoes_html_sidebar .= '<div class="review-item-sidebar ' . $hidden_class . '" style="background-color: #101c2e; padding: 10px; border-radius: 4px; border: 1px solid #253750;">';
         
         $avaliacoes_html_sidebar .= '<h4 style="color: #65ebba; margin-bottom: 5px; font-size: 1em;">';
-        // CORREÇÃO: O ID do anime agora é pego da variável $avaliacao, que está no escopo do loop atual.
-        $avaliacoes_html_sidebar .= '<a href="anime_detalhes.php?id=' . $avaliacao['id_anime'] . '" style="color: #65ebba; text-decoration: none;">' . htmlspecialchars($avaliacao['nome_anime']) . '</a>';
+        $avaliacoes_html_sidebar .= '<a href="anime_detalhes.php?id=' . htmlspecialchars($avaliacao['id_anime']) . '" style="color: #65ebba; text-decoration: none;">' . htmlspecialchars($avaliacao['nome_anime']) . '</a>';
         $avaliacoes_html_sidebar .= '</h4>';
         $avaliacoes_html_sidebar .= '<p style="margin-bottom: 5px; font-size: 0.9em;"><strong>Nota:</strong> ';
         
-        // CORREÇÃO: Removida a operação matemática na string 'nota'. Agora exibe o texto da nota com uma cor.
         $nota_cor = ($avaliacao['nota'] == 'Recomendo') ? '#65ebba' : '#eb2c4c'; // Verde para Recomendo, Vermelho para Não
         $avaliacoes_html_sidebar .= '<span style="color: ' . $nota_cor . '; font-weight: bold;">' . htmlspecialchars($avaliacao['nota']) . '</span></p>';
 
@@ -179,27 +169,31 @@ if (!empty($avaliacoes)) {
 
 ?>
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animalist - Home</title>
+    <title>Animalist - Perfil</title>
+    <!-- === CSS === -->
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/perfil.css">
     <link rel="stylesheet" href="css/universal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-</head>
+    <!-- === FONTES === --></head>
 <body>
 
 <div class="container">
-    <header class="profile-header">
+    <header class="profile-header" style="<?php echo !empty($user_data['fundo_perfil_url']) ? 'background-image: url(\'' . htmlspecialchars($user_data['fundo_perfil_url']) . '\');' : 'background-color: #5a2c8a;'; ?>">
         <div class="profile-pic-container">
             <img src="<?php echo htmlspecialchars($user_data['foto_perfil_url']); ?>" alt="Foto do Perfil" id="profileImage">
         </div>
         <div class="profile-info">
-            <input type="text" id="userName" value="<?php echo htmlspecialchars($user_data['nome']); ?>" placeholder="Seu Nome">
-            <textarea id="userDescription" placeholder="Conte um pouco sobre você..."><?php echo htmlspecialchars($user_data['descricao']); ?></textarea>
+            <h3><?php echo htmlspecialchars($user_data['nome']); ?></h3>
+            <p>E-mail: <?php echo htmlspecialchars($user_data['email']); ?></p>
+            <p>Data de Nascimento: <?php echo htmlspecialchars($user_data['data_nascimento']); ?></p>
+            <p>Sobre mim: <?php echo nl2br(htmlspecialchars($user_data['descricao'])); ?></p>
+            <p>Tipo de Usuário: <?php echo htmlspecialchars($user_data['tipo_usuario_nome']); ?></p>
         </div>
         <div class="profile-actions">
             <button id="addContentBtn" aria-label="Adicionar novo item" title="Adicionar Anime à Lista (Em Breve)"><i class="fas fa-plus"></i></button>
@@ -207,16 +201,25 @@ if (!empty($avaliacoes)) {
                style="background-color: #2f81f7; color: white; border: none; margin-bottom: 10px; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 1.2em;">
                 <i class="fas fa-edit"></i>
             </a>
+            <?php if ($is_admin): ?>
+                <a href="admin.php" class="button admin-button" style="color: white;">Painel Admin</a>
+            <?php endif; ?>
             <button id="deleteProfileBtn" aria-label="Deletar perfil" title="Deletar Conta"><i class="fas fa-trash"></i></button>
         </div>
+
     </header>
 
     <main class="content-area">
         <section class="anime-lists-section" id="lista">
             <?php if (!empty($anime_lists_display)): ?>
                 <?php foreach ($anime_lists_display as $list_title => $animes_in_list): ?>
-                    <?php if (empty($animes_in_list) && !in_array($list_title, ["Favoritos", "Assistindo", "Completado", "Parou/Droppado", "Planejado"])) { continue; } // Não mostra categorias não fixas se vazias ?>
-                    <?php $grid_id = 'grid-' . preg_replace('/[^a-z0-9]+/', '-', strtolower($list_title)); ?>
+                    <?php 
+                    // Se a lista estiver vazia e não for uma das categorias fixas, pula para não mostrar o título vazio
+                    if (empty($animes_in_list) && !in_array($list_title, ["Favoritos", "Assistindo", "Completado", "Droppado", "Planejando Assistir"])) {
+                        continue;
+                    }
+                    $grid_id = 'grid-' . preg_replace('/[^a-z0-9]+/', '-', strtolower($list_title)); 
+                    ?>
                     <div class="anime-list-category">
                         <div class="list-header">
                             <h2><?php echo htmlspecialchars($list_title); ?> (<?php echo count($animes_in_list); ?>)</h2>
@@ -228,26 +231,29 @@ if (!empty($avaliacoes)) {
                             <div class="anime-grid" id="<?php echo $grid_id; ?>">
                                 <?php foreach ($animes_in_list as $index => $anime): ?>
                                 <div class="anime-poster <?php echo $index >= $initial_items_to_show ? 'initially-hidden' : ''; ?>" 
-                                     data-anime-name="<?php echo htmlspecialchars($anime['nome']); ?>"
-                                     data-anime-id="<?php echo htmlspecialchars($anime['id_anime']); ?>">
+                                        data-anime-name="<?php echo htmlspecialchars($anime['nome']); ?>"
+                                        data-anime-id="<?php echo htmlspecialchars($anime['id_anime']); ?>">
                                     <div class="poster-placeholder">
-                                        <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) && $anime['capa_url'] !== 'images/poster_placeholder.png' ? $anime['capa_url'] : 'https://upload.wikimedia.org/wikipedia/commons/d/d4/American-Automobile-Association-Logo.svg' . urlencode(substr($anime['nome'], 0, 1))); ?>" 
-                                             alt="<?php echo htmlspecialchars($anime['nome']); ?>"
-                                             style="width:100%; height:100%; object-fit:cover; border-radius: 4px;">
+                                        <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) ? $anime['capa_url'] : 'https://via.placeholder.com/200x250?text=Sem+Capa'); ?>" 
+                                                alt="<?php echo htmlspecialchars($anime['nome']); ?>">
                                     </div>
-                                     <p class="anime-poster-title" style="font-size:0.8em; color:#c9d1d9; text-align:center; margin-top:5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="<?php echo htmlspecialchars($anime['nome']); ?>">
+                                    <p class="anime-poster-title" title="<?php echo htmlspecialchars($anime['nome']); ?>">
                                         <?php echo htmlspecialchars($anime['nome']); ?>
                                     </p>
                                 </div>
                                 <?php endforeach; ?>
                             </div>
                         <?php else: ?>
-                            <p style="color: #60758b; padding: 10px 0;">Nenhum anime nesta lista ainda. <?php if($list_title != "Favoritos") { ?><a href="animes.php" style="color: #65ebba;">Adicionar?</a><?php } ?></p>
+                            <p style="color: #60758b; padding: 10px 0;">Nenhum anime nesta lista ainda. 
+                                <?php if($list_title != "Favoritos") { // Mensagem mais específica se não for a lista de favoritos, sugerindo adicionar ?>
+                                    <a href="animes.php" style="color: #65ebba;">Adicionar?</a>
+                                <?php } ?>
+                            </p>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
-                 <p>Sua lista de animes está completamente vazia. Comece a adicionar <a href="animes.php" style="color: #65ebba;">aqui</a>!</p>
+                <p>Sua lista de animes está completamente vazia. Comece a adicionar <a href="animes.php" style="color: #65ebba;">aqui</a>!</p>
             <?php endif; ?>
         </section>
         
@@ -257,13 +263,60 @@ if (!empty($avaliacoes)) {
     </main>
 
 </div>
-</body>
 
-<script src="js/perfil.js"></script>
-</html>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Função para alternar visibilidade dos animes em uma grade
+        document.querySelectorAll('.view-all').forEach(button => {
+            button.addEventListener('click', function(event) {
+                event.preventDefault();
+                const targetGridId = this.dataset.targetGrid;
+                const grid = document.getElementById(targetGridId);
+                const hiddenItems = grid.querySelectorAll('.initially-hidden');
+
+                if (this.textContent === 'Ver Tudo') {
+                    hiddenItems.forEach(item => {
+                        item.style.display = 'block'; // Ou 'inline-block' ou 'flex' dependendo do seu grid CSS
+                        item.classList.remove('initially-hidden'); // Remove a classe para evitar problemas no toggle
+                    });
+                    this.textContent = 'Ver Menos';
+                } else {
+                    for (let i = <?php echo $initial_items_to_show; ?>; i < grid.children.length; i++) {
+                        grid.children[i].style.display = 'none';
+                        grid.children[i].classList.add('initially-hidden');
+                    }
+                    this.textContent = 'Ver Tudo';
+                }
+            });
+        });
+
+        // Função para alternar visibilidade das avaliações na sidebar
+        const viewAllReviewsSidebarBtn = document.getElementById('viewAllReviewsSidebar');
+        if (viewAllReviewsSidebarBtn) {
+            viewAllReviewsSidebarBtn.addEventListener('click', function(event) {
+                event.preventDefault();
+                const hiddenReviews = document.querySelectorAll('.initially-hidden-review');
+                if (this.textContent === 'Ver Todas Avaliações') {
+                    hiddenReviews.forEach(item => {
+                        item.style.display = 'block';
+                        item.classList.remove('initially-hidden-review');
+                    });
+                    this.textContent = 'Ver Menos Avaliações';
+                } else {
+                    hiddenReviews.forEach(item => {
+                        item.style.display = 'none';
+                        item.classList.add('initially-hidden-review');
+                    });
+                    this.textContent = 'Ver Todas Avaliações';
+                }
+            });
+        }
+    });
+</script>
 
 <?php
 require_once 'includes/footer.php';
+// Fecha a conexão com o banco de dados.
 if (isset($conn)) {
     $conn->close();
 }
