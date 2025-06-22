@@ -1,46 +1,75 @@
 <?php
-// 1. LÓGICA PHP INICIAL E PROCESSAMENTO DE DADOS
+// LÓGICA PHP INICIAL E PROCESSAMENTO DE DADOS
 require_once 'includes/db_connect.php';
 
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-require_once 'includes/db_connect.php';
+// require_once 'includes/db_connect.php'; // Já incluído acima
 
 $id_anime = (int)($_GET['id'] ?? 0);
 $id_usuario = $_SESSION['user_id'] ?? null;
-$user_type = $_SESSION['user_type'] ?? null;
+$user_type = $_SESSION['user_type'] ?? null; // Mantido para consistência
 
 // Lógica para processar a ação dos botões (manter na lista)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'manter_lista' && $id_usuario) {
-    $novo_status = $_POST['status_anime'] ?? null;
-    $novo_favorito_str = $_POST['is_favorito'] ?? null;
-    try {
-        $stmt_check = $conn->prepare("SELECT status_anime, is_favorito FROM ListaPessoalAnimes WHERE id_usuario = ? AND id_anime = ?");
-        $stmt_check->bind_param("ii", $id_usuario, $id_anime);
-        $stmt_check->execute();
-        $entry_atual = $stmt_check->get_result()->fetch_assoc();
-        $stmt_check->close();
 
-        $status_final = ($novo_status !== null && $entry_atual && $entry_atual['status_anime'] == $novo_status) ? null : $novo_status;
-        $favorito_final = ($novo_favorito_str === 'true') ? 1 : 0;
+    // Buscar a entrada atual na lista pessoal para comparar e para usar como base
+    $stmt_check = $conn->prepare("SELECT status_anime, is_favorito FROM ListaPessoalAnimes WHERE id_usuario = ? AND id_anime = ?");
+    $stmt_check->bind_param("ii", $id_usuario, $id_anime);
+    $stmt_check->execute();
+    $entry_atual = $stmt_check->get_result()->fetch_assoc();
+    $stmt_check->close();
 
-        if ($novo_status !== null && $entry_atual) {
-            $favorito_final = $entry_atual['is_favorito'];
-        } elseif ($novo_favorito_str !== null && $entry_atual) {
-            $status_final = $entry_atual['status_anime'];
+    // Inicializar os valores que serão salvos com os valores atuais (se existirem) ou defaults
+    $status_para_salvar = $entry_atual['status_anime'] ?? null;
+    $favorito_para_salvar = $entry_atual['is_favorito'] ?? 0; // Default para não favorito
+
+    // Verificar e processar 'status_anime' se foi enviado
+    if (array_key_exists('status_anime', $_POST)) {
+        $status_enviado_do_js = $_POST['status_anime'];
+        // Se o JavaScript enviou a string "null" (para desmarcar), converter para PHP null
+        if ($status_enviado_do_js === 'null') {
+            $status_para_salvar = null;
+        } else {
+            // Caso contrário, usa o status enviado (que pode ser "Assistindo", "Completado", etc.)
+            $status_para_salvar = $status_enviado_do_js;
         }
+    }
 
-        $stmt = $conn->prepare("CALL adicionar_atualizar_anime_listapessoal(?, ?, ?, ?)");
-        $stmt->bind_param("iisi", $id_usuario, $id_anime, $status_final, $favorito_final);
-        $stmt->execute();
+    // Verificar e processar 'is_favorito' se foi enviado
+    if (array_key_exists('is_favorito', $_POST)) {
+        $favorito_enviado_do_js_str = $_POST['is_favorito']; // Será 'true' ou 'false' (strings)
+        $favorito_para_salvar = ($favorito_enviado_do_js_str === 'true') ? 1 : 0;
+    }
+
+    try {
+        // Lógica de decisão: Deletar, Atualizar/Inserir, ou Não Fazer Nada
+        if ($status_para_salvar === null && $favorito_para_salvar == 0) {
+            // Se o resultado final é sem status e não favorito
+            if ($entry_atual) {
+                // E já existia uma entrada, então devemos deletá-la
+                $stmt_delete = $conn->prepare("DELETE FROM ListaPessoalAnimes WHERE id_usuario = ? AND id_anime = ?");
+                $stmt_delete->bind_param("ii", $id_usuario, $id_anime);
+                $stmt_delete->execute();
+                $stmt_delete->close();
+            }
+            // Se não existia entrada e o resultado é sem status/favorito, não faz nada
+        } else {
+            // Se há um status ou é favorito, chamamos a procedure para inserir ou atualizar
+            $stmt = $conn->prepare("CALL adicionar_atualizar_anime_listapessoal(?, ?, ?, ?)");
+            $stmt->bind_param("iisi", $id_usuario, $id_anime, $status_para_salvar, $favorito_para_salvar);
+            $stmt->execute();
+            $stmt->close();
+        }
         
         header('Content-Type: application/json');
-        echo json_encode(['success' => true, 'new_status' => $status_final, 'new_favorito' => (bool)$favorito_final]);
-        exit(); // Encerra o script aqui para requisições AJAX
+        echo json_encode(['success' => true, 'new_status' => $status_para_salvar, 'new_favorito' => (bool)$favorito_para_salvar]);
+        exit();
+
     } catch (mysqli_sql_exception $e) {
         header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+        echo json_encode(['success' => false, 'message' => "Erro no servidor: " . $e->getMessage()]);
         exit();
     }
 }
@@ -252,12 +281,17 @@ require_once 'includes/header.php';
     // Aplica o estado visual inicial assim que a página carrega
     updateButtonStates();
 
-    // Função assíncrona para lidar com a ação de clique
+     // Função assíncrona para lidar com a ação de clique
     async function handleAction(data) {
         const formData = new FormData();
         formData.append('action', 'manter_lista');
-        for (const key in data) {
-            formData.append(key, data[key]);
+
+        // Adiciona dados ao FormData somente se eles existirem no objeto 'data'
+        if (data.hasOwnProperty('status_anime')) { // Verifica se a propriedade existe
+            formData.append('status_anime', data.status_anime);
+        }
+        if (data.hasOwnProperty('is_favorito')) { // Verifica se a propriedade existe
+            formData.append('is_favorito', data.is_favorito);
         }
 
         try {
@@ -266,35 +300,55 @@ require_once 'includes/header.php';
                 body: formData
             });
             
-            if (!response.ok) throw new Error('Falha na resposta do servidor.');
+            if (!response.ok) {
+                console.error('Resposta do servidor não OK:', response.status, await response.text());
+                throw new Error(`Falha na resposta do servidor (${response.status})`);
+            }
             const result = await response.json();
             
             if (result.success) {
-                // Atualiza o estado local para feedback instantâneo
-                if (data.status_anime !== undefined) {
+                if (data.hasOwnProperty('status_anime')) { // Atualiza se o status foi enviado
                     actionsSection.dataset.currentStatus = result.new_status || '';
                 }
-                if (data.is_favorito !== undefined) {
-                    actionsSection.dataset.isFavorito = result.new_favorito.toString();
+                if (data.hasOwnProperty('is_favorito')) { // Atualiza se o favorito foi enviado
+                    actionsSection.dataset.isFavorito = result.new_favorito ? 'true' : 'false';
                 }
-                updateButtonStates(); // Atualiza a aparência de todos os botões
+                updateButtonStates();
             } else {
-                alert('Ocorreu um erro ao atualizar sua lista.');
+                alert('Ocorreu um erro ao atualizar sua lista: ' + (result.message || 'Erro desconhecido.'));
             }
         } catch (error) {
-            alert('Ocorreu um erro de conexão. Tente novamente.');
+            console.error('Erro ao executar ação:', error);
+            alert('Ocorreu um erro de conexão ou processamento. Tente novamente. Detalhes: ' + error.message);
         }
     }
 
-    // Adiciona os event listeners aos botões
+    // Adiciona os event listeners aos botões de status
     statusButtons.forEach(button => {
-        button.addEventListener('click', () => handleAction({ status_anime: button.dataset.status }));
+        button.addEventListener('click', function() {
+            const statusClicado = this.dataset.status;
+            const statusAtualNoDataset = actionsSection.dataset.currentStatus;
+
+            let statusParaEnviar;
+            if (statusAtualNoDataset === statusClicado) {
+                statusParaEnviar = null; // O JS define como null
+            } else {
+                statusParaEnviar = statusClicado;
+            }
+            // formData.append('status_anime', statusParaEnviar) resultará no envio da string "null"
+            // ou da string do status.
+            handleAction({ status_anime: statusParaEnviar }); 
+        });
     });
 
-    favoriteBtn.addEventListener('click', () => {
-        const currentlyFavorito = actionsSection.dataset.isFavorito === 'true';
-        handleAction({ is_favorito: !currentlyFavorito });
-    });
+    // Listener do botão de favorito (sem alterações, mas revisado para consistência)
+    if (favoriteBtn) { // Garante que o botão existe
+        favoriteBtn.addEventListener('click', () => {
+            const currentlyFavorito = actionsSection.dataset.isFavorito === 'true';
+            // Envia apenas is_favorito, o status não está sendo alterado por este botão
+            handleAction({ is_favorito: !currentlyFavorito });
+        });
+    }
 });
     </script>
 

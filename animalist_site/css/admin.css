@@ -1,18 +1,23 @@
-
 :root {
-    --cor-primaria: #28a745; /* Roxo principal */
-    --cor-secundaria: #8a2be2; /* Roxo mais claro / Tom secundário */
-    --cor-destaque: #e0b0ff; /* Roxo mais claro para destaque */
-    --cor-texto-claro: #f4f4f4; /* Cinza claro para texto em fundo escuro */
-    --cor-texto-escuro: #333; /* Cinza escuro para texto em fundo claro */
-    --cor-fundo-claro: #ffffff; /* Branco */
-    --cor-fundo-escuro: #1a2430; /* Azul escuro quase preto */
-    --cor-fundo-secundario-escuro: #253750; /* Azul escuro intermediário */
-    --cor-sucesso: #28a745; /* Verde */
-    --cor-erro: #dc3545; /* Vermelho */
+    --cor-primaria: #65EBB9;
+    --cor-fundo-escuro: #0D1117;
+    --cor-texto-claro: #FFFFFF;
+    --cor-azul: #2f81f7;
+    --cor-fundo-container: #161B22;  
+    --cor-fundo-input: #010409;
+    --cor-borda-sutil: #30363D;
+    --cor-texto-escuro-contraste: #010409;
+    --cor-sucesso: #28a745;
+    --cor-erro: #dc3545;
+    --cor-fundo-sucesso: #d4edda;
+    --cor-texto-sucesso: #155724;
+    --cor-borda-sucesso: #c3e6cb;
+    --cor-fundo-erro: #f8d7da;
+    --cor-texto-erro: #721c24;
+    --cor-borda-erro: #f5c6cb;
 }
 
-/* === Reset básico e Estilo do Body para tela cheia === */
+/* --- Reset Básico e Estilos Globais --- */
 html, body {
     margin: 0;
     padding: 0;
@@ -33,7 +38,6 @@ body {
     min-height: 100vh;
 }
 
-/* === Estilo da tag <main> para alinhar com o layout de pesquisa === */
 main {
     padding: 20px;
     max-width: 1200px;
@@ -45,12 +49,11 @@ main {
     flex-grow: 1;
 }
 
-/* Títulos principais da página (h1) */
 .admin-container h1 {
     color: var(--cor-primaria);
     text-align: center;
     margin-bottom: 25px;
-    border-bottom: 2px solid var(--cor-destaque);
+    border-bottom: 2px solid var(--cor-primaria);
     padding-bottom: 10px;
     font-size: 2.2em;
 }
@@ -58,7 +61,7 @@ main {
     margin-top: 10vh;
 }
 
-/* Mensagens de feedback (sucesso/erro) */
+/* --- Mensagens de Feedback --- */
 .form-message {
     padding: 12px;
     margin: -10px auto 25px auto;
@@ -70,22 +73,22 @@ main {
 }
 
 .form-message.sucesso {
-    background-color: #d4edda;
-    color: #155724;
-    border: 1px solid #c3e6cb;
+    background-color: var(--cor-fundo-sucesso);
+    color: var(--cor-texto-sucesso);
+    border: 1px solid var(--cor-borda-sucesso);
 }
 
 .form-message.erro {
-    background-color: #f8d7da;
-    color: #721c24;
-    border: 1px solid #f5c6cb;
+    background-color: var(--cor-fundo-erro);
+    color: var(--cor-texto-erro);
+    border: 1px solid var(--cor-borda-erro);
 }
 
-/* Botão "Adicionar Novo Anime" */
+/* --- Botões de Ação Principal --- */
 .btn-add-new {
     display: inline-block;
     background-color: var(--cor-sucesso);
-    color: white;
+    color: var(--cor-texto-claro);
     padding: 12px 20px;
     border-radius: 8px;
     text-decoration: none;
@@ -101,9 +104,9 @@ main {
     transform: translateY(-2px);
 }
 
-/* Estilos do Formulário de Adição/Edição */
+/* --- Estilos do Formulário de Adição/Edição --- */
 .form-wrapper {
-    background-color: var(--cor-fundo-secundario-escuro);
+    background-color: var(--cor-fundo-container);
     border-radius: 10px;
     box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     padding: 30px;
@@ -114,22 +117,21 @@ main {
 .form input[type="text"],
 .form input[type="number"],
 .form textarea {
-    width: calc(100% - 24px);
+    width: 100%;
     padding: 12px;
     margin-bottom: 20px;
-    border: 1px solid #444;
+    border: 1px solid var(--cor-borda-sutil);
     border-radius: 6px;
     font-size: 1em;
-    box-sizing: border-box;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    background-color: var(--cor-fundo-escuro);
+    background-color: var(--cor-fundo-input);
     color: var(--cor-texto-claro);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .form input:focus,
 .form textarea:focus {
-    border-color: var(--cor-destaque);
-    box-shadow: 0 0 8px rgba(224, 176, 255, 0.4);
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 8px rgba(101, 235, 185, 0.4);
     outline: none;
 }
 
@@ -148,8 +150,8 @@ main {
     margin-bottom: 0;
 }
 .genre-input button {
-    background-color: var(--cor-primaria);
-    color: white;
+    background-color: var(--cor-azul);
+    color: var(--cor-texto-claro);
     border: none;
     padding: 10px 15px;
     border-radius: 6px;
@@ -159,7 +161,7 @@ main {
     flex-shrink: 0;
 }
 .genre-input button:hover {
-    background-color: var(--cor-secundaria);
+    background-color: #2568c4;
 }
 
 .genre-list {
@@ -168,15 +170,15 @@ main {
     gap: 8px;
     margin-bottom: 25px;
     padding: 12px;
-    border: 1px dashed var(--cor-secundaria);
+    border: 1px dashed var(--cor-borda-sutil);
     border-radius: 6px;
-    background-color: var(--cor-fundo-escuro);
+    background-color: var(--cor-fundo-input);
     min-height: 50px;
     align-items: flex-start;
 }
 .genre-item {
-    background-color: var(--cor-secundaria);
-    color: white;
+    background-color: var(--cor-borda-sutil);
+    color: var(--cor-texto-claro);
     padding: 8px 12px;
     border-radius: 20px;
     font-size: 0.9em;
@@ -188,7 +190,7 @@ main {
 .genre-item button {
     background: none;
     border: none;
-    color: var(--cor-destaque);
+    color: var(--cor-primaria);
     cursor: pointer;
     font-size: 0.9em;
     padding: 0;
@@ -201,8 +203,8 @@ main {
 }
 
 .submit-btn {
-    background-color: var(--cor-primaria);
-    color: white;
+    background-color: var(--cor-sucesso);
+    color: var(--cor-texto-claro);
     padding: 15px 25px;
     border: none;
     border-radius: 8px;
@@ -214,7 +216,7 @@ main {
     box-shadow: 0 3px 8px rgba(0,0,0,0.15);
 }
 .submit-btn:hover {
-    background-color: var(--cor-secundaria);
+    background-color: #218838;
     transform: translateY(-2px);
 }
 
@@ -232,12 +234,43 @@ main {
     text-decoration: underline;
 }
 
+/* --- Estilos da Tabela de Animes (admin.php) --- */
+.anime-list-table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+    color: var(--cor-texto-claro);
+}
+.anime-list-table th, .anime-list-table td {
+    border: 1px solid var(--cor-borda-sutil);
+    padding: 8px 12px;
+    text-align: left;
+}
+.anime-list-table th {
+    background-color: var(--cor-fundo-container);
+}
+.anime-list-table .btn-edit {
+    background-color: var(--cor-azul);
+    color: var(--cor-texto-claro);
+    padding: 6px 10px; /* Ajustado */
+    border-radius: 4px; /* Ajustado */
+    text-decoration: none;
+    font-size: 0.9em;
+}
+.anime-list-table .btn-delete {
+    background-color: var(--cor-erro);
+    color: var(--cor-texto-claro);
+    padding: 6px 10px; /* Ajustado */
+    border-radius: 4px; /* Ajustado */
+    border: none;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 5px;
+}
 
-/* === Estilos da Seção de Pesquisa/Listagem de Animes === */
-
-/* Formulário de Filtros e Pesquisa */
+/* --- Estilos da Página de Pesquisar Animes (pesquisar.php) --- */
 .form-filtros-principal {
-    background-color: var(--cor-fundo-secundario-escuro);
+    background-color: var(--cor-fundo-container);
     padding: 20px;
     display: flex;
     justify-content: center;
@@ -264,7 +297,7 @@ main {
 }
 
 .campo-input {
-    background-color: var(--cor-fundo-escuro);
+    background-color: var(--cor-fundo-input);
     border: none;
     border-radius: 5px;
     padding: 10px;
@@ -275,24 +308,17 @@ main {
 
 .campo-input:focus {
     outline: none;
-    background-color: var(--cor-fundo-secundario-escuro);
+    background-color: var(--cor-fundo-container);
     box-shadow: 0 0 0 2px var(--cor-primaria);
 }
 
-/* Estilo para placeholders de input/select */
-.campo-input::placeholder {
-    color: rgba(255, 255, 255, 0.5);
-}
-::-webkit-input-placeholder { color: rgba(255, 255, 255, 0.5); }
-:-moz-placeholder { color: rgba(255, 255, 255, 0.5); }
-::-moz-placeholder { color: rgba(255, 255, 255, 0.5); }
-:-ms-input-placeholder { color: rgba(255, 255, 255, 0.5); }
-::-ms-input-placeholder { color: rgba(255, 255, 255, 0.5); }
+.campo-input::placeholder { color: rgba(255, 255, 255, 0.5); }
+/* Outros seletores de placeholder podem ser necessários para compatibilidade total */
 
 
 .botao-icone {
     background-color: var(--cor-primaria);
-    color: var(--cor-fundo-escuro);
+    color: var(--cor-texto-escuro-contraste);
     border: none;
     border-radius: 50%;
     width: 40px;
@@ -306,14 +332,13 @@ main {
     flex-shrink: 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
 }
-
 .botao-icone:hover {
-    background-color: var(--cor-secundaria);
+    background-color: #52D0A0;
 }
 
 .botao-adicionar-anime {
     background-color: var(--cor-sucesso);
-    color: white;
+    color: var(--cor-texto-claro);
     padding: 10px 15px;
     border-radius: 5px;
     text-decoration: none;
@@ -326,26 +351,22 @@ main {
     flex-shrink: 0;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
-
 .botao-adicionar-anime:hover {
     background-color: #218838;
 }
 
-/* Grade de Animes (aplicada na listagem) */
+/* --- Grade de Animes (pesquisar.php e outras listagens) --- */
 .anime-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
     gap: 30px;
-    padding: 20px;
+    padding: 20px 0;
     margin-top: 20px;
-    max-width: 1200px;
-    margin: 20px auto;
 }
 
 .anime-link {
     text-decoration: none;
     color: inherit;
-    /* **CORRIGIDO: display: flex e flex-direction: column para empilhar conteúdo** */
     display: flex;
     flex-direction: column;
     transition: transform 0.3s ease;
@@ -353,35 +374,30 @@ main {
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-    background-color: var(--cor-fundo-secundario-escuro);
+    background-color: var(--cor-fundo-container);
 }
-
 .anime-link:hover {
     transform: translateY(-5px);
 }
 
 .anime-card-poster {
     position: relative;
-    height: 360; /* Altura fixa para a área da imagem */
+    height: 300px;
     width: 100%;
-    border-radius: 8px 8px 0 0;
     overflow: hidden;
-    background-color: #1d2d3f;
-    flex-shrink: 0; /* Garante que não encolha */
+    background-color: var(--cor-borda-sutil);
+    flex-shrink: 0;
 }
-
 .anime-card-poster img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.4s ease-out;
 }
-
 .anime-card-poster:hover img {
     transform: scale(1.08);
 }
 
-/* Título do Anime sobre a Imagem */
 .anime-card-title-overlay {
     position: absolute;
     top: 0;
@@ -390,7 +406,7 @@ main {
     background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0));
     padding: 10px;
     text-align: center;
-    color: white;
+    color: var(--cor-texto-claro);
     font-size: 1.1em;
     font-weight: bold;
     z-index: 2;
@@ -399,13 +415,10 @@ main {
     text-overflow: ellipsis;
 }
 
-/* Conteúdo extra do card (se houver, como gêneros, etc. abaixo do nome/imagem) */
-/* Removido .anime-info h3 {display: none;} pois o h3 não é mais usado no card */
-.anime-info { 
-    /* Pode ser usado para padding ou outras informações textuais que não são parte da capa */
-    padding: 0; /* Zero padding pois não tem texto aqui mais */
-    height: 0; /* Altura zero pois não tem conteúdo visível aqui */
-    overflow: hidden; /* Garante que não ocupe espaço */
+.anime-info {
+    padding: 0; 
+    height: 0; 
+    overflow: hidden; 
 }
 
 .ano-anime {
@@ -413,7 +426,7 @@ main {
     bottom: 10px;
     right: 10px;
     background-color: var(--cor-primaria);
-    color: var(--cor-fundo-escuro);
+    color: var(--cor-texto-escuro-contraste);
     padding: 4px 10px;
     border-radius: 6px;
     font-size: 0.9em;
@@ -427,60 +440,54 @@ main {
     text-align: center;
     margin: 20px 0;
     padding: 20px;
-    background-color: var(--cor-fundo-secundario-escuro);
+    background-color: var(--cor-fundo-container);
     border-radius: 6px;
     color: var(--cor-texto-claro);
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-/* Estilos para os botões de administração ABAIXO do card */
+/* --- Botões de Admin nos Cards (pesquisar.php) --- */
 .admin-card-actions {
-    display: flex; /* **CORRIGIDO: Usa flexbox para os botões** */
-    justify-content: space-around; /* Espaça os botões */
-    align-items: center; /* Alinha verticalmente os botões no centro */
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
     padding: 10px;
-    background-color: var(--cor-fundo-secundario-escuro);
-    border-top: 1px solid #334a66;
-    border-radius: 0 0 8px 8px; /* Arredonda só os cantos inferiores */
-    /* Remove box-shadow aqui para evitar duplicidade com o shadow do .anime-link */
+    background-color: var(--cor-fundo-container);
+    border-top: 1px solid var(--cor-borda-sutil);
     width: 100%;
-    /* Removido position: absolute e z-index aqui, pois não é mais um overlay */
-    /* top: auto; bottom: auto; left: auto; right: auto; opacity: 1; */
 }
 
 .admin-card-actions .btn-admin-card {
-    background-color: var(--cor-secundaria);
-    color: white;
+    color: var(--cor-texto-claro);
     padding: 8px 12px;
     border-radius: 5px;
     text-decoration: none;
     font-size: 0.9em;
     font-weight: bold;
     transition: background-color 0.3s ease, transform 0.2s ease;
-    min-width: 45%; /* Garante que ocupem boa parte da largura */
+    min-width: 45%;
     text-align: center;
     border: none;
     cursor: pointer;
     box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
-
-.admin-card-actions .btn-admin-card:hover {
-    background-color: var(--cor-primaria);
+.admin-card-actions .btn-admin-card.edit {
+    background-color: var(--cor-azul);
+}
+.admin-card-actions .btn-admin-card.edit:hover {
+    background-color: #2568c4;
     transform: translateY(-2px);
 }
-
 .admin-card-actions .btn-admin-card.delete {
     background-color: var(--cor-erro);
 }
-
 .admin-card-actions .btn-admin-card.delete:hover {
     background-color: #c82333;
+    transform: translateY(-2px);
 }
 
-
-/* === CSS Responsivo === */
+/* --- CSS Responsivo --- */
 @media (max-width: 768px) {
-    /* --- Filtros --- */
     .form-filtros-principal {
         padding: 15px;
         margin: 10px auto;
@@ -490,32 +497,23 @@ main {
         align-items: stretch;
         width: 100%;
     }
-    .grupo-input {
+    .grupo-input, .campo-input, .botao-icone, .botao-adicionar-anime {
         width: 100%;
-    }
-    .campo-input {
-        width: 100%;
-        box-sizing: border-box;
     }
     .botao-icone, .botao-adicionar-anime {
-        width: 100%;
         border-radius: 5px;
         margin-top: 10px;
     }
 
-    /* --- Grade de Animes --- */
     .anime-grid {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 15px;
-        padding: 10px;
+        padding: 10px 0;
     }
     .anime-card-poster {
-        height: 230px;
+        height: 230px; 
     }
-    .anime-info h3 {
-        font-size: 1em;
-    }
-    .admin-card-actions .btn-admin-card { /* Ajusta botões para telas menores */
+    .admin-card-actions .btn-admin-card {
         min-width: 48%;
         padding: 6px 10px;
         font-size: 0.85em;
@@ -530,6 +528,6 @@ main {
         padding: 10px;
     }
     .anime-card-poster {
-        height: 250px;
+        height: 280px;
     }
 }

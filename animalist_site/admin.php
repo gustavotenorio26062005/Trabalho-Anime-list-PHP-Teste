@@ -225,13 +225,22 @@ $sql .= " ORDER BY " . $orderByColumn . " " . $sort_order;
 // Re-executa a busca para a listagem principal, considerando os filtros
 $stmt_list_animes = $conn->prepare($sql);
 if (!$stmt_list_animes) {
-    // Isso é um erro grave na preparação da query. Logar e exibir mensagem amigável.
     error_log("Erro ao preparar a query de listagem em admin.php: " . $conn->error);
-    $animes_filtrados = []; // Garante array vazio em caso de erro
+    $animes_filtrados = [];
+    // É importante mostrar uma mensagem de erro para o admin aqui ou logar extensivamente
+    $mensagem = "Erro crítico ao preparar a consulta de animes. Verifique os logs do servidor.";
+    $tipo_mensagem = "erro";
 } else {
-    if (!empty($params)) {
-        call_user_func_array([$stmt_list_animes, 'bind_param'], array_merge([$types], $params));
+    // Só chama bind_param se houver tipos (e, consequentemente, parâmetros)
+    if (!empty($types)) {
+        $bind_params_ref = [];
+        $bind_params_ref[] = &$types; // Primeiro argumento é a string de tipos
+        foreach ($params as $key => $value) {
+            $bind_params_ref[] = &$params[$key]; // Adiciona cada parâmetro por referência
+        }
+        call_user_func_array([$stmt_list_animes, 'bind_param'], $bind_params_ref);
     }
+    
     $stmt_list_animes->execute();
     $result_filtered_animes = $stmt_list_animes->get_result();
     $animes_filtrados = $result_filtered_animes->fetch_all(MYSQLI_ASSOC);

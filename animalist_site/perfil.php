@@ -16,7 +16,7 @@ $user_data = [
     'nome' => $_SESSION['user_name'] ?? 'Usuário',
     'email' => $_SESSION['user_email'] ?? 'usuario@exemplo.com',
     'foto_perfil_url' => 'img/perfil_default.png',
-    'fundo_perfil_url' => '',
+    'fundo_perfil_url' => 'img/fundo_default.png',
     'descricao' => 'Grande fã de animes...',
     'data_nascimento' => '',
     'tipo_usuario_nome' => $_SESSION['user_type_name'] ?? 'Usuário Comum'
@@ -36,7 +36,7 @@ if ($stmt_user) {
         $user_data['email'] = $db_user_data['email'];
         $user_data['data_nascimento'] = $db_user_data['data_nascimento'];
         $user_data['foto_perfil_url'] = !empty($db_user_data['foto_perfil_url']) ? $db_user_data['foto_perfil_url'] : $user_data['foto_perfil_url'];
-        $user_data['fundo_perfil_url'] = $db_user_data['fundo_perfil_url'] ?? '';
+        $user_data['fundo_perfil_url'] = !empty($db_user_data['fundo_perfil_url']) ? $db_user_data['fundo_perfil_url'] : $user_data['fundo_perfil_url'];
         $user_data['descricao'] = $db_user_data['descricao'];
         $user_data['tipo_usuario_nome'] = $db_user_data['tipo_usuario_nome'];
 
