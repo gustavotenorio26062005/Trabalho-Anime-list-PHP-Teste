@@ -9,6 +9,7 @@ require_once 'includes/db_connect.php';
 
 $id_anime = (int)($_GET['id'] ?? 0);
 $id_usuario = $_SESSION['user_id'] ?? null;
+$user_type = $_SESSION['user_type'] ?? null;
 
 // Lógica para processar a ação dos botões (manter na lista)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'manter_lista' && $id_usuario) {
@@ -136,6 +137,13 @@ require_once 'includes/header.php';
                 </div>
                 <div class="info">
                     <h1><?php echo htmlspecialchars($anime['nome_anime'] ?? ''); ?></h1>
+                    
+                    <?php if (isset($user_type) && $user_type == 1): // Verifica se é admin (tipo 1) ?>
+                        <a href="admin.php?action=edit&id=<?php echo $id_anime; ?>" class="btn-admin-editar-anime">
+                            <i class="fas fa-pencil-alt"></i> Editar Anime (Admin)
+                        </a>
+                    <?php endif; ?>
+                    
                     <div class="meta-info">
                         <span><i class="fas fa-calendar-alt"></i> <?php echo htmlspecialchars($anime['ano_lancamento'] ?? ''); ?></span>
                         <span class="genres"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($anime['generos'] ?? ''); ?></span>
