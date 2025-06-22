@@ -1,3 +1,27 @@
+:root {
+    /* Paleta Principal */
+    --cor-primaria: #65EBB9;
+    --cor-fundo-escuro: #0D1117;
+    --cor-texto-claro: #FFFFFF;
+    --cor-texto-logo: #E6EDF3;
+    
+    /* Elementos de Interface */
+    --cor-fundo-container: #161B22;
+    --cor-fundo-input: #010409;
+    --cor-borda-sutil: #30363D;
+    --cor-texto-escuro-contraste: #010409;
+
+    /* Cores de Feedback */
+    --cor-sucesso: #28a745;
+    --cor-erro: #dc3545;
+    --cor-fundo-sucesso: #d4edda;
+    --cor-texto-sucesso: #155724;
+    --cor-borda-sucesso: #c3e6cb;
+    --cor-fundo-erro: #f8d7da;
+    --cor-texto-erro: #721c24;
+    --cor-borda-erro: #f5c6cb;
+}
+
 /* Estilos para a Barra de Navegação */
 
 .barra-navegacao {
@@ -66,14 +90,13 @@
 
 .link-nav:hover {
     color: #ffffff; 
-    /* background-color: #21262d; Opcional: cor de fundo suave no hover */
 }
 
 /* Estilo para o link ativo */
 .link-nav.ativo {
-    background-color: #6AF2D7; /* Cor de fundo verde/teal */
-    color: #0d1117 !important; /* Cor do texto escura para contraste com o fundo verde */
-    font-weight: 500; /* Opcional: Deixar o texto um pouco mais forte */
+    background-color: var(--cor-primaria); 
+    color: #0d1117 !important; 
+    font-weight: 500; 
 }
 
 

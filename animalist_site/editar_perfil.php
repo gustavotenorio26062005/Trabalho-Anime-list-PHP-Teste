@@ -2,7 +2,7 @@
 require_once 'includes/db_connect.php'; // Conexão com o banco e início da sessão
 require_once 'includes/header.php';     // Inclui o cabeçalho
 
-// 1. Redireciona se o usuário não estiver logado
+// Redireciona se o usuário não estiver logado
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
@@ -192,7 +192,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <main>
         <div class="form-container">
             <div style="text-align: center;">
-                <h2>Cadastro de usuário</h2>
+                <h2>Editar Perfil</h2>
             </div>
             <?php if ($message): ?>
                 <div class="message <?php echo $message_type; ?>"><?php echo $message; ?></div>
