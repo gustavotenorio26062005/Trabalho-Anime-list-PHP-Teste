@@ -37,8 +37,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $tipo_mensagem = "erro";
     } else {
         // Inicia uma transação no banco de dados.
-        // Isso garante que todas as operações (inserção/atualização do anime e seus gêneros)
-        // sejam realizadas com sucesso ou todas sejam desfeitas em caso de erro.
         $conn->begin_transaction();
         try {
             $id_anime_afetado = null; // Variável para guardar o ID do anime manipulado
@@ -50,8 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 $stmt_anime->execute();
                 $stmt_anime->close();
                 
-                // Exclui todas as associações de gênero existentes para este anime,
-                // para depois inserir as novas associações atualizadas.
+                // Exclui todas as associações de gênero existentes para este anime
                 $stmt_delete_genres = $conn->prepare("DELETE FROM AnimeGeneros WHERE id_anime = ?");
                 $stmt_delete_genres->bind_param("i", $id_anime_edit);
                 $stmt_delete_genres->execute();
@@ -70,41 +67,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
 
             // Lógica para processar Gêneros (para INSERT e UPDATE)
-            // Divide a string de gêneros (ex: "Ação,Comédia") em um array e remove duplicatas.
             $generos_array = array_unique(explode(',', $generos_str));
             foreach ($generos_array as $nome_genero) {
-                $nome_genero = trim($nome_genero); // Remove espaços extras
-                if (empty($nome_genero)) continue; // Pula se for uma string vazia
+                $nome_genero = trim($nome_genero);
+                if (empty($nome_genero)) continue;
 
                 $id_genero = null;
-                // Verifica se o gênero já existe na tabela Generos
                 $stmt_check_genre = $conn->prepare("SELECT id_genero FROM Generos WHERE nome_genero = ?");
                 $stmt_check_genre->bind_param("s", $nome_genero);
                 $stmt_check_genre->execute();
                 $result_genre = $stmt_check_genre->get_result();
                 if ($row = $result_genre->fetch_assoc()) {
-                    $id_genero = $row['id_genero']; // Usa o ID do gênero existente
+                    $id_genero = $row['id_genero'];
                 } else {
-                    // Se o gênero não existe, insere-o na tabela Generos
                     $stmt_insert_genre = $conn->prepare("INSERT INTO Generos (nome_genero) VALUES (?)");
                     $stmt_insert_genre->bind_param("s", $nome_genero);
                     $stmt_insert_genre->execute();
-                    $id_genero = $conn->insert_id; // Pega o ID do gênero recém-inserido
+                    $id_genero = $conn->insert_id;
                     $stmt_insert_genre->close();
                 }
                 $stmt_check_genre->close();
 
-                // Associa o anime ao gênero na tabela AnimeGeneros (relação muitos-para-muitos)
                 $stmt_link_anime_genre = $conn->prepare("INSERT INTO AnimeGeneros (id_anime, id_genero) VALUES (?, ?)");
                 $stmt_link_anime_genre->bind_param("ii", $id_anime_afetado, $id_genero);
                 $stmt_link_anime_genre->execute();
                 $stmt_link_anime_genre->close();
             }
 
-            $conn->commit(); // Confirma todas as operações da transação no banco
+            $conn->commit();
             $tipo_mensagem = "sucesso";
         } catch (Exception $e) {
-            $conn->rollback(); // Desfaz todas as operações em caso de qualquer erro
+            $conn->rollback();
             $mensagem = "Erro na operação com o banco de dados: " . $e->getMessage();
             $tipo_mensagem = "erro";
         }
@@ -117,8 +110,6 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
 
     $conn->begin_transaction();
     try {
-        // A exclusão de um anime irá acionar triggers e regras ON DELETE CASCADE
-        // para limpar suas associações (gêneros, listas pessoais, avaliações) automaticamente.
         $stmt_delete_anime = $conn->prepare("DELETE FROM Animes WHERE id_anime = ?");
         $stmt_delete_anime->bind_param("i", $id_para_deletar);
         
@@ -178,6 +169,95 @@ if ($action == 'edit' && isset($_GET['id'])) {
         $tipo_mensagem = htmlspecialchars($_GET['tipo_mensagem']);
     }
 }
+
+// Lógica de busca, filtro e ordenação (integrada para a tela de admin também)
+$search_query = $_GET['search'] ?? '';
+$filter_year = $_GET['year'] ?? '';
+$filter_genre = $_GET['genre'] ?? '';
+$sort_by = $_GET['sort_by'] ?? 'nome';
+$sort_order = $_GET['sort_order'] ?? 'ASC';
+
+// Construção da query SQL base para a listagem (similar à de animes.php)
+$sql = "SELECT A.id_anime, A.nome, A.ano_lancamento, A.sinopse, A.capa_url, 
+               GROUP_CONCAT(DISTINCT G.nome_genero SEPARATOR ', ') AS generos
+        FROM Animes A
+        LEFT JOIN AnimeGeneros AG ON A.id_anime = AG.id_anime
+        LEFT JOIN Generos G ON AG.id_genero = G.id_genero
+        WHERE 1=1 ";
+
+$params = [];
+$types = '';
+
+if (!empty($search_query)) {
+    $sql .= " AND A.nome LIKE ? ";
+    $params[] = '%' . $search_query . '%';
+    $types .= 's';
+}
+if (!empty($filter_year)) {
+    $sql .= " AND A.ano_lancamento = ? ";
+    $params[] = (int)$filter_year;
+    $types .= 'i';
+}
+if (!empty($filter_genre)) {
+    $sql .= " AND A.id_anime IN (
+                 SELECT AG_filter.id_anime 
+                 FROM AnimeGeneros AG_filter 
+                 JOIN Generos G_filter ON AG_filter.id_genero = G_filter.id_genero 
+                 WHERE G_filter.nome_genero = ?
+               ) ";
+    $params[] = $filter_genre;
+    $types .= 's';
+}
+
+$sql .= " GROUP BY A.id_anime";
+
+$allowed_sort_by = ['nome', 'ano_lancamento'];
+$orderByColumn = 'A.nome';
+if (in_array($sort_by, $allowed_sort_by)) {
+    $orderByColumn = 'A.' . $sort_by;
+}
+$allowed_sort_order = ['ASC', 'DESC'];
+if (!in_array($sort_order, $allowed_sort_order)) {
+    $sort_order = 'ASC'; // Default para ordem segura
+}
+$sql .= " ORDER BY " . $orderByColumn . " " . $sort_order;
+
+// Re-executa a busca para a listagem principal, considerando os filtros
+$stmt_list_animes = $conn->prepare($sql);
+if (!$stmt_list_animes) {
+    // Isso é um erro grave na preparação da query. Logar e exibir mensagem amigável.
+    error_log("Erro ao preparar a query de listagem em admin.php: " . $conn->error);
+    $animes_filtrados = []; // Garante array vazio em caso de erro
+} else {
+    if (!empty($params)) {
+        call_user_func_array([$stmt_list_animes, 'bind_param'], array_merge([$types], $params));
+    }
+    $stmt_list_animes->execute();
+    $result_filtered_animes = $stmt_list_animes->get_result();
+    $animes_filtrados = $result_filtered_animes->fetch_all(MYSQLI_ASSOC);
+    $stmt_list_animes->close();
+}
+
+// Obter todos os gêneros e anos para as opções de filtro (para o formulário de pesquisa)
+$generos_options = [];
+$result_generos = $conn->query("SELECT DISTINCT nome_genero FROM Generos ORDER BY nome_genero ASC");
+if ($result_generos) {
+    while ($row = $result_generos->fetch_assoc()) {
+        $generos_options[] = $row['nome_genero'];
+    }
+    $result_generos->close();
+}
+
+$anos_options = [];
+$result_anos = $conn->query("SELECT DISTINCT ano_lancamento FROM Animes WHERE ano_lancamento IS NOT NULL ORDER BY ano_lancamento DESC");
+if ($result_anos) {
+    while ($row = $result_anos->fetch_assoc()) {
+        $anos_options[] = $row['ano_lancamento'];
+    }
+    $result_anos->close();
+}
+
+
 ?>
 
 <!DOCTYPE html>
@@ -186,14 +266,14 @@ if ($action == 'edit' && isset($_GET['id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel de Admin - Animalist</title>
-    <!-- === CSS === -->
-    <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/admin.css">
-    <link rel="stylesheet" href="css/universal.css">
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- === FONTES === -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/universal.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/admin.css"> 
 </head>
-<body style="background-color: black;">
+<body>
 
     <?php require_once 'includes/header.php'; ?>
 
@@ -244,29 +324,90 @@ if ($action == 'edit' && isset($_GET['id'])) {
                 <h1>Gerenciar Animes</h1>
                 <a href="admin.php?action=add" class="btn-add-new">Adicionar Novo Anime</a>
                 
-                <table class="anime-list-table">
-                    <thead>
-                        <tr>
-                            <th>Nome do Anime</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($todos_animes)): ?>
-                            <tr><td colspan="2" style="text-align: center;">Nenhum anime cadastrado.</td></tr>
-                        <?php else: ?>
-                            <?php foreach ($todos_animes as $anime): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($anime['nome']); ?></td>
-                                    <td>
-                                        <a href="admin.php?action=edit&id=<?php echo $anime['id_anime']; ?>" class="btn-edit">Editar</a>
-                                        <button class="btn-delete" onclick="confirmDelete(<?php echo $anime['id_anime']; ?>, '<?php echo htmlspecialchars($anime['nome']); ?>')">Deletar</button>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
+                <form action="admin.php" method="GET" class="form-filtros-principal">
+                    <section class="secao-filtros">
+                        <div class="container-filtros">
+                            <div class="grupo-input">
+                                <label for="search-input">Pesquisar</label>
+                                <input type="text" id="search-input" name="search" class="campo-input" value="<?php echo htmlspecialchars($search_query); ?>" placeholder="Nome do anime...">
+                            </div>
+
+                            <div class="grupo-input">
+                                <label for="genre-select">Gênero</label>
+                                <select id="genre-select" name="genre" class="campo-input">
+                                    <option value="">Todos os Gêneros</option>
+                                    <?php foreach ($generos_options as $genero_opt): ?>
+                                        <option value="<?php echo htmlspecialchars($genero_opt); ?>" <?php echo ($filter_genre == $genero_opt) ? 'selected' : ''; ?>>
+                                            <?php echo htmlspecialchars($genero_opt); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+
+                            <div class="grupo-input">
+                                <label for="year-select">Ano de Lançamento</label>
+                                <select id="year-select" name="year" class="campo-input">
+                                    <option value="">Todos os Anos</option>
+                                    <?php foreach ($anos_options as $ano_opt): ?>
+                                        <option value="<?php echo $ano_opt; ?>" <?php echo ($filter_year == $ano_opt) ? 'selected' : ''; ?>>
+                                            <?php echo $ano_opt; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            
+                            <div class="grupo-input">
+                                <label for="sort_by-select">Ordenar por</label>
+                                <select id="sort_by-select" name="sort_by" class="campo-input">
+                                    <option value="nome" <?php echo ($sort_by == 'nome') ? 'selected' : ''; ?>>Nome</option>
+                                    <option value="ano_lancamento" <?php echo ($sort_by == 'ano_lancamento') ? 'selected' : ''; ?>>Ano</option>
+                                </select>
+                            </div>
+                            
+                            <div class="grupo-input">
+                                <label for="sort_order-select">Ordem</label>
+                                <select id="sort_order-select" name="sort_order" class="campo-input">
+                                    <option value="ASC" <?php echo ($sort_order == 'ASC') ? 'selected' : ''; ?>>Ascendente</option>
+                                    <option value="DESC" <?php echo ($sort_order == 'DESC') ? 'selected' : ''; ?>>Descendente</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="botao-icone botao-pesquisar" aria-label="Pesquisar"><i class="fas fa-search"></i></button>
+                            
+                        </div>
+                    </section>
+                </form>
+
+
+<div class="anime-grid">
+    <?php if (empty($animes_filtrados)): ?>
+        <p class="mensagem-vazio">Nenhum anime encontrado com os filtros e termos de pesquisa aplicados.</p>
+    <?php else: ?>
+        <?php foreach ($animes_filtrados as $anime): ?>
+            <div class="anime-link"> <a href="anime_detalhes.php?id=<?php echo $anime['id_anime']; ?>" style="text-decoration: none; color: inherit; display: block;">
+                    <div class="anime-card-poster">
+                        <div class="anime-card-title-overlay">
+                            <?php echo htmlspecialchars($anime['nome']); ?>
+                        </div>
+                        <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) ? $anime['capa_url'] : 'img/logo_site.jpg'); ?>" 
+                             alt="Capa de <?php echo htmlspecialchars($anime['nome']); ?>">
+
+                        <?php if (!empty($anime['ano_lancamento'])): ?>
+                        <span class="ano-anime"><?php echo htmlspecialchars($anime['ano_lancamento']); ?></span>
                         <?php endif; ?>
-                    </tbody>
-                </table>
+                    </div>
+                </a>
+                
+                <div class="admin-card-actions">
+                    <a href="admin.php?action=edit&id=<?php echo $anime['id_anime']; ?>" class="btn-admin-card edit">Editar</a>
+                    
+                    <button class="btn-admin-card delete" onclick="event.preventDefault(); confirmDelete(<?php echo $anime['id_anime']; ?>, '<?php echo htmlspecialchars(addslashes($anime['nome'])); ?>')">Deletar</button>
+                </div>
+
+            </div>
+        <?php endforeach; ?>
+    <?php endif; ?>
+</div>
             <?php endif; ?>
         </div>
     </main>
@@ -335,7 +476,7 @@ if ($action == 'edit' && isset($_GET['id'])) {
         // Função para confirmar a exclusão de um anime
         function confirmDelete(id, nome) {
             if (confirm(`Tem certeza que deseja deletar o anime "${nome}"? Esta ação é irreversível.`)) {
-                // Se o usuário confirmar, redireciona para a página admin.php com a ação de deletar e o ID.
+                // Redireciona para a página admin.php com a ação de deletar e o ID.
                 window.location.href = `admin.php?action=delete&id=${id}`;
             }
         }
