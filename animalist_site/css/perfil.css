@@ -1,11 +1,9 @@
-/* --- Estilos Globais do Perfil (se houver, além do universal.css) --- */
-/* (Seu CSS existente para .container, body, etc. que não foi modificado, permanece aqui) */
-/* Por exemplo: */
-body { /* Supondo que você queira manter o fundo escuro da página de perfil */
+/* --- Estilos Globais do Perfil --- */
+body {
     background-color: #0a1625; 
     color: #f0f3f6; 
 }
-.container { /* O container geral da página de perfil */
+.container {
     max-width: 1200px;
     margin: 20px auto;
     padding: 20px;
@@ -27,7 +25,7 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
 
 .profile-background-image-container {
     width: 100%;
-    height: 200px; /* Ou a altura que você definiu */
+    height: 200px;
     overflow: hidden;
     position: relative;
 }
@@ -41,14 +39,13 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
 
 .profile-content-wrapper {
     display: flex;
-    align-items: center; /* Alinha verticalmente a foto e as informações */
-    padding: 20px; /* Espaçamento interno geral para o conteúdo abaixo da imagem de fundo */
-    /* REMOVIDO: margin-top: -50px; */ 
-    position: relative; /* Mantido para caso precise de z-index ou outros posicionamentos filhos */
+    align-items: center;
+    padding: 20px;
+    position: relative;
 }
 
 .profile-pic-container {
-    width: 100px; /* Ou o tamanho que você definiu */
+    width: 100px;
     height: 100px;
     border-radius: 50%;
     background-color: #60758b;
@@ -57,9 +54,8 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 3px solid #101c2e; /* Mantém a borda se desejar */
-    /* z-index: 1; */ /* Não é mais estritamente necessário sem a sobreposição */
-    flex-shrink: 0; /* Impede que a foto de perfil encolha se o texto for longo */
+    border: 3px solid #101c2e;
+    flex-shrink: 0;
 }
 
 .profile-pic-container img {
@@ -85,7 +81,6 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
     font-size: 0.95em;
     line-height: 1.5;
     margin-bottom: 0; 
-    
     min-height: auto; 
     white-space: pre-wrap;
 }
@@ -110,7 +105,7 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
     background-color: #2f81f7; 
     color: white;
 }
-.profile-actions button#deleteProfileBtn { /* Estilo específico para o botão de deletar perfil */
+.profile-actions button#deleteProfileBtn {
     background-color: #eb2c4c;
     color: #f0f3f6;
 }
@@ -174,7 +169,7 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
     color: inherit; 
 }
 
-.anime-poster { /* Container para a imagem e o título do item na grade */
+.anime-poster {
     width: 125px;
     cursor: pointer;
     transition: transform 0.2s ease-in-out;
@@ -190,8 +185,8 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
     position: relative;
     overflow: hidden;
     width: 100%;
-    padding-bottom: 140%; /* Proporção da altura da imagem */
-    background-color: #253750; /* Cor de placeholder para a imagem */
+    padding-bottom: 140%;
+    background-color: #253750;
     border-radius: 4px;
 }
 
@@ -204,7 +199,7 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
     object-fit: cover;
 }
 
-.anime-item-title { /* Título abaixo de cada poster na grade */
+.anime-item-title {
     color: #f0f3f6;
     font-family: Arial, sans-serif;
     font-size: 0.85em;
@@ -212,19 +207,28 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
     text-align: center;
     margin-top: 6px;
     padding: 0 4px;
-    line-height: 1.3;
+    line-height: 1.3; 
     width: 100%;
     box-sizing: border-box;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /* white-space: nowrap; REMOVIDO para permitir quebra de linha */
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    /* Adicionado para ellipsis em múltiplas linhas */
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Número de linhas desejado */
+    -webkit-box-orient: vertical;
+    /* Pode ser necessário ajustar a altura ou max-height se -webkit-line-clamp não for suficiente por si só
+       ou para navegadores que não suportam -webkit-line-clamp totalmente.
+       Por exemplo: max-height: calc(1.3em * 2);  (line-height * número de linhas) 
+       No entanto, o -webkit-line-clamp é geralmente preferido.
+    */
 }
 
-.anime-grid .initially-hidden { /* Classe para esconder itens no "Ver Tudo" */
+.anime-grid .initially-hidden {
     display: none;
 }
 
-/* Sidebar de Detalhes/Avaliações */
+/* --- Sidebar de Detalhes/Avaliações --- */
 .sidebar-details {
     flex: 1;
     background-color: #18283f;
@@ -233,13 +237,12 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
     max-height: 80vh;
     overflow-y: auto;
 }
-/* Estilos para itens dentro da sidebar de avaliações, se necessário */
-.initially-hidden-review { /* Para "Ver Tudo" das avaliações */
+.initially-hidden-review {
     display: none;
 }
 
 
-/* Estilos básicos para o modal de exclusão de conta */
+/* --- Estilos para o modal de exclusão de conta --- */
 .modal {
     display: none; 
     position: fixed; 
@@ -331,9 +334,6 @@ body { /* Supondo que você queira manter o fundo escuro da página de perfil */
 @media (max-width: 768px) {
     .content-area {
         flex-direction: column;
-    }
-    .profile-header {
-        /* A ordem dos elementos internos já se ajusta com flex-direction: column no wrapper */
     }
     .profile-content-wrapper {
         flex-direction: column;
