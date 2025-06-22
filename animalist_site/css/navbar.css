@@ -1,69 +1,27 @@
-/* Estilo para a Barra de Navegação - Versão Corrigida e Reforçada */
-header {
-    margin: 0;
-    padding: 0;
+/* Estilos para a Barra de Navegação */
+
+.barra-navegacao {
+    background-color: #0d1117; 
+    padding: 10px 0; 
+    border-bottom: 1px solid #21262d; 
+    color: #c9d1d9; 
+    display: flex;
+    justify-content: center; 
+    position: fixed; 
+    top: 0;           
+    z-index: 1000;    
     width: 100%;
-    z-index: 1000; /* Garante que a navbar fique sobre outros elementos */
+    box-sizing: content-box;
 }
 
-nav.barra-navegacao {
-    background-color: #0d1117;
-    border-bottom: 1px solid #21262d;
-    color: #c9d1d9;
+.container-navegacao {
+    width: 90%; 
+    max-width: 1280px; 
     display: flex;
-    justify-content: center;
-}
-
-div.container-navegacao {
-    width: 90%;
-    max-width: 1280px;
-    display: flex;
+    font-family: "Jost", sans-serif;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 20px;
-    font-family: "Jost", sans-serif;
-}
-
-/* ======================================================= */
-/* REGRAS REFORÇADAS PARA GARANTIR A VISIBILIDADE DOS LINKS */
-/* ======================================================= */
-ul.lista-links-navegacao {
-    display: flex !important; /* Garante que a lista seja um flex container */
-    visibility: visible !important; /* Garante que a lista esteja visível */
-    opacity: 1 !important; /* Garante que não esteja transparente */
-    
-    /* Estilos de layout originais */
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    gap: 25px;
-    align-items: center;
-}
-
-ul.lista-links-navegacao li {
-    display: list-item !important; /* Garante que os itens da lista sejam exibidos */
-}
-
-ul.lista-links-navegacao li a.link-nav {
-    color: #c9d1d9;
-    text-decoration: none;
-    font-size: 1em;
-    padding: 5px 0;
-    transition: color 0.3s ease;
-}
-
-ul.lista-links-navegacao li a.link-nav:hover {
-    color: #ffffff;
-}
-/* ======================================================= */
-/* FIM DAS REGRAS REFORÇADAS */
-/* ======================================================= */
-
-
-div.acoes-usuario-navegacao {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+    padding: 0 20px; 
 }
 
 .foto-perfil {
@@ -85,19 +43,61 @@ div.acoes-usuario-navegacao {
     object-fit: cover;  
 }
 
-.foto-perfil:hover {
-    opacity: 0.8;
+.foto-perfil:hover{
+    opacity: 50%;
+}
+
+.lista-links-navegacao {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 25px; 
+}
+
+.link-nav {
+    color: #c9d1d9; 
+    text-decoration: none;
+    font-size: 1em; 
+    padding: 8px 15px; /* Adicionado padding para dar espaço ao fundo */
+    border-radius: 20px; /* Para o formato de pílula no próprio link */
+    transition: color 0.3s ease, background-color 0.3s ease; /* Transição suave para hover e estado ativo */
+}
+
+.link-nav:hover {
+    color: #ffffff; 
+    /* background-color: #21262d; Opcional: cor de fundo suave no hover */
+}
+
+/* Estilo para o link ativo */
+.link-nav.ativo {
+    background-color: #6AF2D7; /* Cor de fundo verde/teal */
+    color: #0d1117 !important; /* Cor do texto escura para contraste com o fundo verde */
+    font-weight: 500; /* Opcional: Deixar o texto um pouco mais forte */
+}
+
+
+.acoes-usuario-navegacao {
+    display: flex;
+    align-items: center;
+    gap: 15px; 
 }
 
 .separador-vertical-nav {
-    color: #484f58;
+    color: #484f58; 
+    font-size: 1.2em;
+    margin-right: 5px; 
+}
+
+.link-entrar-nav {
+     /* Já herda de .link-nav, mas não terá o fundo ativo a menos que seja a página ativa */
 }
 
 .botao-cadastrar-nav {
-    background-color: #2f81f7;
-    color: #ffffff;
+    background-color: #2f81f7; 
+    color: #ffffff; 
     padding: 8px 16px;
-    border-radius: 20px;
+    border-radius: 20px; 
     text-decoration: none;
     font-size: 0.9em;
     font-weight: 500;
@@ -105,19 +105,78 @@ div.acoes-usuario-navegacao {
 }
 
 .botao-cadastrar-nav:hover {
-    background-color: #1f6feb;
+    background-color: #1f6feb; 
 }
 
+.barra-navegacao .fas {
+    display: inline-block;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
 
-/* Media queries para responsividade (mantidas como estavam) */
+/* Media queries para responsividade */
 @media (max-width: 992px) {
-    /* ... */
+    .lista-links-navegacao {
+        gap: 15px; 
+    }
+    .texto-logo-anima, .texto-logo-list {
+        font-size: 1.2em;
+    }
+    .logo-olho-nav {
+        font-size: 35px;
+    }
+    .logo-check-nav {
+        font-size: 16px;
+        left: 9px;
+    }
 }
 
 @media (max-width: 768px) {
-    /* ... */
+    .container-navegacao {
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 15px;
+        padding: 10px 20px; 
+    }
+
+    .lista-links-navegacao {
+        width: 100%;
+        justify-content: space-around; 
+        padding: 10px 0;
+        border-top: 1px solid #21262d;
+        border-bottom: 1px solid #21262d;
+        margin-top: 10px;
+    }
+
+    .acoes-usuario-navegacao {
+        width: 100%;
+        justify-content: center; 
+        margin-top: 10px;
+    }
+    .separador-vertical-nav {
+        display: none; 
+    }
 }
 
 @media (max-width: 480px) {
-    /* ... */
+    .lista-links-navegacao {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    .link-nav {
+        padding: 8px 15px; /* Manter o padding para consistência visual */
+        width: fit-content; /* Para que o fundo não ocupe a largura toda no modo coluna */
+        text-align: center;
+    }
+    .acoes-usuario-navegacao {
+       flex-direction: column;
+       gap: 10px;
+    }
+    .botao-cadastrar-nav {
+        width: 80%;
+        text-align: center;
+    }
 }

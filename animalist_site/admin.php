@@ -1,5 +1,5 @@
 <?php
-// 1. LÓGICA PHP INICIAL
+// LÓGICA PHP INICIAL
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
