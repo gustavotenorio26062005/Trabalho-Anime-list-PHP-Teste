@@ -221,21 +221,26 @@ if (!empty($avaliacoes)) {
                             <?php endif; ?>
                         </div>
                         <?php if (!empty($animes_in_list)): ?>
-                            <div class="anime-grid" id="<?php echo $grid_id; ?>">
-                                <?php foreach ($animes_in_list as $index => $anime): ?>
-                                <div class="anime-poster <?php echo $index >= $initial_items_to_show ? 'initially-hidden' : ''; ?>" 
-                                        data-anime-name="<?php echo htmlspecialchars($anime['nome']); ?>"
-                                        data-anime-id="<?php echo htmlspecialchars($anime['id_anime']); ?>">
-                                    <div class="poster-placeholder">
-                                        <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) ? $anime['capa_url'] : 'https://via.placeholder.com/200x250?text=Sem+Capa'); ?>" 
-                                                alt="<?php echo htmlspecialchars($anime['nome']); ?>">
+                        <div class="anime-grid" id="<?php echo $grid_id; ?>">
+                            <?php foreach ($animes_in_list as $index => $anime): ?>
+                            
+                                <a href="anime_detalhes.php?id=<?php echo htmlspecialchars($anime['id_anime']); ?>" 
+                                class="anime-link-perfil <?php echo $index >= $initial_items_to_show ? 'initially-hidden' : ''; ?>" 
+                                data-anime-name="<?php echo htmlspecialchars($anime['nome']); ?>"
+                                data-anime-id="<?php echo htmlspecialchars($anime['id_anime']); ?>">
+                                
+                                    <div class="anime-poster">
+                                        <div class="poster-placeholder">
+                                            <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) ? $anime['capa_url'] : 'https://via.placeholder.com/200x250?text=Sem+Capa'); ?>" 
+                                                    alt="<?php echo htmlspecialchars($anime['nome']); ?>">
+                                        </div>
+                                        <p class="anime-poster-title" title="<?php echo htmlspecialchars($anime['nome']); ?>">
+                                            <?php echo htmlspecialchars($anime['nome']); ?>
+                                        </p>
                                     </div>
-                                    <p class="anime-poster-title" title="<?php echo htmlspecialchars($anime['nome']); ?>">
-                                        <?php echo htmlspecialchars($anime['nome']); ?>
-                                    </p>
-                                </div>
+                                </a>
                                 <?php endforeach; ?>
-                            </div>
+                        </div>
                         <?php else: ?>
                             <p style="color: #60758b; padding: 10px 0;">Nenhum anime nesta lista ainda. 
                                 <?php if($list_title != "Favoritos") { // Mensagem mais específica se não for a lista de favoritos, sugerindo adicionar ?>
