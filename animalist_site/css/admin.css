@@ -1,7 +1,4 @@
-/* Estilos Específicos para o Painel de Admin (admin.css) */
 
-/* Variáveis CSS (cores) - Recomendo ter essas variáveis em um arquivo global como style.css */
-/* Se você já as tem em style.css, pode remover este bloco :root */
 :root {
     --cor-primaria: #28a745; /* Roxo principal */
     --cor-secundaria: #8a2be2; /* Roxo mais claro / Tom secundário */
