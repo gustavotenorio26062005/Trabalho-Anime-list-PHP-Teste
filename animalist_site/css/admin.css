@@ -1,4 +1,4 @@
-/* Estilo para a página de Admin - Versão com melhorias visuais e animações */
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(-10px); }
     to { opacity: 1; transform: translateY(0); }
@@ -53,9 +53,7 @@
     box-shadow: 0 0 0 4px rgba(101, 235, 185, 0.15); /* Sombra de foco mais visível */
 }
 
-/* ... (O restante do seu CSS para .genre-input, .genre-list, etc. pode ser mantido) ... */
-
-/* BOTÕES MELHORADOS */
+/* BOTÕES  */
 .btn-add-new, .submit-btn, .genre-input button {
     border: none;
     padding: 12px 25px;
