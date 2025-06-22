@@ -13,7 +13,7 @@
 
 ## 📖 Sobre o Projeto
 
-O *Animalist* é um site para avaliação de animes desenvolvido como um projeto acadêmico por alunos do curso de Tecnologia em Análise e Desenvolvimento de Sistemas do Instituto Federal de São Paulo (IFSP), Câmpus Bragança Paulista.
+O **Animalist** é um site para avaliação de animes desenvolvido como um projeto acadêmico por alunos do curso de Tecnologia em Análise e Desenvolvimento de Sistemas do Instituto Federal de São Paulo (IFSP), Câmpus Bragança Paulista.
 
 A plataforma permite que os usuários criem um perfil, pesquisem animes, mantenham listas personalizadas e compartilhem suas opiniões com a comunidade.
 
@@ -21,22 +21,22 @@ A plataforma permite que os usuários criem um perfil, pesquisem animes, mantenh
 
 O sistema foi projetado com funcionalidades distintas para usuários e administradores:
 
-  * *Para Usuários:*
-      * 👤 *Gerenciamento de Conta:* Cadastro, login, recuperação de senha e exclusão de perfil.
-      * 🖼️ *Customização de Perfil:* Alteração de nome, foto, banner e descrição.
-      * 🔍 *Pesquisa Avançada:* Busca de animes por nome, gênero e ano.
-      * 📝 *Listas Pessoais:* Organize animes com status ("Assistindo", "Completado", "Planejando Assistir", etc.).
-      * 👍 *Avaliações e Comentários:* Recomende ou não um anime e deixe sua opinião.
-  * *Para Administradores:*
-      * ➕ *Gerenciamento de Conteúdo:* Adicionar, editar e excluir animes do catálogo.
-      * 🛡️ *Moderação:* Excluir avaliações e comentários de usuários.
+  * **Para Usuários:**
+      * 👤 **Gerenciamento de Conta:** Cadastro, login, recuperação de senha e exclusão de perfil.
+      * 🖼️ **Customização de Perfil:** Alteração de nome, foto, banner e descrição.
+      * 🔍 **Pesquisa Avançada:** Busca de animes por nome, gênero e ano.
+      * 📝 **Listas Pessoais:** Organize animes com status ("Assistindo", "Completado", "Planejando Assistir", etc.).
+      * 👍 **Avaliações e Comentários:** Recomende ou não um anime e deixe sua opinião.
+  * **Para Administradores:**
+      * ➕ **Gerenciamento de Conteúdo:** Adicionar, editar e excluir animes do catálogo.
+      * 🛡️ **Moderação:** Excluir avaliações e comentários de usuários.
 
 ## 🛠️ Tecnologias Utilizadas
 
-  * *Backend:* PHP
-  * *Banco de Dados:* MySQL
-  * *Servidor Web:* Apache (configurado via XAMPP)
-  * *Frontend:* HTML, CSS, JavaScript
+  * **Backend:** PHP
+  * **Banco de Dados:** MySQL
+  * **Servidor Web:** Apache (configurado via XAMPP)
+  * **Frontend:** HTML, CSS, JavaScript
 
 ## 🚀 Começando
 
@@ -44,59 +44,59 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
 
 ### Pré-requisitos
 
-  * *XAMPP:* Um ambiente de desenvolvimento PHP completo.
+  * **XAMPP:** Um ambiente de desenvolvimento PHP completo.
       * Pode ser baixado em: **[https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)**
-  * *Navegador Web:* Google Chrome, Mozilla Firefox, etc.
+  * **Navegador Web:** Google Chrome, Mozilla Firefox, etc.
 
 ### Instalação
 
-1.  *Clone o Repositório*
+1.  **Clone o Repositório**
 
-    sh
+    ```sh
     git clone https://github.com/SEU-USUARIO/Projeto-ANIMALIST-PHP.git
-    
+    ```
 
-    Como alternativa, você pode baixar o arquivo .zip e extraí-lo.
+    *Como alternativa, você pode baixar o arquivo `.zip` e extraí-lo.*
 
-2.  *Mova os Arquivos*
-    Copie a pasta animalist_site para o diretório htdocs da sua instalação do XAMPP.
+2.  **Mova os Arquivos**
+    Copie a pasta `animalist_site` para o diretório `htdocs` da sua instalação do XAMPP.
 
-    
+    ```
     # Exemplo no Windows
     C:\xampp\htdocs\animalist_site
 
     # Exemplo no macOS
     /Applications/XAMPP/xamppfiles/htdocs/animalist_site
-    
+    ```
 
-3.  *Inicie os Serviços*
-    Abra o Painel de Controle do XAMPP e inicie os módulos *Apache* e *MySQL*.
+3.  **Inicie os Serviços**
+    Abra o Painel de Controle do XAMPP e inicie os módulos **Apache** e **MySQL**.
 
-4.  *Importe o Banco de Dados*
-    a. Abra o phpMyAdmin em http://localhost/phpmyadmin.
-    b. Clique em *"Novo"* para criar um banco de dados.
-    c. Nomeie o banco como animalist_db e clique em "Criar".
-    d. Selecione o banco animalist_db e vá para a aba *"Importar"*.
-    e. Clique em *"Escolher arquivo"* e localize o arquivo animalist_site/config_SQL/animalist_db.sql.
-    f. Clique em *"Executar"* no final da página para iniciar a importação.
+4.  **Importe o Banco de Dados**
+    a. Abra o phpMyAdmin em `http://localhost/phpmyadmin`.
+    b. Clique em **"Novo"** para criar um banco de dados.
+    c. Nomeie o banco como `animalist_db` e clique em "Criar".
+    d. Selecione o banco `animalist_db` e vá para a aba **"Importar"**.
+    e. Clique em **"Escolher arquivo"** e localize o arquivo `animalist_site/config_SQL/animalist_db.sql`.
+    f. Clique em **"Executar"** no final da página para iniciar a importação.
 
-5.  *Configure a Conexão com o Banco*
+5.  **Configure a Conexão com o Banco**
 
-    > *⚠️ MUITO IMPORTANTE:* Este passo garante que o site se conecte ao banco de dados.
+    > **⚠️ MUITO IMPORTANTE:** Este passo garante que o site se conecte ao banco de dados.
 
-    a. Abra o arquivo de conexão em um editor de código: animalist_site/includes/db_connect.php.
+    a. Abra o arquivo de conexão em um editor de código: `animalist_site/includes/db_connect.php`.
     b. Verifique se as variáveis de conexão correspondem à sua configuração do MySQL.
 
     | Variável | Valor Padrão | Descrição |
     | :--- | :--- | :--- |
-    | $host | localhost | Endereço do servidor. |
-    | $user | root | Usuário do MySQL. |
-    | $password | '' (vazio) | *Ajuste aqui se o seu root tiver senha.* |
-    | $dbh | animalist_db| Nome do banco de dados criado no passo 4. |
+    | `$host` | `localhost` | Endereço do servidor. |
+    | `$user` | `root` | Usuário do MySQL. |
+    | `$password` | `''` (vazio) | **Ajuste aqui se o seu `root` tiver senha.** |
+    | `$dbh` | `animalist_db`| Nome do banco de dados criado no passo 4. |
 
-    *Exemplo no arquivo db_connect.php:*
+    **Exemplo no arquivo `db_connect.php`:**
 
-    php
+    ```php
     <?php
     $host = 'localhost';
     $user = 'root';
@@ -110,19 +110,19 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
         die("ERROR: Could not connect. " . $e->getMessage());
     }
     ?>
-    
+    ```
 
-6.  *Acesse o Animalist*
+6.  **Acesse o Animalist**
     Abra seu navegador e digite o endereço: **[http://localhost/animalist\_site](https://www.google.com/search?q=http://localhost/animalist_site)**.
 
 🎉 E pronto\! Agora você pode navegar e usar o Animalist localmente.
 
 ## 🤔 Solução de Problemas Comuns
 
-  * *Access denied for user 'root'@'localhost': A senha no arquivo db_connect.php não corresponde à senha do seu MySQL. Verifique o **Passo 5*.
-  * *Unknown database 'animalist_db': O nome do banco no arquivo de conexão está incorreto ou não foi criado corretamente. Verifique os **Passos 4 e 5*.
-  * *Página em branco ou erros de PHP*: Verifique se os serviços Apache e MySQL estão realmente rodando no XAMPP.
-  * *Erro 404 (Objeto não encontrado)*: Verifique se o nome da pasta em htdocs está correto (animalist_site) e se a URL no navegador está correta.
+  * **`Access denied for user 'root'@'localhost'`**: A senha no arquivo `db_connect.php` não corresponde à senha do seu MySQL. Verifique o **Passo 5**.
+  * **`Unknown database 'animalist_db'`**: O nome do banco no arquivo de conexão está incorreto ou não foi criado corretamente. Verifique os **Passos 4 e 5**.
+  * **Página em branco ou erros de PHP**: Verifique se os serviços Apache e MySQL estão realmente rodando no XAMPP.
+  * **Erro 404 (Objeto não encontrado)**: Verifique se o nome da pasta em `htdocs` está correto (`animalist_site`) e se a URL no navegador está correta.
 
 ## 👥 Contribuidores
 
