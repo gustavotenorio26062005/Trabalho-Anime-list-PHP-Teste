@@ -4,6 +4,7 @@
 require_once 'includes/db_connect.php'; // Conexão e session_start() (se db_connect.php fizer isso)
 require_once 'includes/header.php';     // Nosso header integrado (que também chama session_start())
 
+
 // 2. Lógica de busca, filtro e ordenação
 $search_query = '';
 $filter_year = '';
@@ -197,17 +198,15 @@ if($result_anos) $result_anos->close();
             </div>
 
             <button type="submit" class="botao-icone botao-pesquisar" aria-label="Pesquisar"><i class="fas fa-search"></i></button>
+
+            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] == 1): // Verifica se o tipo de usuário é 1 (admin) ?>
+     <a href="admin.php" class="botao-icone botao-adicionar" aria-label="Painel de Admin" title="Painel de Admin">
+         <i class="fa fa-plus-square" aria-hidden="true"></i>
+
+     </a>
+<?php endif; ?>
             
-            <!-- Botão Adicionar - ADM -->
-            <?php if (isset($_SESSION['user_type']) && $_SESSION['user_type'] === 'admin'): ?>
-                 <a href="admin/adicionar_anime.php" class="botao-icone botao-adicionar" aria-label="Adicionar Anime"><i class="fas fa-plus"></i></a>
-            <?php else: ?>
-                 <!-- Pode estar desabilitado ou oculto para outros usuários, ou ter outra função -->
-                 <!-- <button type="button" class="botao-icone botao-adicionar" aria-label="Adicionar" title="Adicionar novo anime (Admin)" disabled><i class="fas fa-plus"></i></button> -->
-            <?php endif; ?>
-             <!-- Se não for usar, pode comentar/remover o de baixo. Este é um placeholder: 
-             <a href="#" class="botao-icone botao-adicionar" aria-label="Adicionar" onclick="alert('Funcionalidade de adicionar não implementada.'); return false;" title="Adicionar (Em breve)"><i class="fas fa-plus"></i></a>
-                    -->
+            
         </div>
     </section>
 </form>
