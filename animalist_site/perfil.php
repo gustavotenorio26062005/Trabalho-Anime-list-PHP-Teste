@@ -103,6 +103,8 @@ if ($stmt_reviews) {
     $stmt_reviews->close();
 }
 
+
+
 // --- Gerar HTML das Avaliações para Sidebar ---
 $avaliacoes_html_sidebar = '<div class="user-reviews-sidebar-content">';
 $avaliacoes_html_sidebar .= '<h3 style="color: #65ebba; margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #253750;">Minhas Avaliações</h3>';
@@ -140,7 +142,7 @@ $avaliacoes_html_sidebar .= '</div>';
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/perfil.css">
     <link rel="stylesheet" href="css/universal.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 <body>
 
@@ -167,6 +169,7 @@ $avaliacoes_html_sidebar .= '</div>';
                    style="background-color: #2f81f7; color: white; border: none; margin-bottom: 10px; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 1.2em;">
                     <i class="fas fa-edit"></i>
                 </a>
+                <!-- BOTÃO PARA ACIONAR O MODAL -->
                 <button id="deleteProfileBtn" aria-label="Deletar perfil" title="Deletar Conta"><i class="fas fa-trash"></i></button>
             </div>
         </div>
@@ -226,44 +229,24 @@ $avaliacoes_html_sidebar .= '</div>';
             <?php echo $avaliacoes_html_sidebar; ?>
         </aside>
     </main>
-</div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.view-all').forEach(button => {
-            button.addEventListener('click', function(event) {
-                event.preventDefault();
-                const targetGridId = this.dataset.targetGrid;
-                const grid = document.getElementById(targetGridId);
-                const isViewAllButton = this.id !== 'viewAllReviewsSidebar';
-                const itemsToToggleSelector = isViewAllButton ? '.initially-hidden' : '.initially-hidden-review';
-                const itemsToToggle = grid ? grid.querySelectorAll(itemsToToggleSelector) : document.querySelectorAll(itemsToToggleSelector);
+    <!-- Modal de Confirmação para Deletar Conta (VOCÊ JÁ TINHA ESTE HTML) -->
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" title="Fechar">×</span>
+            <h2>Confirmar Exclusão de Conta</h2>
+            <p>Tem certeza de que deseja excluir sua conta permanentemente? Esta ação não pode ser desfeita.</p>
+            <p>Todos os seus dados, incluindo listas de animes e avaliações, serão removidos.</p>
+            <p style="margin-top: 15px;">Para confirmar, por favor, insira sua senha:</p>
+            <input type="password" id="deleteConfirmPassword" placeholder="Sua senha" autocomplete="current-password">
+            <div id="deleteAccountError" style="color: #eb2c4c; margin-top: 10px; min-height: 1em;"></div>
+            <button id="confirmDeleteAccountBtn" style="margin-top: 15px;">Excluir Minha Conta Permanentemente</button>
+        </div>
+    </div>
 
-                if (this.textContent.includes('Ver Tudo') || this.textContent.includes('Ver Todas')) {
-                    itemsToToggle.forEach(item => {
-                        item.style.display = 'block'; 
-                        item.classList.remove(isViewAllButton ? 'initially-hidden' : 'initially-hidden-review');
-                    });
-                    this.textContent = isViewAllButton ? 'Ver Menos' : 'Ver Menos Avaliações';
-                } else {
-                    const initialShowCount = <?php echo $initial_items_to_show; ?>;
-                    const initialReviewShowCount = 5;
-                    const parentContainer = grid || document.querySelector('.reviews-list-sidebar');
-                    const allItems = Array.from(parentContainer.children).filter(child => child.matches(isViewAllButton ? '.anime-link-perfil' : '.review-item-sidebar'));
-                    const limit = isViewAllButton ? initialShowCount : initialReviewShowCount;
+</div> 
 
-                    allItems.forEach((item, index) => {
-                        if (index >= limit) {
-                            item.style.display = 'none';
-                            item.classList.add(isViewAllButton ? 'initially-hidden' : 'initially-hidden-review');
-                        }
-                    });
-                    this.textContent = isViewAllButton ? 'Ver Tudo' : 'Ver Todas Avaliações';
-                }
-            });
-        });
-    });
-</script>
+<script src="js/perfil.js"></script>
 
 <?php
 require_once 'includes/footer.php';

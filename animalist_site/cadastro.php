@@ -43,10 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = "A senha deve ter no mínimo 6 caracteres.";
         $message_type = "error";
     }
-    // --- Nova Validação: Idade Mínima ---
-    // Converte a data de nascimento para um objeto DateTime.
-    // Pega a data atual.
-    // Calcula a diferença em anos.
+
     else {
         try {
             $data_nasc_obj = new DateTime($data_nascimento);
@@ -116,19 +113,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animalist - Home</title>
     <!-- === CSS === -->
-    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/universal.css">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- === FONTES === -->
      <!--<?php include __DIR__ . '/pages/constante/fontes.php' ?> -->
-
 </head>
+
 <div class="form-container">
-    <div style="text-align: center;">
-    <h2>Cadastro de usuário</h2>
-    </div>
+    <h2>Cadastro de Usuário</h2>
     <?php if ($message): ?>
         <div class="message <?php echo $message_type; ?>">
             <?php echo htmlspecialchars($message); ?>

@@ -210,11 +210,11 @@ INSERT INTO TipoUsuario (tipo) VALUES
 ('usuario_comum');
 
 INSERT INTO Usuarios (nome, email, data_nascimento, senha, id_tipo_usuario, foto_perfil_url, fundo_perfil_url, descricao) VALUES
-('Gabriel Dias', 'gabriel.dias@example.com', '1990-01-01', 'senha123', 1, 'https://avatars.githubusercontent.com/u/153240026?v=4', 'https://via.placeholder.com/800x200/FF0000/FFFFFF?text=Fundo+G.D.', 'Admin principal do Animalist. Gosto de tudo que é otimizado.'),
-('Gustavo Barros', 'gustavo.barros@example.com', '1991-03-15', 'senha123', 1, 'https://avatars.githubusercontent.com/u/129299486?v=4', 'https://via.placeholder.com/800x200/00FF00/FFFFFF?text=Fundo+G.B.', 'Admin e especialista em usabilidade. Paixão por animes de fantasia.'),
-('Luiz Gonçalves', 'luiz.goncalves@example.com', '1992-07-22', 'senha123', 2, 'https://avatars.githubusercontent.com/u/163657618?s=400&u=a5fd444ec209497f4b754979c48dc7d66b25e261&v=4', 'https://via.placeholder.com/800x200/FFFF00/000000?text=Fundo+L.G.', 'Fã de animes de ação e aventura, sempre em busca da próxima grande batalha.'),
-('Maycon Cabral', 'maycon.cabral@example.com', '1993-11-05', 'senha123', 2, 'https://avatars.githubusercontent.com/u/118577513?v=4', 'https://via.placeholder.com/800x200/FF00FF/FFFFFF?text=Fundo+M.C.', 'Adora animes de fantasia e slice of life, para relaxar e se inspirar.'),
-('Renan Rodrigues', 'renan.rodrigues@example.com', '1994-04-30', 'senha123', 2, 'https://avatars.githubusercontent.com/u/163357233?v=4', 'https://via.placeholder.com/800x200/00FFFF/000000?text=Fundo+R.R.', 'Crítico de animes e mangás, sempre com uma opinião sincera e bem fundamentada.'),
+('Gabriel Dias', 'gabriel.dias@example.com', '1990-01-01', 'senha123', 1, 'https://avatars.githubusercontent.com/u/153240026?v=4', '', 'Admin principal do Animalist. Gosto de tudo que é otimizado.'),
+('Gustavo Barros', 'gustavo.barros@example.com', '1991-03-15', 'senha123', 1, 'https://avatars.githubusercontent.com/u/129299486?v=4', '', 'Admin e especialista em usabilidade. Paixão por animes de fantasia.'),
+('Luiz Gonçalves', 'luiz.goncalves@example.com', '1992-07-22', 'senha123', 2, 'https://avatars.githubusercontent.com/u/163657618?s=400&u=a5fd444ec209497f4b754979c48dc7d66b25e261&v=4', '', 'Fã de animes de ação e aventura, sempre em busca da próxima grande batalha.'),
+('Maycon Cabral', 'maycon.cabral@example.com', '1993-11-05', 'senha123', 2, 'https://avatars.githubusercontent.com/u/118577513?v=4', '', 'Adora animes de fantasia e slice of life, para relaxar e se inspirar.'),
+('Renan Rodrigues', 'renan.rodrigues@example.com', '1994-04-30', 'senha123', 2, 'https://avatars.githubusercontent.com/u/163357233?v=4', '', 'Crítico de animes e mangás, sempre com uma opinião sincera e bem fundamentada.'),
 ('Ana Santos', 'ana.santos@example.com', '1988-08-10', 'senha123', 2, NULL, NULL, 'Gosta de animes mais antigos e cult, buscando sempre novas pérolas.'),
 ('Pedro Lima', 'pedro.lima@example.com', '1995-02-28', 'senha123', 2, NULL, NULL, 'Em busca de novos animes para assistir, aberto a todos os gêneros.'),
 ('Usuario Menor', 'menor@example.com', '2015-05-10', 'senha123', 2, NULL, NULL, 'Este usuário é menor de idade (deve falhar o cadastro devido à restrição CHK_IDADE_MINIMA, mas agora só será validado no PHP).');
