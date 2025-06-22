@@ -135,7 +135,7 @@ if($result_anos) $result_anos->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animalist - Home</title>
+    <title>Animalist - Pesquisar Animes</title>
     <!-- === CSS === -->
     <link rel="stylesheet" href="css/pesquisar.css">
     <link rel="stylesheet" href="css/universal.css">

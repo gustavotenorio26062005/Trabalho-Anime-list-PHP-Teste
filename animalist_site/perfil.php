@@ -184,16 +184,13 @@ if (!empty($avaliacoes)) {
 <body>
 
 <div class="container">
-    <header class="profile-header" style="<?php echo !empty($user_data['fundo_perfil_url']) ? 'background-image: url(\'' . htmlspecialchars($user_data['fundo_perfil_url']) . '\');' : 'background-color: #5a2c8a;'; ?>">
+    <header class="profile-header">
         <div class="profile-pic-container">
             <img src="<?php echo htmlspecialchars($user_data['foto_perfil_url']); ?>" alt="Foto do Perfil" id="profileImage">
         </div>
         <div class="profile-info">
-            <h3><?php echo htmlspecialchars($user_data['nome']); ?></h3>
-            <p>E-mail: <?php echo htmlspecialchars($user_data['email']); ?></p>
-            <p>Data de Nascimento: <?php echo htmlspecialchars($user_data['data_nascimento']); ?></p>
-            <p>Sobre mim: <?php echo nl2br(htmlspecialchars($user_data['descricao'])); ?></p>
-            <p>Tipo de Usuário: <?php echo htmlspecialchars($user_data['tipo_usuario_nome']); ?></p>
+            <input type="text" id="userName" value="<?php echo htmlspecialchars($user_data['nome']); ?>" placeholder="Seu Nome">
+            <textarea id="userDescription" placeholder="Conte um pouco sobre você..."><?php echo htmlspecialchars($user_data['descricao']); ?></textarea>
         </div>
         <div class="profile-actions">
             <button id="addContentBtn" aria-label="Adicionar novo item" title="Adicionar Anime à Lista (Em Breve)"><i class="fas fa-plus"></i></button>
@@ -201,12 +198,8 @@ if (!empty($avaliacoes)) {
                style="background-color: #2f81f7; color: white; border: none; margin-bottom: 10px; border-radius: 50%; width: 40px; height: 40px; display: flex; justify-content: center; align-items: center; text-decoration: none; font-size: 1.2em;">
                 <i class="fas fa-edit"></i>
             </a>
-            <?php if ($is_admin): ?>
-                <a href="admin.php" class="button admin-button" style="color: white;">Painel Admin</a>
-            <?php endif; ?>
             <button id="deleteProfileBtn" aria-label="Deletar perfil" title="Deletar Conta"><i class="fas fa-trash"></i></button>
         </div>
-
     </header>
 
     <main class="content-area">
