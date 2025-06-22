@@ -234,7 +234,7 @@ if (!empty($avaliacoes)) {
                                             <img src="<?php echo htmlspecialchars(!empty($anime['capa_url']) ? $anime['capa_url'] : 'https://via.placeholder.com/200x250?text=Sem+Capa'); ?>" 
                                                     alt="<?php echo htmlspecialchars($anime['nome']); ?>">
                                         </div>
-                                        <p class="anime-poster-title" title="<?php echo htmlspecialchars($anime['nome']); ?>">
+                                        <p class="anime-item-title" title="<?php echo htmlspecialchars($anime['nome']); ?>">
                                             <?php echo htmlspecialchars($anime['nome']); ?>
                                         </p>
                                     </div>

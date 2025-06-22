@@ -206,26 +206,31 @@ body {
     overflow-y: auto;
 }
 
-.anime-detail-card {
-    background-color: #101c2e; /* Fundo do card de detalhe, igual ao .container para distinção */
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    border: 1px solid #253750; /* Borda sutil escura */
+.anime-item-title {
+    /* 1. Cor do Texto - Puxado de body e .anime-detail-card h3 */
+    color: #f0f3f6; 
+
+    /* 2. Fonte - Puxado de body */
+    font-family: Arial, sans-serif; 
+
+    /* 3. Tamanho e Peso - Ajustado para o contexto da grade */
+    font-size: 0.85em; /* Um pouco menor para caber bem */
+    font-weight: 500;   /* Normal ou semi-bold, 'bold' pode ser muito pesado para um texto pequeno */
+    
+    /* 4. Alinhamento e Espaçamento */
+    text-align: center; /* Centraliza o texto abaixo do poster */
+    margin-top: 6px;   /* Pequeno espaço entre o poster e o título */
+    padding: 0 4px;    /* Padding lateral para evitar que o texto encoste nas bordas */
+    line-height: 1.3;  /* Melhora a legibilidade para textos que podem ter duas linhas antes do '...' */
+
+    /* 5. Controle de Overflow (Essencial para grades) */
+    width: 100%; /* Ocupa a largura total do .anime-poster */
+    box-sizing: border-box; /* Inclui padding na largura total */
+    white-space: nowrap; /* Impede que o texto quebre em várias linhas */
+    overflow: hidden; /* Esconde o texto que transborda */
+    text-overflow: ellipsis; /* Adiciona "..." ao texto que transborda */
 }
 
-.anime-detail-card h3 {
-    color: #f0f3f6; /* BRANCO (TEXTO) */
-    margin-bottom: 8px;
-    font-size: 1.1em;
-}
-
-.anime-detail-card p {
-    font-size: 0.9em;
-    color: #60758b; /* CINZA (Texto menos destacado) */
-}
-
-/* Responsividade básica */
 @media (max-width: 768px) {
     .content-area {
         flex-direction: column;
