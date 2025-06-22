@@ -1,0 +1,181 @@
+/* Estilos Específicos para editar_perfil.php */
+
+/* Container Principal do Formulário */
+.form-container {
+    background-color: #ffffff; /* Fundo branco para o formulário */
+    border-radius: 10px; /* Bordas arredondadas */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Sombra suave */
+    padding: 30px;
+    max-width: 600px; /* Largura máxima para o formulário */
+    margin: 40px auto; /* Centraliza na página com margem superior/inferior */
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaçamento entre os grupos de formulário */
+}
+
+/* Títulos h2 */
+.form-container h2 {
+    color: #6a0dad; /* Cor roxa do tema Animalist */
+    text-align: center;
+    margin-bottom: 25px;
+    font-size: 2em;
+    border-bottom: 2px solid #e0b0ff; /* Linha sublinhada suave */
+    padding-bottom: 10px;
+}
+
+/* Títulos h3 (Alterar Senha) */
+.form-container h3 {
+    color: #8a2be2; /* Um roxo ligeiramente mais claro */
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    text-align: center;
+}
+
+/* Parágrafos de informação (Alterar Senha) */
+.form-container p {
+    font-size: 0.95em;
+    color: #555;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Grupos de Formulário */
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Labels dos campos */
+.form-group label {
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 8px;
+    font-size: 1.05em;
+}
+
+/* Inputs de texto, email, password, date e textareas */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="date"],
+.form-group textarea {
+    width: calc(100% - 20px); /* Ajusta a largura considerando o padding */
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box; /* Garante que padding e borda não aumentem a largura total */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Foco nos inputs */
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="date"]:focus,
+.form-group textarea:focus {
+    border-color: #8a2be2; /* Borda roxa ao focar */
+    box-shadow: 0 0 8px rgba(138, 43, 226, 0.2); /* Sombra suave ao focar */
+    outline: none; /* Remove o contorno padrão do navegador */
+}
+
+/* Textarea específico */
+.form-group textarea {
+    resize: vertical; /* Permite redimensionar apenas verticalmente */
+    min-height: 80px;
+}
+
+/* Estilo para as imagens de preview */
+.form-group img {
+    display: block; /* Garante que a imagem ocupe sua própria linha */
+    margin-top: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    object-fit: cover; /* Garante que a imagem preencha sem distorcer */
+}
+
+/* Botão de envio (Salvar Alterações) */
+.form-group button[type="submit"] {
+    background-color: #6a0dad; /* Roxo principal */
+    color: white;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-group button[type="submit"]:hover {
+    background-color: #5a2c8a; /* Roxo mais escuro ao passar o mouse */
+    transform: translateY(-2px); /* Efeito de "levantar" */
+}
+
+/* Links de navegação (Voltar para o Perfil) */
+.form-container a {
+    color: #6a0dad;
+    text-decoration: none;
+    text-align: center;
+    display: block; /* Para que ocupe sua própria linha e possa ser centralizado */
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.form-container a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagens de feedback (sucesso/erro) */
+.message {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 0.95em;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Responsividade básica */
+@media (max-width: 768px) {
+    .form-container {
+        margin: 20px auto;
+        padding: 20px;
+    }
+
+    .form-container h2 {
+        font-size: 1.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        border-radius: 0; /* Remove borda arredondada em telas muito pequenas */
+        margin: 0;
+        box-shadow: none;
+    }
+    .form-group input,
+    .form-group textarea {
+        padding: 10px;
+    }
+    .form-group button[type="submit"] {
+        padding: 12px;
+        font-size: 1em;
+    }
+}
