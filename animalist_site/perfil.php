@@ -244,7 +244,7 @@ if (!empty($avaliacoes)) {
                         <?php else: ?>
                             <p style="color: #60758b; padding: 10px 0;">Nenhum anime nesta lista ainda. 
                                 <?php if($list_title != "Favoritos") { // Mensagem mais específica se não for a lista de favoritos, sugerindo adicionar ?>
-                                    <a href="animes.php" style="color: #65ebba;">Adicionar?</a>
+                                    <a href="pesquisar.php" style="color: #65ebba;">Adicionar?</a>
                                 <?php } ?>
                             </p>
                         <?php endif; ?>
