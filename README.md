@@ -1,79 +1,139 @@
-🎬 Animalist - Seu Site de Avaliações de Anime
-👋 Bem-vindo ao Animalist! Uma plataforma para você descobrir, avaliar e discutir seus animes favoritos.
-Este guia irá ajudá-lo a configurar e rodar o projeto em seu ambiente local.
-🛠️ Pré-requisitos
-Para rodar este projeto localmente, você precisará ter o seguinte instalado:
-🖥️ XAMPP: Um ambiente de desenvolvimento PHP que inclui:
-Apache (servidor web)
-MySQL (banco de dados)
-PHP
-Você pode baixá-lo em: https://www.apachefriends.org/index.html
-🌐 Navegador Web: Chrome, Firefox, Edge, etc.
-📁 Os arquivos do projeto Animalist: Incluindo o arquivo .sql do banco de dados.
-🚀 Configuração e Instalação
-Siga os passos abaixo para colocar o Animalist no ar em sua máquina:
-📥 Instale o XAMPP:
-Baixe e instale o XAMPP. Durante a instalação, você pode manter as opções padrão.
-📂 Copie os Arquivos do Projeto:
-Pegue a pasta do projeto "Animalist" e copie-a para o diretório htdocs dentro da sua instalação do XAMPP.
-Exemplo de caminho no Windows: C:\xampp\htdocs\animalist
-Exemplo de caminho no macOS: /Applications/XAMPP/xamppfiles/htdocs/animalist
-Exemplo de caminho no Linux: /opt/lampp/htdocs/animalist
-(Certifique-se de que o nome da pasta seja animalist ou ajuste o URL no passo 6 de acordo)
-▶️ Inicie os Serviços do XAMPP:
-Abra o Painel de Controle do XAMPP.
-Inicie os módulos Apache e MySQL. Espere até que fiquem verdes (ou indicando que estão rodando).
-🗄️ Importe o Banco de Dados:
-Abra seu navegador e acesse o phpMyAdmin: http://localhost/phpmyadmin
-No menu à esquerda, clique em "Novo" para criar um novo banco de dados.
-Dê um nome ao banco de dados (ex: animalist_db) e clique em "Criar".
-Selecione o banco de dados que você acabou de criar na lista à esquerda.
-Clique na aba "Importar" no menu superior.
-Clique em "Escolher arquivo" e localize o arquivo .sql que veio com o projeto (ex: animalist_banco.sql).
-Role para baixo e clique em "Executar". Aguarde a importação ser concluída. ✨
-🔑 Verifique a Configuração de Conexão com o Banco (MUITO IMPORTANTE!):
-Dentro da pasta do projeto (ex: htdocs/animalist), localize o arquivo PHP que faz a conexão com o banco de dados.
-Ele pode se chamar conexao.php, db.php, config.php, ou estar dentro de uma pasta como includes/ ou config/.
-Abra este arquivo em um editor de texto.
-Verifique as seguintes configurações:
-host: geralmente localhost
-username: geralmente root
-password: ❗ ATENÇÃO: Por padrão, este projeto está configurado para conectar ao MySQL com o usuário root SEM SENHA.
-Se o seu MySQL (do XAMPP) tiver uma senha definida para o usuário root, você precisará:
-✅ Opção A (Recomendado): Alterar a senha no arquivo de configuração do PHP para a senha que você usa no seu MySQL.
-⚠️ Opção B: Remover a senha do usuário root no seu MySQL (menos seguro para outros projetos).
-database_name ou dbname: Deve ser o mesmo nome que você deu ao banco de dados no passo 4 (ex: animalist_db).
-📝 Exemplo de como pode estar no arquivo PHP:
-<?php
-$servidor = "localhost";
-$usuario = "root";
-$senha = ""; // <--- ❗ ATENÇÃO AQUI! Altere se seu root tiver senha.
-$banco = "animalist_db"; // <--- Certifique-se que este é o nome do seu banco.
+# 🎬 Animalist - Seu Site de Avaliações de Anime
 
-$conexao = mysqli_connect($servidor, $usuario, $senha, $banco);
+<p align="center"\>
+<strong\>Uma plataforma para você descobrir, avaliar e discutir seus animes favoritos.</strong\>
+</p\>
 
-if (!$conexao) {
-    die("Falha na conexão: " . mysqli_connect_error());
-}
-// echo "Conectado com sucesso!"; // Descomente para testar a conexão
-?>
-Use code with caution.
-PHP
-💾 Salve as alterações, se houver alguma.
-🌍 Acesse o Animalist:
-Abra seu navegador web.
-Digite o seguinte endereço: http://localhost/animalist
-(Se você nomeou a pasta do projeto de forma diferente dentro de htdocs, substitua animalist pelo nome da sua pasta).
-🎉 E pronto! Agora você deve conseguir navegar e usar o Animalist localmente.
-🤔 Solução de Problemas Comuns
-"Access denied for user 'root'@'localhost'":
-Isso geralmente significa que a senha no arquivo de configuração do PHP não corresponde à senha do usuário root do seu MySQL. Verifique o Passo 5.
-"Unknown database 'animalist_db'":
-O nome do banco de dados no arquivo de configuração do PHP não corresponde ao nome do banco que você criou ou importou no phpMyAdmin. Verifique os Passos 4 e 5.
-Página em branco ou erros de PHP:
-Verifique se o Apache e o MySQL estão realmente rodando no XAMPP.
-Certifique-se também de que você está usando uma versão do PHP compatível com o projeto (o XAMPP geralmente vem com uma versão recente e estável).
-Erro 404 / Objeto não encontrado:
-Verifique se o nome da pasta do projeto em htdocs está correto.
-Verifique se você digitou o URL corretamente no navegador.
-Divirta-se avaliando seus animes! 🌟
+<div align="center"\>
+<img src="https://img.shields.io/badge/Linguagem-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="Linguagem PHP">
+<img src="https://img.shields.io/badge/Banco%20de%20Dados-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="Banco de Dados MySQL">
+<img src="https://img.shields.io/badge/Apache-D22128?style=for-the-badge&logo=Apache&logoColor=white" alt="Apache">
+<img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge" alt="Status: Em Desenvolvimento">
+<div\>
+
+## 📖 Sobre o Projeto
+
+O *Animalist* é um site para avaliação de animes desenvolvido como um projeto acadêmico por alunos do curso de Tecnologia em Análise e Desenvolvimento de Sistemas do Instituto Federal de São Paulo (IFSP), Câmpus Bragança Paulista.
+
+A plataforma permite que os usuários criem um perfil, pesquisem animes, mantenham listas personalizadas e compartilhem suas opiniões com a comunidade.
+
+## ✨ Funcionalidades
+
+O sistema foi projetado com funcionalidades distintas para usuários e administradores:
+
+  * *Para Usuários:*
+      * 👤 *Gerenciamento de Conta:* Cadastro, login, recuperação de senha e exclusão de perfil.
+      * 🖼️ *Customização de Perfil:* Alteração de nome, foto, banner e descrição.
+      * 🔍 *Pesquisa Avançada:* Busca de animes por nome, gênero e ano.
+      * 📝 *Listas Pessoais:* Organize animes com status ("Assistindo", "Completado", "Planejando Assistir", etc.).
+      * 👍 *Avaliações e Comentários:* Recomende ou não um anime e deixe sua opinião.
+  * *Para Administradores:*
+      * ➕ *Gerenciamento de Conteúdo:* Adicionar, editar e excluir animes do catálogo.
+      * 🛡️ *Moderação:* Excluir avaliações e comentários de usuários.
+
+## 🛠️ Tecnologias Utilizadas
+
+  * *Backend:* PHP
+  * *Banco de Dados:* MySQL
+  * *Servidor Web:* Apache (configurado via XAMPP)
+  * *Frontend:* HTML, CSS, JavaScript
+
+## 🚀 Começando
+
+Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
+
+### Pré-requisitos
+
+  * *XAMPP:* Um ambiente de desenvolvimento PHP completo.
+      * Pode ser baixado em: **[https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)**
+  * *Navegador Web:* Google Chrome, Mozilla Firefox, etc.
+
+### Instalação
+
+1.  *Clone o Repositório*
+
+    sh
+    git clone https://github.com/SEU-USUARIO/Projeto-ANIMALIST-PHP.git
+    
+
+    Como alternativa, você pode baixar o arquivo .zip e extraí-lo.
+
+2.  *Mova os Arquivos*
+    Copie a pasta animalist_site para o diretório htdocs da sua instalação do XAMPP.
+
+    
+    # Exemplo no Windows
+    C:\xampp\htdocs\animalist_site
+
+    # Exemplo no macOS
+    /Applications/XAMPP/xamppfiles/htdocs/animalist_site
+    
+
+3.  *Inicie os Serviços*
+    Abra o Painel de Controle do XAMPP e inicie os módulos *Apache* e *MySQL*.
+
+4.  *Importe o Banco de Dados*
+    a. Abra o phpMyAdmin em http://localhost/phpmyadmin.
+    b. Clique em *"Novo"* para criar um banco de dados.
+    c. Nomeie o banco como animalist_db e clique em "Criar".
+    d. Selecione o banco animalist_db e vá para a aba *"Importar"*.
+    e. Clique em *"Escolher arquivo"* e localize o arquivo animalist_site/config_SQL/animalist_db.sql.
+    f. Clique em *"Executar"* no final da página para iniciar a importação.
+
+5.  *Configure a Conexão com o Banco*
+
+    > *⚠️ MUITO IMPORTANTE:* Este passo garante que o site se conecte ao banco de dados.
+
+    a. Abra o arquivo de conexão em um editor de código: animalist_site/includes/db_connect.php.
+    b. Verifique se as variáveis de conexão correspondem à sua configuração do MySQL.
+
+    | Variável | Valor Padrão | Descrição |
+    | :--- | :--- | :--- |
+    | $host | localhost | Endereço do servidor. |
+    | $user | root | Usuário do MySQL. |
+    | $password | '' (vazio) | *Ajuste aqui se o seu root tiver senha.* |
+    | $dbh | animalist_db| Nome do banco de dados criado no passo 4. |
+
+    *Exemplo no arquivo db_connect.php:*
+
+    php
+    <?php
+    $host = 'localhost';
+    $user = 'root';
+    $password = ''; // <-- ❗ ATENÇÃO AQUI! Altere se seu root tiver senha.
+    $dbh = 'animalist_db'; // <-- Certifique-se que este é o nome do seu banco.
+
+    try {
+        $pdo = new PDO("mysql:host=$host;dbname=$dbh", $user, $password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    } catch (PDOException $e) {
+        die("ERROR: Could not connect. " . $e->getMessage());
+    }
+    ?>
+    
+
+6.  *Acesse o Animalist*
+    Abra seu navegador e digite o endereço: **[http://localhost/animalist\_site](https://www.google.com/search?q=http://localhost/animalist_site)**.
+
+🎉 E pronto\! Agora você pode navegar e usar o Animalist localmente.
+
+## 🤔 Solução de Problemas Comuns
+
+  * *Access denied for user 'root'@'localhost': A senha no arquivo db_connect.php não corresponde à senha do seu MySQL. Verifique o **Passo 5*.
+  * *Unknown database 'animalist_db': O nome do banco no arquivo de conexão está incorreto ou não foi criado corretamente. Verifique os **Passos 4 e 5*.
+  * *Página em branco ou erros de PHP*: Verifique se os serviços Apache e MySQL estão realmente rodando no XAMPP.
+  * *Erro 404 (Objeto não encontrado)*: Verifique se o nome da pasta em htdocs está correto (animalist_site) e se a URL no navegador está correta.
+
+## 👥 Contribuidores
+
+Este projeto foi idealizado e desenvolvido por:
+
+  * Gabriel Dias Ribeiro
+  * Gustavo Barros Tenório
+  * Luiz Henrique Gonçalvez
+  * Maycon Cabral da Silva
+  * Renan Valença Bueno Rodrigues
+
+-----
+
+<p align="center"\>Divirta-se avaliando seus animes\! 🌟\</p\>
