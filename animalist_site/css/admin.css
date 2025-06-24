@@ -17,7 +17,6 @@
     --cor-borda-erro: #f5c6cb;
 }
 
-/* --- Reset Básico e Estilos Globais --- */
 html, body {
     margin: 0;
     padding: 0;
@@ -61,7 +60,6 @@ main {
     margin-top: 10vh;
 }
 
-/* --- Mensagens de Feedback --- */
 .form-message {
     padding: 12px;
     margin: -10px auto 25px auto;
@@ -84,7 +82,6 @@ main {
     border: 1px solid var(--cor-borda-erro);
 }
 
-/* --- Botões de Ação Principal --- */
 .btn-add-new {
     display: inline-block;
     background-color: var(--cor-sucesso);
@@ -104,7 +101,6 @@ main {
     transform: translateY(-2px);
 }
 
-/* --- Estilos do Formulário de Adição/Edição --- */
 .form-wrapper {
     background-color: var(--cor-fundo-container);
     border-radius: 10px;
@@ -234,7 +230,6 @@ main {
     text-decoration: underline;
 }
 
-/* --- Estilos da Tabela de Animes (admin.php) --- */
 .anime-list-table {
     width: 100%;
     margin-top: 20px;
@@ -252,23 +247,22 @@ main {
 .anime-list-table .btn-edit {
     background-color: var(--cor-azul);
     color: var(--cor-texto-claro);
-    padding: 6px 10px; /* Ajustado */
-    border-radius: 4px; /* Ajustado */
+    padding: 6px 10px;
+    border-radius: 4px;
     text-decoration: none;
     font-size: 0.9em;
 }
 .anime-list-table .btn-delete {
     background-color: var(--cor-erro);
     color: var(--cor-texto-claro);
-    padding: 6px 10px; /* Ajustado */
-    border-radius: 4px; /* Ajustado */
+    padding: 6px 10px;
+    border-radius: 4px;
     border: none;
     cursor: pointer;
     font-size: 0.9em;
     margin-left: 5px;
 }
 
-/* --- Estilos da Página de Pesquisar Animes (pesquisar.php) --- */
 .form-filtros-principal {
     background-color: var(--cor-fundo-container);
     padding: 20px;
@@ -313,7 +307,6 @@ main {
 }
 
 .campo-input::placeholder { color: rgba(255, 255, 255, 0.5); }
-/* Outros seletores de placeholder podem ser necessários para compatibilidade total */
 
 
 .botao-icone {
@@ -355,7 +348,6 @@ main {
     background-color: #218838;
 }
 
-/* --- Grade de Animes (pesquisar.php e outras listagens) --- */
 .anime-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
@@ -446,7 +438,6 @@ main {
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
 
-/* --- Botões de Admin nos Cards (pesquisar.php) --- */
 .admin-card-actions {
     display: flex;
     justify-content: space-around;
@@ -486,8 +477,36 @@ main {
     transform: translateY(-2px);
 }
 
-/* --- CSS Responsivo --- */
 @media (max-width: 768px) {
+    main {
+        padding: 15px;
+        margin: 15px auto;
+    }
+    .admin-container h1 {
+        font-size: 1.9em;
+        margin-bottom: 20px;
+        padding-bottom: 8px;
+    }
+    .form-wrapper {
+        padding: 20px;
+    }
+    .btn-add-new {
+        padding: 10px 15px;
+        font-size: 1em;
+        margin-bottom: 20px;
+    }
+    .submit-btn {
+        padding: 12px 20px;
+        font-size: 1em;
+    }
+    .genre-input {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .genre-input input {
+        margin-bottom: 10px;
+    }
+
     .form-filtros-principal {
         padding: 15px;
         margin: 10px auto;
@@ -509,6 +528,7 @@ main {
         grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         gap: 15px;
         padding: 10px 0;
+        margin-top: 15px;
     }
     .anime-card-poster {
         height: 230px; 
@@ -518,16 +538,94 @@ main {
         padding: 6px 10px;
         font-size: 0.85em;
     }
+    .anime-list-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+        margin-top: 15px;
+    }
+    .anime-list-table th, .anime-list-table td {
+        padding: 6px 8px;
+        font-size: 0.9em;
+    }
+    .anime-list-table .btn-edit, .anime-list-table .btn-delete {
+        font-size: 0.85em;
+        padding: 5px 8px;
+    }
+    .form-message {
+        margin-bottom: 20px;
+        font-size: 0.9em;
+    }
 }
 
 @media (max-width: 480px) {
+    main {
+        padding: 10px;
+        margin: 10px auto;
+    }
+    .admin-container h1 {
+        font-size: 1.7em;
+        margin-bottom: 15px;
+        padding-bottom: 6px;
+    }
+    .form-wrapper {
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+     .form input[type="text"],
+    .form input[type="number"],
+    .form textarea {
+        padding: 10px;
+        font-size: 0.95em;
+        margin-bottom: 15px;
+    }
+    .form textarea {
+        min-height: 100px;
+    }
+     .btn-add-new {
+        padding: 8px 12px;
+        font-size: 0.95em;
+    }
+    .submit-btn {
+        padding: 10px 15px;
+        font-size: 0.95em;
+    }
+    .genre-list {
+        margin-bottom: 20px;
+        padding: 10px;
+        min-height: 40px;
+    }
+    .genre-item {
+        padding: 6px 10px;
+        font-size: 0.85em;
+    }
     .anime-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
     }
     .form-filtros-principal {
         padding: 10px;
     }
     .anime-card-poster {
         height: 280px;
+    }
+    .anime-card-title-overlay {
+        font-size: 1em;
+    }
+    .ano-anime {
+        font-size: 0.85em;
+        padding: 3px 8px;
+    }
+    .anime-list-table th, .anime-list-table td {
+        padding: 4px 6px;
+        font-size: 0.85em;
+    }
+    .anime-list-table .btn-edit, .anime-list-table .btn-delete {
+        font-size: 0.8em;
+        padding: 4px 6px;
+        margin-left: 3px;
+    }
+    .admin-card-actions .btn-admin-card {
+        font-size: 0.8em;
     }
 }

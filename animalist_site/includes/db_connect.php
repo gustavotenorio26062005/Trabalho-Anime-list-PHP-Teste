@@ -3,7 +3,7 @@
 $servername = "localhost"; // Geralmente 'localhost' no XAMPP/WAMP
 $username = "root";        // Usuário padrão do MySQL
 $password = "";            // Senha padrão (geralmente vazia no XAMPP/WAMP)
-$dbname = "animalist_db";  // Nome do banco de dados que você criou
+$dbname = "animalist_db";  // Nome do banco de dados 
 
 // Cria a conexão
 $conn = new mysqli($servername, $username, $password, $dbname);

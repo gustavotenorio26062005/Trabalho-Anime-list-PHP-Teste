@@ -335,8 +335,6 @@ require_once 'includes/header.php';
             } else {
                 statusParaEnviar = statusClicado;
             }
-            // formData.append('status_anime', statusParaEnviar) resultará no envio da string "null"
-            // ou da string do status.
             handleAction({ status_anime: statusParaEnviar }); 
         });
     });

@@ -70,8 +70,8 @@ body {
     background-color: var(--cor-borda); 
     color: var(--cor-clara); 
     padding: 8px 15px;
-    margin-top: 10px; /* Espaço acima */
-    margin-bottom: 15px; /* Espaço abaixo */
+    margin-top: 10px; 
+    margin-bottom: 15px; 
     border-radius: 5px;
     font-weight: bold;
     font-size: 0.9em;
@@ -130,7 +130,7 @@ body {
 .btn-delete:hover { color: var(--cor-nao-recomendo); }
 
 .user-actions-container {
-    background-color: rgba(13, 17, 23, 0.7); /* Fundo escuro semi-transparente */
+    background-color: rgba(13, 17, 23, 0.7); 
     border: 1px solid #30363d;
     border-radius: 12px;
     padding: 20px;
@@ -141,8 +141,8 @@ body {
     align-items: center;
     flex-wrap: wrap;
     gap: 20px;
-    backdrop-filter: blur(5px); /* Efeito de vidro fosco no fundo */
-    animation: fadeIn 0.5s ease-out; /* Animação de entrada */
+    backdrop-filter: blur(5px); 
+    animation: fadeIn 0.5s ease-out; 
 }
 
 @keyframes fadeIn {
@@ -161,16 +161,16 @@ body {
     background-color: #161b22;
     color: #c9d1d9;
     padding: 10px 20px;
-    border-radius: 20px; /* Botões arredondados em formato de pílula */
+    border-radius: 20px; 
     cursor: pointer;
     font-weight: 500;
     font-family: 'Jost', sans-serif;
-    transition: all 0.3s ease; /* Animação para todas as propriedades */
+    transition: all 0.3s ease;
 }
 
 .status-btn:hover, .favorite-btn:hover {
     border-color: #8b949e;
-    transform: translateY(-2px); /* Efeito de elevação */
+    transform: translateY(-2px);
 }
 
 .favorite-btn {
@@ -182,13 +182,13 @@ body {
 /* ESTILO DO BOTÃO ATIVO (FEEDBACK VISUAL) */
 .user-actions-container .status-btn.active,
 .user-actions-container .favorite-btn.active {
-    background-color: #65EBB9; /* Cor de destaque do tema */
-    color: #0d1117; /* Texto escuro para contraste */
+    background-color: #65EBB9; 
+    color: #0d1117; 
     border-color: #65EBB9;
     font-weight: bold;
     box-shadow: 0 0 15px rgba(101, 235, 185, 0.3);
 }
 
 .user-actions-container .favorite-btn.active .fa-heart {
-    color: #e44d5f; /* Cor do coração quando favoritado */
+    color: #e44d5f; 
 }

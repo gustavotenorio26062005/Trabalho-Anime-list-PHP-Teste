@@ -210,18 +210,14 @@ body {
     line-height: 1.3; 
     width: 100%;
     box-sizing: border-box;
-    /* white-space: nowrap; REMOVIDO para permitir quebra de linha */
+
     overflow: hidden; 
     text-overflow: ellipsis; 
-    /* Adicionado para ellipsis em múltiplas linhas */
+
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* Número de linhas desejado */
+    -webkit-line-clamp: 2; 
     -webkit-box-orient: vertical;
-    /* Pode ser necessário ajustar a altura ou max-height se -webkit-line-clamp não for suficiente por si só
-       ou para navegadores que não suportam -webkit-line-clamp totalmente.
-       Por exemplo: max-height: calc(1.3em * 2);  (line-height * número de linhas) 
-       No entanto, o -webkit-line-clamp é geralmente preferido.
-    */
+
 }
 
 .anime-grid .initially-hidden {

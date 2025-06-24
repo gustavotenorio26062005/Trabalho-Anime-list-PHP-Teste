@@ -35,6 +35,3 @@ $anoAtual = date("Y"); // Para o ano dinâmico
         </div>
     </div>
 </footer>
-
-<!-- Importante: Adicione o link para o Font Awesome no <head> da sua página principal se ainda não tiver -->
-<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"> -->

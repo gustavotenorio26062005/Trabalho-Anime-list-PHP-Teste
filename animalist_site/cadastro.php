@@ -11,7 +11,7 @@ $message_type = '';
 // Variáveis para pré-popular o formulário em caso de erro, mantendo o que o usuário digitou.
 $nome = '';
 $email = '';
-$data_nascimento = ''; // Nova variável para a data de nascimento
+$data_nascimento = ''; 
 
 // Verifica se o formulário foi enviado usando o método POST.
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -61,14 +61,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             // Se todas as validações passarem, tenta inserir no banco de dados.
             else {
-                $senha_para_salvar = $senha; // Senha em texto puro (não segura para produção!)
+                $senha_para_salvar = $senha; 
 
                 $conn->begin_transaction(); // Inicia a transação
 
                 try {
                     // Prepara a query SQL para inserir o usuário.
-                    // ATENÇÃO: 'sds' -> string (nome), string (email), date (data_nascimento), string (senha)
-                    // No PHP, mesmo sendo DATE no MySQL, passamos como STRING (formato 'YYYY-MM-DD').
                     $stmt = $conn->prepare("INSERT INTO Usuarios (nome, email, data_nascimento, senha) VALUES (?, ?, ?, ?)");
                     $stmt->bind_param("ssss", $nome, $email, $data_nascimento, $senha_para_salvar);
 

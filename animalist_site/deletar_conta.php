@@ -4,13 +4,13 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once 'includes/db_connect.php'; // Ajuste o caminho se necessário
+require_once 'includes/db_connect.php'; 
 // Inicie a sessão se você for pegar o user_id dela
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 
-header('Content-Type: application/json'); // É crucial para o JavaScript entender a resposta
+header('Content-Type: application/json'); 
 
 $response = ['success' => false, 'message' => 'Ocorreu um erro inicial.'];
 
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result->num_rows === 1) {
             $user_row = $result->fetch_assoc();
-            $stored_plain_password = $user_row['senha']; // Nome da sua coluna de senha em texto puro
+            $stored_plain_password = $user_row['senha']; 
 
             //  COMPARAR A SENHA FORNECIDA COM A SENHA ARMAZENADA
             if ($entered_password === $stored_plain_password) {
@@ -74,8 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         session_destroy();
 
                     } else {
-                        // Isso pode acontecer se o usuário já foi deletado por algum motivo
-                        // ou se o ID do usuário não existir mais (improvável se a sessão estiver correta)
                         throw new Exception('Nenhum usuário foi afetado pela exclusão. Verifique o ID do usuário.');
                     }
                     $stmt_delete_user->close();

@@ -438,7 +438,6 @@ if ($result_anos) {
 
                 const genreItem = document.createElement('div');
                 genreItem.className = 'genre-item';
-                // htmlspecialchars para prevenir XSS ao exibir o nome do gênero
                 genreItem.innerHTML = `${htmlspecialchars(genreName)} <button type="button" onclick="this.parentElement.remove(); atualizarGenerosInput();">🗑️</button>`;
                 genreList.appendChild(genreItem);
                 genreInput.value = ''; // Limpa o campo de input após adicionar
@@ -449,7 +448,6 @@ if ($result_anos) {
         }
 
         // Função para atualizar o input hidden 'generosInput' com todos os gêneros da lista
-        // Isso é crucial para que os gêneros sejam enviados corretamente no formulário
         function atualizarGenerosInput() {
             const genreList = document.getElementById('genreList');
             const generosInput = document.getElementById('generosInput');

@@ -27,7 +27,7 @@
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 4px;
-    box-sizing: border-box; /* Inclui padding na largura total */
+    box-sizing: border-box; 
 }
 
 .form-group button {
