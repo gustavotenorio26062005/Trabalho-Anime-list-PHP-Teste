@@ -98,7 +98,7 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
     
     f. Clique em **"Executar"** no final da página para iniciar a importação.
 
-    Alternativamente:
+    **Alternativamente:**
     
     a. Copie o código dentro do arquivo `animalist_db`
     
