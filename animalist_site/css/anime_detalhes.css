@@ -189,6 +189,37 @@ body {
     box-shadow: 0 0 15px rgba(101, 235, 185, 0.3);
 }
 
+/* BOTÃO DE DELETAR AVALIACAO PARA ADMIN*/
+
 .user-actions-container .favorite-btn.active .fa-heart {
     color: #e44d5f; 
+}
+
+.user-actions-container .status-btn.active,
+.user-actions-container .favorite-btn.active {
+    background-color: #65EBB9; color: #0d1117;
+    box-shadow: 0 0 10px rgba(101, 235, 185, 0.5);
+}
+.review-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #888; /* Cor da data */
+}
+.review-footer form { /* Formulário de delete */
+    margin: 0; 
+}
+.review-footer .btn-delete { /* Botão de delete no rodapé da avaliação */
+    background-color: transparent;
+    color: var(--cor-erro); /* Vermelho para erro/delete */
+    border: none;
+    padding: 0 5px; 
+    cursor: pointer;
+    font-size: 1em; 
+    line-height: 1;
+}
+.review-footer .btn-delete:hover {
+    color: #a0232f; /* Vermelho mais escuro no hover */
 }

@@ -5,11 +5,45 @@ require_once 'includes/db_connect.php';
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-// require_once 'includes/db_connect.php'; // Já incluído acima
 
 $id_anime = (int)($_GET['id'] ?? 0);
 $id_usuario = $_SESSION['user_id'] ?? null;
-$user_type = $_SESSION['user_type'] ?? null; // Mantido para consistência
+$user_type = $_SESSION['user_type'] ?? null; // Initial check for user_type
+
+// LÓGICA PARA PROCESSAR EXCLUSÃO DE AVALIAÇÃO (ADMIN)
+$message = ''; // Initialize message variables
+$message_type = ''; // Initialize message_type
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete_review') {
+    if (isset($id_usuario) && isset($user_type) && $user_type == 1) { // Check if admin (type 1)
+        $id_avaliacao_para_deletar = (int)($_POST['id_avaliacao'] ?? 0);
+
+        if ($id_avaliacao_para_deletar > 0) {
+            try {
+                $stmt_delete_review = $conn->prepare("DELETE FROM Avaliacoes WHERE id_avaliacao = ?");
+                $stmt_delete_review->bind_param("i", $id_avaliacao_para_deletar);
+                if ($stmt_delete_review->execute()) {
+                    $message = "Avaliação removida com sucesso.";
+                    $message_type = "success";
+                } else {
+                    $message = "Erro ao remover a avaliação.";
+                    $message_type = "error";
+                }
+                $stmt_delete_review->close();
+            } catch (mysqli_sql_exception $e) {
+                $message = "Erro no servidor ao deletar avaliação: " . $e->getMessage();
+                $message_type = "error";
+            }
+        } else {
+            $message = "ID da avaliação inválido para exclusão.";
+            $message_type = "error";
+        }
+    } else {
+        $message = "Ação não permitida.";
+        $message_type = "error";
+    }
+}
+
 
 // Lógica para processar a ação dos botões (manter na lista)
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'manter_lista' && $id_usuario) {
@@ -21,42 +55,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
     $entry_atual = $stmt_check->get_result()->fetch_assoc();
     $stmt_check->close();
 
-    // Inicializar os valores que serão salvos com os valores atuais (se existirem) ou defaults
     $status_para_salvar = $entry_atual['status_anime'] ?? null;
-    $favorito_para_salvar = $entry_atual['is_favorito'] ?? 0; // Default para não favorito
+    $favorito_para_salvar = $entry_atual['is_favorito'] ?? 0; 
 
-    // Verificar e processar 'status_anime' se foi enviado
     if (array_key_exists('status_anime', $_POST)) {
         $status_enviado_do_js = $_POST['status_anime'];
-        // Se o JavaScript enviou a string "null" (para desmarcar), converter para PHP null
         if ($status_enviado_do_js === 'null') {
             $status_para_salvar = null;
         } else {
-            // Caso contrário, usa o status enviado (que pode ser "Assistindo", "Completado", etc.)
             $status_para_salvar = $status_enviado_do_js;
         }
     }
 
-    // Verificar e processar 'is_favorito' se foi enviado
     if (array_key_exists('is_favorito', $_POST)) {
-        $favorito_enviado_do_js_str = $_POST['is_favorito']; // Será 'true' ou 'false' (strings)
+        $favorito_enviado_do_js_str = $_POST['is_favorito']; 
         $favorito_para_salvar = ($favorito_enviado_do_js_str === 'true') ? 1 : 0;
     }
 
     try {
-        // Lógica de decisão: Deletar, Atualizar/Inserir, ou Não Fazer Nada
         if ($status_para_salvar === null && $favorito_para_salvar == 0) {
-            // Se o resultado final é sem status e não favorito
             if ($entry_atual) {
-                // E já existia uma entrada, então devemos deletá-la
                 $stmt_delete = $conn->prepare("DELETE FROM ListaPessoalAnimes WHERE id_usuario = ? AND id_anime = ?");
                 $stmt_delete->bind_param("ii", $id_usuario, $id_anime);
                 $stmt_delete->execute();
                 $stmt_delete->close();
             }
-            // Se não existia entrada e o resultado é sem status/favorito, não faz nada
         } else {
-            // Se há um status ou é favorito, chamamos a procedure para inserir ou atualizar
             $stmt = $conn->prepare("CALL adicionar_atualizar_anime_listapessoal(?, ?, ?, ?)");
             $stmt->bind_param("iisi", $id_usuario, $id_anime, $status_para_salvar, $favorito_para_salvar);
             $stmt->execute();
@@ -74,15 +98,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
     }
 }
 
-$user_type = $_SESSION['user_type'] ?? 'normal';
+// Re-fetch user_type after potential session changes or for general page load
+$user_type = $_SESSION['user_type'] ?? 'normal'; // Now it's 'normal' if not set, or the actual value (e.g., 1 for admin)
+
 if ($id_anime <= 0) {
     header("Location: pesquisar.php");
     exit();
 }
 
 // LÓGICA PARA PROCESSAR NOVAS AVALIAÇÕES (FORMULÁRIO)
-$message = '';
-$message_type = '';
+// $message, $message_type are initialized above to catch delete messages as well
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'avaliar' && $id_usuario) {
     try {
         $nota = $_POST['nota'];
@@ -101,10 +126,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
             $stmt_insert->execute();
             $message = "Avaliação registrada com sucesso.";
         }
-        $message_type = "success";
+        $message_type = "success"; // Ensure message_type is set for avaliação
     } catch (mysqli_sql_exception $e) {
-        $message = "Erro: " . $e->getMessage();
-        $message_type = "error";
+        $message = "Erro ao avaliar: " . $e->getMessage();
+        $message_type = "error"; // Ensure message_type is set for avaliação
     }
 }
 
@@ -153,6 +178,29 @@ require_once 'includes/header.php';
         .user-actions-container .favorite-btn.active {
             background-color: #65EBB9; color: #0d1117;
             box-shadow: 0 0 10px rgba(101, 235, 185, 0.5);
+        }
+        .review-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 0.85em;
+            color: #888; /* Cor da data */
+        }
+        .review-footer form { /* Formulário de delete */
+            margin: 0; 
+        }
+        .review-footer .btn-delete { /* Botão de delete no rodapé da avaliação */
+            background-color: transparent;
+            color: var(--cor-erro); /* Vermelho para erro/delete */
+            border: none;
+            padding: 0 5px; 
+            cursor: pointer;
+            font-size: 1em; 
+            line-height: 1;
+        }
+        .review-footer .btn-delete:hover {
+            color: #a0232f; /* Vermelho mais escuro no hover */
         }
     </style>
 </head>
@@ -205,7 +253,7 @@ require_once 'includes/header.php';
             <h2 class="section-title">Avaliações da Comunidade</h2>
             
             <?php if (!empty($message)): ?>
-                <div class="message <?php echo $message_type; ?>"><?php echo htmlspecialchars($message); ?></div>
+                <div class="message <?php echo htmlspecialchars($message_type); ?>"><?php echo htmlspecialchars($message); ?></div>
             <?php endif; ?>
 
             <?php if (isset($_SESSION['user_id'])): ?>
@@ -243,7 +291,7 @@ require_once 'includes/header.php';
                         <p class="review-comment"><?php echo nl2br(htmlspecialchars($aval['comentario'])); ?></p>
                         <div class="review-footer">
                             <small>Postado em <?php echo date('d/m/Y', strtotime($aval['data_avaliacao'])); ?></small>
-                            <?php if (($user_type ?? 'normal') === 'admin'): ?>
+                            <?php if (isset($user_type) && $user_type == 1): // Verifica se é admin (tipo 1) ?>
                                 <form action="anime_detalhes.php?id=<?php echo $id_anime; ?>" method="POST">
                                     <input type="hidden" name="action" value="delete_review">
                                     <input type="hidden" name="id_avaliacao" value="<?php echo $aval['id_avaliacao']; ?>">
@@ -267,7 +315,6 @@ require_once 'includes/header.php';
     const statusButtons = actionsSection.querySelectorAll('.status-btn');
     const favoriteBtn = document.getElementById('favorite-btn');
     
-    // Função que atualiza a aparência dos botões baseado nos dados do container
     function updateButtonStates() {
         const currentStatus = actionsSection.dataset.currentStatus;
         const isFav = actionsSection.dataset.isFavorito === 'true';
@@ -278,19 +325,16 @@ require_once 'includes/header.php';
         favoriteBtn.classList.toggle('active', isFav);
     }
     
-    // Aplica o estado visual inicial assim que a página carrega
     updateButtonStates();
 
-     // Função assíncrona para lidar com a ação de clique
     async function handleAction(data) {
         const formData = new FormData();
         formData.append('action', 'manter_lista');
 
-        // Adiciona dados ao FormData somente se eles existirem no objeto 'data'
-        if (data.hasOwnProperty('status_anime')) { // Verifica se a propriedade existe
+        if (data.hasOwnProperty('status_anime')) { 
             formData.append('status_anime', data.status_anime);
         }
-        if (data.hasOwnProperty('is_favorito')) { // Verifica se a propriedade existe
+        if (data.hasOwnProperty('is_favorito')) { 
             formData.append('is_favorito', data.is_favorito);
         }
 
@@ -307,10 +351,10 @@ require_once 'includes/header.php';
             const result = await response.json();
             
             if (result.success) {
-                if (data.hasOwnProperty('status_anime')) { // Atualiza se o status foi enviado
+                if (data.hasOwnProperty('status_anime')) { 
                     actionsSection.dataset.currentStatus = result.new_status || '';
                 }
-                if (data.hasOwnProperty('is_favorito')) { // Atualiza se o favorito foi enviado
+                if (data.hasOwnProperty('is_favorito')) { 
                     actionsSection.dataset.isFavorito = result.new_favorito ? 'true' : 'false';
                 }
                 updateButtonStates();
@@ -323,7 +367,6 @@ require_once 'includes/header.php';
         }
     }
 
-    // Adiciona os event listeners aos botões de status
     statusButtons.forEach(button => {
         button.addEventListener('click', function() {
             const statusClicado = this.dataset.status;
@@ -331,7 +374,7 @@ require_once 'includes/header.php';
 
             let statusParaEnviar;
             if (statusAtualNoDataset === statusClicado) {
-                statusParaEnviar = null; // O JS define como null
+                statusParaEnviar = null; 
             } else {
                 statusParaEnviar = statusClicado;
             }
@@ -339,11 +382,9 @@ require_once 'includes/header.php';
         });
     });
 
-    // Listener do botão de favorito (sem alterações, mas revisado para consistência)
-    if (favoriteBtn) { // Garante que o botão existe
+    if (favoriteBtn) { 
         favoriteBtn.addEventListener('click', () => {
             const currentlyFavorito = actionsSection.dataset.isFavorito === 'true';
-            // Envia apenas is_favorito, o status não está sendo alterado por este botão
             handleAction({ is_favorito: !currentlyFavorito });
         });
     }

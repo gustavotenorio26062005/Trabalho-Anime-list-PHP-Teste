@@ -9,8 +9,8 @@ require_once 'includes/header.php';     // Nosso header integrado (que também c
 $search_query = '';
 $filter_year = '';
 $filter_genre = '';
-$sort_by = 'nome';     // Valor padrão para ordenação
-$sort_order = 'ASC';   // Ordem padrão
+$sort_by = 'nome';  
+$sort_order = 'ASC'; 
 $animes = []; 
 
 // Obter valores do GET para filtros e ordenação
