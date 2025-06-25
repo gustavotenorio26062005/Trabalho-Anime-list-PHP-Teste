@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Linguagem-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="Linguagem PHP">
   <img src="https://img.shields.io/badge/Banco%20de%20Dados-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="Banco de Dados MySQL">
   <img src="https://img.shields.io/badge/Servidor-Apache-D22128?style=for-the-badge&logo=Apache&logoColor=white" alt="Servidor Apache">
-  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge" alt="Status: Em Desenvolvimento">
+  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-green?style=for-the-badge" alt="Status: Completo.">
 </p>
 
 -----
