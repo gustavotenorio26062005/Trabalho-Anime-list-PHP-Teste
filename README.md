@@ -1,15 +1,15 @@
 # 🎬 Animalist - Seu Site de Avaliações de Anime
 
-\<p align="center"\>
-\<strong\>Uma plataforma para você descobrir, avaliar e discutir seus animes favoritos.\</strong\>
-\</p\>
+<p align="center">
+  <strong>Uma plataforma para você descobrir, avaliar e discutir seus animes favoritos.</strong>
+</p>
 
-\<p align="center"\>
-\<img src="[https://img.shields.io/badge/Linguagem-PHP-777BB4?style=for-the-badge\&logo=php\&logoColor=white](https://img.shields.io/badge/Linguagem-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)" alt="Linguagem PHP"\>
-\<img src="[https://img.shields.io/badge/Banco%20de%20Dados-MySQL-4479A1?style=for-the-badge\&logo=mysql\&logoColor=white](https://img.shields.io/badge/Banco%20de%20Dados-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)" alt="Banco de Dados MySQL"\>
-\<img src="[https://img.shields.io/badge/Servidor-Apache-D22128?style=for-the-badge\&logo=Apache\&logoColor=white](https://www.google.com/search?q=https://img.shields.io/badge/Servidor-Apache-D22128%3Fstyle%3Dfor-the-badge%26logo%3DApache%26logoColor%3Dwhite)" alt="Servidor Apache"\>
-\<img src="[https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge)" alt="Status: Em Desenvolvimento"\>
-\</p\>
+<p align="center">
+  <img src="https://img.shields.io/badge/Linguagem-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="Linguagem PHP">
+  <img src="https://img.shields.io/badge/Banco%20de%20Dados-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="Banco de Dados MySQL">
+  <img src="https://img.shields.io/badge/Servidor-Apache-D22128?style=for-the-badge&logo=Apache&logoColor=white" alt="Servidor Apache">
+  <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge" alt="Status: Em Desenvolvimento">
+</p>
 
 -----
 
