@@ -1,15 +1,17 @@
 # 🎬 Animalist - Seu Site de Avaliações de Anime
 
-<p align="center"\>
-<strong\>Uma plataforma para você descobrir, avaliar e discutir seus animes favoritos.</strong\>
-</p\>
+\<p align="center"\>
+\<strong\>Uma plataforma para você descobrir, avaliar e discutir seus animes favoritos.\</strong\>
+\</p\>
 
-<div align="center"\>
-<img src="https://img.shields.io/badge/Linguagem-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white" alt="Linguagem PHP">
-<img src="https://img.shields.io/badge/Banco%20de%20Dados-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white" alt="Banco de Dados MySQL">
-<img src="https://img.shields.io/badge/Apache-D22128?style=for-the-badge&logo=Apache&logoColor=white" alt="Apache">
-<img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge" alt="Status: Em Desenvolvimento">
-<div\>
+\<p align="center"\>
+\<img src="[https://img.shields.io/badge/Linguagem-PHP-777BB4?style=for-the-badge\&logo=php\&logoColor=white](https://img.shields.io/badge/Linguagem-PHP-777BB4?style=for-the-badge&logo=php&logoColor=white)" alt="Linguagem PHP"\>
+\<img src="[https://img.shields.io/badge/Banco%20de%20Dados-MySQL-4479A1?style=for-the-badge\&logo=mysql\&logoColor=white](https://img.shields.io/badge/Banco%20de%20Dados-MySQL-4479A1?style=for-the-badge&logo=mysql&logoColor=white)" alt="Banco de Dados MySQL"\>
+\<img src="[https://img.shields.io/badge/Servidor-Apache-D22128?style=for-the-badge\&logo=Apache\&logoColor=white](https://www.google.com/search?q=https://img.shields.io/badge/Servidor-Apache-D22128%3Fstyle%3Dfor-the-badge%26logo%3DApache%26logoColor%3Dwhite)" alt="Servidor Apache"\>
+\<img src="[https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge](https://img.shields.io/badge/Status-Em%20Desenvolvimento-yellow?style=for-the-badge)" alt="Status: Em Desenvolvimento"\>
+\</p\>
+
+-----
 
 ## 📖 Sobre o Projeto
 
@@ -17,26 +19,35 @@ O **Animalist** é um site para avaliação de animes desenvolvido como um proje
 
 A plataforma permite que os usuários criem um perfil, pesquisem animes, mantenham listas personalizadas e compartilhem suas opiniões com a comunidade.
 
+-----
+
 ## ✨ Funcionalidades
 
-O sistema foi projetado com funcionalidades distintas para usuários e administradores:
+O sistema foi projetado com funcionalidades distintas para usuários e administradores.
 
-  * **Para Usuários:**
-      * 👤 **Gerenciamento de Conta:** Cadastro, login, recuperação de senha e exclusão de perfil.
-      * 🖼️ **Customização de Perfil:** Alteração de nome, foto, banner e descrição.
-      * 🔍 **Pesquisa Avançada:** Busca de animes por nome, gênero e ano.
-      * 📝 **Listas Pessoais:** Organize animes com status ("Assistindo", "Completado", "Planejando Assistir", etc.).
-      * 👍 **Avaliações e Comentários:** Recomende ou não um anime e deixe sua opinião.
-  * **Para Administradores:**
-      * ➕ **Gerenciamento de Conteúdo:** Adicionar, editar e excluir animes do catálogo.
-      * 🛡️ **Moderação:** Excluir avaliações e comentários de usuários.
+### Para Usuários:
+
+  - 👤 **Gerenciamento de Conta:** Cadastro, login, recuperação de senha e exclusão de perfil.
+  - 🖼️ **Customização de Perfil:** Alteração de nome, foto, banner e descrição.
+  - 🔍 **Pesquisa Avançada:** Busca de animes por nome, gênero e ano.
+  - 📝 **Listas Pessoais:** Organize animes com status ("Assistindo", "Completado", "Planejando Assistir", etc.).
+  - 👍 **Avaliações e Comentários:** Recomende ou não um anime e deixe sua opinião.
+
+### Para Administradores:
+
+  - ➕ **Gerenciamento de Conteúdo:** Adicionar, editar e excluir animes do catálogo.
+  - 🛡️ **Moderação:** Excluir avaliações e comentários de usuários.
+
+-----
 
 ## 🛠️ Tecnologias Utilizadas
 
-  * **Backend:** PHP
-  * **Banco de Dados:** MySQL
-  * **Servidor Web:** Apache (configurado via XAMPP)
-  * **Frontend:** HTML, CSS, JavaScript
+  - **Backend:** PHP
+  - **Banco de Dados:** MySQL
+  - **Servidor Web:** Apache (configurado via XAMPP)
+  - **Frontend:** HTML, CSS, JavaScript
+
+-----
 
 ## 🚀 Começando
 
@@ -44,9 +55,9 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
 
 ### Pré-requisitos
 
-  * **XAMPP:** Um ambiente de desenvolvimento PHP completo.
-      * Pode ser baixado em: **[https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)**
-  * **Navegador Web:** Google Chrome, Mozilla Firefox, etc.
+  - **XAMPP:** Um ambiente de desenvolvimento PHP completo.
+      - Pode ser baixado em: **[https://www.apachefriends.org/index.html](https://www.apachefriends.org/index.html)**
+  - **Navegador Web:** Google Chrome, Mozilla Firefox, etc.
 
 ### Instalação
 
@@ -80,7 +91,13 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
     e. Clique em **"Escolher arquivo"** e localize o arquivo `animalist_site/config_SQL/animalist_db.sql`.
     f. Clique em **"Executar"** no final da página para iniciar a importação.
 
-5.  **Configure a Conexão com o Banco**
+    Alternativamente:
+    a. Copie o código dentro do arquivo `animalist_db`
+    b. abra a página admin do MySQL no Xampp
+    c. Cole o código que copiou dentro da aba "SQL"
+    d. Clique no botão executar
+
+6.  **Configure a Conexão com o Banco**
 
     > **⚠️ MUITO IMPORTANTE:** Este passo garante que o site se conecte ao banco de dados.
 
@@ -112,28 +129,34 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
     ?>
     ```
 
-6.  **Acesse o Animalist**
+7.  **Acesse o Animalist**
     Abra seu navegador e digite o endereço: **[http://localhost/animalist\_site](https://www.google.com/search?q=http://localhost/animalist_site)**.
 
 🎉 E pronto\! Agora você pode navegar e usar o Animalist localmente.
 
+-----
+
 ## 🤔 Solução de Problemas Comuns
 
-  * **`Access denied for user 'root'@'localhost'`**: A senha no arquivo `db_connect.php` não corresponde à senha do seu MySQL. Verifique o **Passo 5**.
-  * **`Unknown database 'animalist_db'`**: O nome do banco no arquivo de conexão está incorreto ou não foi criado corretamente. Verifique os **Passos 4 e 5**.
-  * **Página em branco ou erros de PHP**: Verifique se os serviços Apache e MySQL estão realmente rodando no XAMPP.
-  * **Erro 404 (Objeto não encontrado)**: Verifique se o nome da pasta em `htdocs` está correto (`animalist_site`) e se a URL no navegador está correta.
+  - **`Access denied for user 'root'@'localhost'`**: A senha no arquivo `db_connect.php` não corresponde à senha do seu MySQL. Verifique o **Passo 5**.
+  - **`Unknown database 'animalist_db'`**: O nome do banco no arquivo de conexão está incorreto ou não foi criado corretamente. Verifique os **Passos 4 e 5**.
+  - **Página em branco ou erros de PHP**: Verifique se os serviços Apache e MySQL estão realmente rodando no XAMPP.
+  - **Erro 404 (Objeto não encontrado)**: Verifique se o nome da pasta em `htdocs` está correto (`animalist_site`) e se a URL no navegador está correta.
+
+-----
 
 ## 👥 Contribuidores
 
 Este projeto foi idealizado e desenvolvido por:
 
-  * Gabriel Dias Ribeiro
-  * Gustavo Barros Tenório
-  * Luiz Henrique Gonçalvez
-  * Maycon Cabral da Silva
-  * Renan Valença Bueno Rodrigues
+  - [Gabriel Dias Ribeiro](https://github.com/Tsarco)
+  - [Gustavo Barros Tenório](https://github.com/gustavotenorio26062005)
+  - [Luiz Henrique Gonçalvez](https://github.com/LuizHenriqueGon)
+  - [Maycon Cabral da Silva](https://github.com/Mayconcabral1196)
+  - [Renan Valença Bueno Rodrigues](https://github.com/RenanVKoashi)
 
 -----
 
-<p align="center"\>Divirta-se avaliando seus animes\! 🌟\</p\>
+\<p align="center"\>
+Divirta-se avaliando seus animes\! 🌟
+\</p\>
