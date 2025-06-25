@@ -1,3 +1,4 @@
+![Novo Projeto (39)](https://github.com/user-attachments/assets/99d3056b-b3b9-4260-859a-9e5c8394fd0f)
 # 🎬 Animalist - Seu Site de Avaliações de Anime
 
 <p align="center">
