@@ -85,17 +85,27 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
     Abra o Painel de Controle do XAMPP e inicie os módulos **Apache** e **MySQL**.
 
 4.  **Importe o Banco de Dados**
+   
     a. Abra o phpMyAdmin em `http://localhost/phpmyadmin`.
+    
     b. Clique em **"Novo"** para criar um banco de dados.
+    
     c. Nomeie o banco como `animalist_db` e clique em "Criar".
+    
     d. Selecione o banco `animalist_db` e vá para a aba **"Importar"**.
+    
     e. Clique em **"Escolher arquivo"** e localize o arquivo `animalist_site/config_SQL/animalist_db.sql`.
+    
     f. Clique em **"Executar"** no final da página para iniciar a importação.
 
     Alternativamente:
+    
     a. Copie o código dentro do arquivo `animalist_db`
+    
     b. abra a página admin do MySQL no Xampp
+    
     c. Cole o código que copiou dentro da aba "SQL"
+    
     d. Clique no botão executar
 
 6.  **Configure a Conexão com o Banco**
