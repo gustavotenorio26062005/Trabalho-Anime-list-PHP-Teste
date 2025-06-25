@@ -169,4 +169,4 @@ Este projeto foi idealizado e desenvolvido por:
 -----
 
 <p align="center"\>
-Divirta-se avaliando seus animes\! 🌟 </p>
+Divirta-se avaliando seus animes! 🌟 </p>
