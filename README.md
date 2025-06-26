@@ -1,8 +1,6 @@
-
-
 <div align="center">
-  <a href="https://www.youtube.com/watch?v=l2qvem76MwY" title="Clique para assistir à demonstração">
-    ![Novo Projeto (39)](https://github.com/user-attachments/assets/44e65cab-ed6d-4750-81f7-395f9fd3353a)
+  <a href="[URL_DO_SEU_VIDEO_AQUI](https://www.youtube.com/watch?v=l2qvem76MwY)" title="Clique para assistir à demonstração">
+    <img src="https://img.youtube.com/vi/l2qvem76MwY/hqdefault.jpg" alt="Demonstração do Projeto Animalist">
   </a>
   <br>
   <em><p>Clique na imagem para assistir ao vídeo</p></em>
