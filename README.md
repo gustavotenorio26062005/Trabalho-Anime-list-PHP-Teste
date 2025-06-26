@@ -1,10 +1,6 @@
-<div align="center">
-  <a href="[URL_DO_SEU_VIDEO_AQUI](https://www.youtube.com/watch?v=l2qvem76MwY)" title="Clique para assistir à demonstração">
-    <img src="https://img.youtube.com/vi/l2qvem76MwY/hqdefault.jpg" alt="Demonstração do Projeto Animalist">
-  </a>
-  <br>
-  <em><p>Clique na imagem para assistir ao vídeo</p></em>
-</div>
+![Novo Projeto (39)](https://github.com/user-attachments/assets/977bc3af-5a76-4565-be6c-584790534ee3)
+![Novo Projeto (39)](https://github.com/user-attachments/assets/977bc3af-5a76-4565-be6c-584790534ee3)
+
 
 # 🎬 Animalist - Seu Site de Avaliações de Anime
 
@@ -18,6 +14,14 @@
   <img src="https://img.shields.io/badge/Servidor-Apache-D22128?style=for-the-badge&logo=Apache&logoColor=white" alt="Servidor Apache">
   <img src="https://img.shields.io/badge/Status-Completo-green?style=for-the-badge" alt="Status: Completo.">
 </p>
+
+
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=l2qvem76MwY" title="Clique para assistir à demonstração">
+    <img src="https://img.shields.io/badge/Assista%20à%20Demonstração-FF0000?style=for-the-badge&logo=youtube&logoColor=white" alt="Assista à Demonstração">
+  </a>
+</p>
+
 
 -----
 
