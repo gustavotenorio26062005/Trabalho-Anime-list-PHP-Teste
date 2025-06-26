@@ -2,7 +2,7 @@
 
 <div align="center">
   <a href="https://www.youtube.com/watch?v=l2qvem76MwY" title="Clique para assistir à demonstração">
-    ![Novo Projeto (39)](https://github.com/user-attachments/assets/99d3056b-b3b9-4260-859a-9e5c8394fd0f)
+    ![Novo Projeto (39)](https://github.com/user-attachments/assets/44e65cab-ed6d-4750-81f7-395f9fd3353a)
   </a>
   <br>
   <em><p>Clique na imagem para assistir ao vídeo</p></em>
