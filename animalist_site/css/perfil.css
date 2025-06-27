@@ -1,0 +1,358 @@
+/* --- Estilos Globais do Perfil --- */
+body {
+    background-color: #0a1625; 
+    color: #f0f3f6; 
+}
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #101c2e; 
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+/* --- Cabeçalho do Perfil --- */
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    position: relative;
+    background-color: #101c2e;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.profile-background-image-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-background-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.profile-content-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    position: relative;
+}
+
+.profile-pic-container {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background-color: #60758b;
+    margin-right: 20px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 3px solid #101c2e;
+    flex-shrink: 0;
+}
+
+.profile-pic-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-info {
+    flex-grow: 1;
+}
+
+.profile-name-display {
+    color: #f0f3f6;
+    font-weight: bold;
+    font-size: 1.5em; 
+    margin-bottom: 5px;
+    line-height: 1.2;
+}
+
+.profile-description-display {
+    color: #c0c8d1;
+    font-size: 0.95em;
+    line-height: 1.5;
+    margin-bottom: 0; 
+    min-height: auto; 
+    white-space: pre-wrap;
+}
+
+.profile-actions button, 
+.profile-actions .profile-action-link { 
+    border: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.2em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none; 
+    transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out; 
+}
+.profile-actions .profile-action-link { 
+    background-color: #2f81f7; 
+    color: white;
+}
+.profile-actions button#deleteProfileBtn {
+    background-color: #eb2c4c;
+    color: #f0f3f6;
+}
+.profile-actions button:hover,
+.profile-actions .profile-action-link:hover {
+    opacity: 0.8;
+}
+
+/* --- Área de Conteúdo Principal (Listas de Animes e Sidebar) --- */
+.content-area {
+    display: flex;
+    gap: 20px;
+}
+
+.anime-lists-section {
+    flex: 3;
+}
+
+.anime-list-category {
+    margin-bottom: 30px;
+    background-color: #18283f;
+    padding: 15px;
+    border-radius: 6px;
+}
+
+.list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #253750;
+}
+
+.list-header h2 {
+    color: #65ebba;
+    font-size: 1.4em;
+}
+
+.list-header .view-all {
+    color: #60758b;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.list-header .view-all:hover {
+    text-decoration: underline;
+    color: #65ebba;
+}
+
+.anime-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 125px);
+    gap: 15px;
+    justify-content: start;
+}
+
+.anime-link-perfil { 
+    display: block; 
+    text-decoration: none; 
+    color: inherit; 
+}
+
+.anime-poster {
+    width: 125px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+}
+
+.anime-poster:hover {
+    transform: scale(1.05);
+}
+
+.poster-placeholder {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-bottom: 140%;
+    background-color: #253750;
+    border-radius: 4px;
+}
+
+.poster-placeholder img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.anime-item-title {
+    color: #f0f3f6;
+    font-family: Arial, sans-serif;
+    font-size: 0.85em;
+    font-weight: 500;
+    text-align: center;
+    margin-top: 6px;
+    padding: 0 4px;
+    line-height: 1.3; 
+    width: 100%;
+    box-sizing: border-box;
+
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical;
+
+}
+
+.anime-grid .initially-hidden {
+    display: none;
+}
+
+/* --- Sidebar de Detalhes/Avaliações --- */
+.sidebar-details {
+    flex: 1;
+    background-color: #18283f;
+    padding: 15px;
+    border-radius: 6px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+.initially-hidden-review {
+    display: none;
+}
+
+
+/* --- Estilos para o modal de exclusão de conta --- */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0; 
+    top: 0; 
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.7);
+    align-items: center; 
+    justify-content: center;
+}
+
+.modal-content {
+    background-color: #101c2e; 
+    color: #cdd5e0; 
+    padding: 25px 30px; 
+    border-radius: 8px;
+    width: 90%; 
+    max-width: 450px; 
+    text-align: left; 
+    border: 1px solid #253750; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative;
+}
+
+.modal-content h2 { 
+    color: #65ebba; 
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.modal-content p {
+    font-size: 0.95em;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.modal-content input[type="password"] {
+    width: calc(100% - 22px); 
+    padding: 10px; 
+    margin-top: 5px; 
+    margin-bottom: 5px;
+    border: 1px solid #253750; 
+    background-color: #0d1726; 
+    color: #cdd5e0; 
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.modal-content button {
+    background-color: #eb2c4c; 
+    color: white; 
+    padding: 12px 20px; 
+    border: none;
+    border-radius: 4px; 
+    cursor: pointer; 
+    font-size: 1em;
+    font-weight: bold;
+    width: 100%; 
+    margin-top: 10px; 
+}
+
+.modal-content button:hover { 
+    background-color: #c91f3c; 
+}
+
+.close-button {
+    color: #aaa; 
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 28px; 
+    font-weight: bold;
+}
+
+.close-button:hover, 
+.close-button:focus {
+    color: #fff; 
+    text-decoration: none; 
+    cursor: pointer;
+}
+
+
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+    .content-area {
+        flex-direction: column;
+    }
+    .profile-content-wrapper {
+        flex-direction: column;
+        align-items: center;
+        margin-top: -50px; 
+        text-align: center;
+    }
+    .profile-pic-container {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+    .profile-info {
+        margin-top: 0;
+        width: 100%;
+    }
+    .profile-actions {
+        flex-direction: row;
+        margin-top: 20px;
+        margin-left: 0;
+        width: auto;
+        justify-content: center;
+    }
+    .profile-actions button, .profile-actions .profile-action-link {
+        margin: 0 5px;
+    }
+}

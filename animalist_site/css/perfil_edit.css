@@ -1,0 +1,220 @@
+
+:root {
+    /* Paleta Principal (do ANIMA LIST) */
+    --cor-primaria: #65EBB9;        
+    --cor-fundo-escuro: #0D1117;     
+    --cor-texto-claro: #FFFFFF;      
+    
+    /* Elementos de Interface (do ANIMA LIST) */
+    --cor-fundo-container: #161B22;  
+    --cor-fundo-input: #010409;      
+    --cor-borda-sutil: #30363D;     
+    --cor-texto-escuro-contraste: #010409; 
+
+    /* Cores de Feedback (mantidas) */
+    --cor-sucesso: #28a745;
+    --cor-erro: #dc3545;
+    --cor-fundo-sucesso: #d4edda;
+    --cor-texto-sucesso: #155724;
+    --cor-borda-sucesso: #c3e6cb;
+    --cor-fundo-erro: #f8d7da;
+    --cor-texto-erro: #721c24;
+    --cor-borda-erro: #f5c6cb;
+}
+/* --- Estilos Específicos para editar_perfil.php (Tema Escuro ANIMA LIST) --- */
+
+/* Container Principal do Formulário */
+.form-container {
+    background-color: var(--cor-fundo-container);
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    max-width: 600px;
+    margin: 40px auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Títulos */
+.form-container h2,
+.form-container h3 {
+    color: var(--cor-primaria);
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.form-container h2 {
+    font-size: 2em;
+    border-bottom: 2px solid var(--cor-borda-sutil);
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+}
+
+.form-container h3 {
+    font-size: 1.5em;
+    margin-top: 20px;
+}
+
+/* Parágrafos de Informação */
+.form-container p {
+    font-size: 0.95em;
+    color: var(--cor-texto-claro);
+    opacity: 0.8;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Grupos de Formulário */
+.form-group {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: var(--cor-texto-claro);
+    opacity: 0.9;
+    margin-bottom: 8px;
+    font-size: 1.05em;
+}
+
+/* Inputs e Textareas */
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group input[type="password"],
+.form-group input[type="date"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: var(--cor-fundo-input);
+    color: var(--cor-texto-claro);
+    border: 1px solid var(--cor-borda-sutil);
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-group input[type="date"] {
+    color-scheme: dark;
+}
+.form-group input[type="date"]:not(:valid) {
+    color: var(--cor-texto-claro);
+    opacity: 0.7;
+}
+.form-group input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(100%);
+}
+
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group input[type="password"]:focus,
+.form-group input[type="date"]:focus,
+.form-group textarea:focus {
+    border-color: var(--cor-primaria);
+    box-shadow: 0 0 8px rgba(101, 235, 185, 0.3);
+    outline: none;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Imagens de Preview */
+.form-group img {
+    display: block;
+    margin-top: 10px;
+    border: 1px solid var(--cor-borda-sutil);
+    border-radius: 5px;
+    object-fit: cover;
+}
+
+/* Botões */
+.form-group button[type="submit"] {
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-escuro-contraste);
+    padding: 15px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    width: 100%;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.form-group button[type="submit"]:hover {
+    background-color: #52D0A0; /* Ou use var(--cor-primaria-hover) se definida */
+    transform: translateY(-2px);
+}
+
+/* Links */
+.form-container a {
+    color: var(--cor-primaria);
+    text-decoration: none;
+    text-align: center;
+    display: block;
+    margin-top: 20px;
+    font-weight: bold;
+}
+
+.form-container a:hover {
+    text-decoration: underline;
+}
+
+/* Mensagens de Feedback */
+.message {
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    text-align: center;
+    font-size: 0.95em;
+    border-width: 1px;
+    border-style: solid;
+}
+
+.message.success {
+    background-color: var(--cor-fundo-sucesso);
+    color: var(--cor-texto-sucesso);
+    border-color: var(--cor-borda-sucesso);
+}
+
+.message.error {
+    background-color: var(--cor-fundo-erro);
+    color: var(--cor-texto-erro);
+    border-color: var(--cor-borda-erro);
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+    .form-container {
+        margin: 20px;
+        padding: 20px;
+    }
+
+    .form-container h2 {
+        font-size: 1.8em;
+    }
+}
+
+@media (max-width: 480px) {
+    .form-container {
+        border-radius: 0;
+        margin: 0;
+        padding: 15px;
+        box-shadow: none;
+    }
+    .form-group input,
+    .form-group textarea {
+        padding: 10px;
+    }
+    .form-group button[type="submit"] {
+        padding: 12px;
+        font-size: 1em;
+    }
+}
