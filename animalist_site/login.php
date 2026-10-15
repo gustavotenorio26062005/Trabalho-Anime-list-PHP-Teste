@@ -32,7 +32,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user = $result->fetch_assoc();
             
     
-                if ($senha === $user['senha']) { 
+            // password_verify valida senhas com hash. O hash_equals mantém compatibilidade
+            // com contas antigas (ex.: dados de exemplo do SQL) gravadas em texto puro,
+            // que são convertidas para hash no primeiro login bem-sucedido.
+            $senha_ok = password_verify($senha, $user['senha']);
+            if (!$senha_ok && password_get_info($user['senha'])['algo'] === null && hash_equals($user['senha'], $senha)) {
+                $senha_ok = true;
+                $user['senha'] = ''; // força o rehash abaixo
+            }
+
+            if ($senha_ok) {
+                if (password_needs_rehash($user['senha'], PASSWORD_DEFAULT)) {
+                    $novo_hash = password_hash($senha, PASSWORD_DEFAULT);
+                    $stmt_rehash = $conn->prepare("UPDATE Usuarios SET senha = ? WHERE id_usuario = ?");
+                    $stmt_rehash->bind_param("si", $novo_hash, $user['id_usuario']);
+                    $stmt_rehash->execute();
+                    $stmt_rehash->close();
+                }
+                session_regenerate_id(true);
                             
                 
                 // Armazena os dados do usuário na sessão
@@ -48,12 +65,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             } else {
                 
-                $message = "Senha incorreta.";
+                $message = "E-mail ou senha incorretos.";
                 $message_type = "error";
             }
         } else {
             // Se nenhum usuário for encontrado com o e-mail fornecido.
-            $message = "E-mail incorreto.";
+            $message = "E-mail ou senha incorretos.";
             $message_type = "error";
         }
 
@@ -72,8 +89,6 @@ require_once 'includes/header.php';
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/universal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- === FONTES === -->
-     <!--<?php include __DIR__ . '/pages/constante/fontes.php' ?> -->
 </head>
 
 <div class="form-container">

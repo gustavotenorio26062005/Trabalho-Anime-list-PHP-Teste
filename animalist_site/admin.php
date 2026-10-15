@@ -6,8 +6,8 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Inclui o arquivo de conexão com o banco de dados.
 require_once 'includes/db_connect.php';
-// Inclui o cabeçalho HTML, que contém a estrutura inicial da página e a navegação.
-require_once 'includes/header.php';
+// O cabeçalho (includes/header.php) é incluído mais abaixo, dentro do <body>,
+// para que os redirecionamentos com header() funcionem antes de qualquer saída HTML.
 
 // Proteção da página:
 // Redireciona para a página inicial se o usuário não estiver logado ou não for um administrador.

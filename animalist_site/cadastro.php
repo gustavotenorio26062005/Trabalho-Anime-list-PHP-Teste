@@ -61,7 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             // Se todas as validações passarem, tenta inserir no banco de dados.
             else {
-                $senha_para_salvar = $senha; 
+                $senha_para_salvar = password_hash($senha, PASSWORD_DEFAULT);
 
                 $conn->begin_transaction(); // Inicia a transação
 
@@ -115,8 +115,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="css/universal.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <!-- === FONTES === -->
-     <!--<?php include __DIR__ . '/pages/constante/fontes.php' ?> -->
 </head>
 
 <div class="form-container">

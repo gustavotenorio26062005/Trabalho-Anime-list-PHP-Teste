@@ -1,11 +1,12 @@
 <?php
 require_once 'includes/db_connect.php';
-require_once 'includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+
+require_once 'includes/header.php';
 
 $user_id = $_SESSION['user_id'];
 $initial_items_to_show = 5;

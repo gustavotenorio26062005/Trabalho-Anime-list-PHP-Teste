@@ -1,8 +1,7 @@
 <?php
-// Certifique-se de que os erros do PHP sejam exibidos para depuração (remova em produção)
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+// Endpoint JSON: erros do PHP não são exibidos na resposta para não quebrar o JSON
+// nem expor detalhes internos (eles continuam indo para o log do servidor).
+ini_set('display_errors', 0);
 
 require_once 'includes/db_connect.php'; 
 // Inicie a sessão se você for pegar o user_id dela
@@ -39,10 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($result->num_rows === 1) {
             $user_row = $result->fetch_assoc();
-            $stored_plain_password = $user_row['senha']; 
+            $stored_plain_password = $user_row['senha']; // hash (ou texto puro em contas antigas)
 
             //  COMPARAR A SENHA FORNECIDA COM A SENHA ARMAZENADA
-            if ($entered_password === $stored_plain_password) {
+            if (password_verify($entered_password, $stored_plain_password)
+                || (password_get_info($stored_plain_password)['algo'] === null && hash_equals($stored_plain_password, $entered_password))) {
                 $conn->begin_transaction();
                 try {
                     

@@ -1,6 +1,6 @@
 <?php
 require_once 'includes/db_connect.php'; // Conexão com o banco e início da sessão
-require_once 'includes/header.php';     // Inclui o cabeçalho
+// O cabeçalho é incluído dentro do <body>, mais abaixo (evita saída antes de header()).
 
 // Redireciona se o usuário não estiver logado
 if (!isset($_SESSION['user_id'])) {
@@ -90,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } elseif (strlen($new_senha) < 6) {
             $errors[] = "A nova senha deve ter no mínimo 6 caracteres.";
         } else {
-            $senha_para_salvar = $new_senha; // Senha em texto puro (ATENÇÃO: INSEGURO EM PRODUÇÃO)
+            $senha_para_salvar = password_hash($new_senha, PASSWORD_DEFAULT);
             $update_password = true;
         }
     }

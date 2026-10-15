@@ -1,0 +1,10 @@
+# Configuração local com credenciais (use includes/config.example.php como modelo)
+animalist_site/includes/config.php
+.env
+
+# Sistema operacional / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.log

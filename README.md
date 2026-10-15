@@ -38,7 +38,7 @@ O sistema foi projetado com funcionalidades distintas para usuários e administr
 
 ### Para Usuários:
 
-  - 👤 **Gerenciamento de Conta:** Cadastro, login, recuperação de senha e exclusão de perfil.
+  - 👤 **Gerenciamento de Conta:** Cadastro, login, alteração de senha e exclusão de perfil.
   - 🖼️ **Customização de Perfil:** Alteração de nome, foto, banner e descrição.
   - 🔍 **Pesquisa Avançada:** Busca de animes por nome, gênero e ano.
   - 📝 **Listas Pessoais:** Organize animes com status ("Assistindo", "Completado", "Planejando Assistir", etc.).
@@ -53,7 +53,7 @@ O sistema foi projetado com funcionalidades distintas para usuários e administr
 
 ## 🛠️ Tecnologias Utilizadas
 
-  - **Backend:** PHP
+  - **Backend:** PHP (extensão `mysqli` com *prepared statements*)
   - **Banco de Dados:** MySQL
   - **Servidor Web:** Apache (configurado via XAMPP)
   - **Frontend:** HTML, CSS, JavaScript
@@ -75,7 +75,7 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
 1.  **Clone o Repositório**
 
     ```sh
-    git clone https://github.com/SEU-USUARIO/Projeto-ANIMALIST-PHP.git
+    git clone https://github.com/gustavotenorio26062005/trabalho-anime-list-php-teste.git
     ```
 
     *Como alternativa, você pode baixar o arquivo `.zip` e extraí-lo.*
@@ -110,48 +110,35 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
 
     **Alternativamente:**
     
-    a. Copie o código dentro do arquivo `animalist_db`
+    a. Copie o código do arquivo `animalist_site/config_SQL/animalist_db.sql`
     
-    b. abra a página admin do MySQL no Xampp
+    b. Abra a página admin do MySQL no Xampp
     
     c. Cole o código que copiou dentro da aba "SQL"
     
     d. Clique no botão executar
 
-6.  **Configure a Conexão com o Banco**
+5.  **Configure a Conexão com o Banco**
 
-    > **⚠️ MUITO IMPORTANTE:** Este passo garante que o site se conecte ao banco de dados.
+    As credenciais ficam fora do código versionado. Copie o modelo e ajuste:
 
-    a. Abra o arquivo de conexão em um editor de código: `animalist_site/includes/db_connect.php`.
-    b. Verifique se as variáveis de conexão correspondem à sua configuração do MySQL.
-
-    | Variável | Valor Padrão | Descrição |
-    | :--- | :--- | :--- |
-    | `$host` | `localhost` | Endereço do servidor. |
-    | `$user` | `root` | Usuário do MySQL. |
-    | `$password` | `''` (vazio) | **Ajuste aqui se o seu `root` tiver senha.** |
-    | `$dbh` | `animalist_db`| Nome do banco de dados criado no passo 4. |
-
-    **Exemplo no arquivo `db_connect.php`:**
-
-    ```php
-    <?php
-    $host = 'localhost';
-    $user = 'root';
-    $password = ''; // <-- ❗ ATENÇÃO AQUI! Altere se seu root tiver senha.
-    $dbh = 'animalist_db'; // <-- Certifique-se que este é o nome do seu banco.
-
-    try {
-        $pdo = new PDO("mysql:host=$host;dbname=$dbh", $user, $password);
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    } catch (PDOException $e) {
-        die("ERROR: Could not connect. " . $e->getMessage());
-    }
-    ?>
+    ```sh
+    cp animalist_site/includes/config.example.php animalist_site/includes/config.php
     ```
 
-7.  **Acesse o Animalist**
-    Abra seu navegador e digite o endereço: **[http://localhost/animalist\_site](https://www.google.com/search?q=http://localhost/animalist_site)**.
+    ```php
+    return [
+        'host'     => 'localhost',
+        'user'     => 'root',
+        'password' => '',             // ajuste se o seu root tiver senha
+        'database' => 'animalist_db',
+    ];
+    ```
+
+    O `config.php` está no `.gitignore`. Se ele não existir, o `includes/db_connect.php` usa os valores padrão do `config.example.php` (padrão do XAMPP).
+
+6.  **Acesse o Animalist**
+    Abra seu navegador e digite o endereço: **[http://localhost/animalist_site](http://localhost/animalist_site)**.
 
 🎉 E pronto\! Agora você pode navegar e usar o Animalist localmente.
 
@@ -159,10 +146,50 @@ Siga os passos abaixo para configurar e rodar o projeto em seu ambiente local.
 
 ## 🤔 Solução de Problemas Comuns
 
-  - **`Access denied for user 'root'@'localhost'`**: A senha no arquivo `db_connect.php` não corresponde à senha do seu MySQL. Verifique o **Passo 5**.
-  - **`Unknown database 'animalist_db'`**: O nome do banco no arquivo de conexão está incorreto ou não foi criado corretamente. Verifique os **Passos 4 e 5**.
+  - **`Access denied for user 'root'@'localhost'`**: A senha em `includes/config.php` não corresponde à senha do seu MySQL. Verifique o **Passo 5**.
+  - **`Unknown database 'animalist_db'`**: O nome do banco em `includes/config.php` está incorreto ou não foi criado corretamente. Verifique os **Passos 4 e 5**.
   - **Página em branco ou erros de PHP**: Verifique se os serviços Apache e MySQL estão realmente rodando no XAMPP.
   - **Erro 404 (Objeto não encontrado)**: Verifique se o nome da pasta em `htdocs` está correto (`animalist_site`) e se a URL no navegador está correta.
+
+-----
+
+## 🗂️ Estrutura do Projeto
+
+```
+animalist_site/
+├── index.php             # Página inicial com seções de animes por gênero
+├── pesquisar.php         # Busca com filtros (nome, gênero, ano) e ordenação
+├── anime_detalhes.php    # Detalhes do anime, lista pessoal e avaliações
+├── perfil.php            # Perfil do usuário, listas e avaliações
+├── editar_perfil.php     # Edição de dados, foto, banner e senha
+├── deletar_conta.php     # Endpoint (JSON) de exclusão de conta
+├── admin.php             # Painel do administrador (CRUD de animes)
+├── cadastro.php / login.php / logout.php
+├── includes/             # Conexão com o banco, configuração, header e footer
+├── config_SQL/           # Script de criação e dados de exemplo do banco
+├── css/  js/  img/       # Estilos, scripts e imagens
+```
+
+A documentação completa do trabalho está em `ANIMALIST_DOCUMENTAÇÃO.pdf`.
+
+-----
+
+## 🔐 Segurança
+
+  - Todas as consultas com dados do usuário usam *prepared statements* (`mysqli`), evitando SQL Injection.
+  - Saídas em HTML passam por `htmlspecialchars`, reduzindo o risco de XSS.
+  - Senhas são armazenadas com `password_hash` e verificadas com `password_verify`.
+  - Os usuários de exemplo do `animalist_db.sql` usam a senha `senha123` em texto puro; ela é convertida automaticamente para hash no primeiro login.
+
+-----
+
+## 📚 Aprendizados
+
+  - Modelagem de banco relacional (usuários, animes, gêneros, listas e avaliações) em MySQL.
+  - Autenticação com sessões PHP e controle de acesso por tipo de usuário (comum/administrador).
+  - Montagem de consultas dinâmicas com filtros e ordenação de forma segura.
+  - Uso de transações para operações que alteram várias tabelas (ex.: exclusão de conta).
+  - Trabalho em equipe no desenvolvimento de um projeto acadêmico completo.
 
 -----
 
