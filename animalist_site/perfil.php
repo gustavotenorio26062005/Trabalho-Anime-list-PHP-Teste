@@ -232,7 +232,7 @@ $avaliacoes_html_sidebar .= '</div>';
     </main>
 
     <!-- Modal de Confirmação para Deletar Conta (VOCÊ JÁ TINHA ESTE HTML) -->
-    <div id="deleteAccountModal" class="modal">
+    <div id="deleteAccountModal" class="modal" data-csrf="<?php echo htmlspecialchars(csrf_token()); ?>">
         <div class="modal-content">
             <span class="close-button" title="Fechar">×</span>
             <h2>Confirmar Exclusão de Conta</h2>

@@ -30,4 +30,7 @@ $conn->set_charset("utf8mb4");
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
+
+// Funções de proteção CSRF (csrf_token, csrf_field, csrf_validate)
+require_once __DIR__ . '/csrf.php';
 ?>

@@ -89,12 +89,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         $message = "Você deve ter pelo menos 13 anos para se cadastrar.";
                     }
                     else {
-                        $message = "Erro inesperado ao cadastrar: " . $e->getMessage();
+                        error_log("cadastro.php: " . $e->getMessage());
+                        $message = "Não foi possível concluir o cadastro. Tente novamente mais tarde.";
                     }
                     $message_type = "error";
                 } catch (Exception $e) {
                     $conn->rollback(); // Desfaz a transação em caso de outros erros.
-                    $message = "Ocorreu um erro: " . $e->getMessage();
+                    error_log("cadastro.php: " . $e->getMessage());
+                    $message = "Não foi possível concluir o cadastro. Tente novamente mais tarde.";
                     $message_type = "error";
                 }
             }

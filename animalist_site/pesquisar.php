@@ -85,7 +85,8 @@ $stmt = $conn->prepare($sql);
 
 if (!$stmt) {
     // Em um ambiente de produção, logar o erro em vez de exibi-lo diretamente
-    echo "Erro ao preparar a consulta: " . htmlspecialchars($conn->error);
+    error_log("pesquisar.php (prepare): " . $conn->error);
+    echo "Não foi possível realizar a pesquisa no momento. Tente novamente mais tarde.";
     require_once 'includes/footer.php';
     if (isset($conn)) { $conn->close(); }
     exit;

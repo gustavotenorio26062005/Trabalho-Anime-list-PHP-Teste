@@ -21,8 +21,14 @@ if (!isset($_SESSION['user_type']) || $_SESSION['user_type'] != 1) {
 $mensagem = '';
 $tipo_mensagem = ''; // 'sucesso' ou 'erro'
 
+// Toda requisição POST precisa de um token CSRF válido.
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !csrf_validate()) {
+    header("Location: admin.php?mensagem=" . urlencode("Sessão expirada ou requisição inválida. Tente novamente.") . "&tipo_mensagem=erro");
+    exit();
+}
+
 // Lógica de processamento do formulário (Adicionar e Editar Anime)
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && ($_POST['action'] ?? '') !== 'delete') {
     // Coleta os dados do formulário
     $id_anime_edit = $_POST['id_anime'] ?? null; // Presente se for uma edição
     $nome = trim($_POST['nome'] ?? '');
@@ -98,15 +104,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $tipo_mensagem = "sucesso";
         } catch (Exception $e) {
             $conn->rollback();
-            $mensagem = "Erro na operação com o banco de dados: " . $e->getMessage();
+            error_log("admin.php (salvar anime): " . $e->getMessage());
+            $mensagem = "Não foi possível salvar o anime. Tente novamente mais tarde.";
             $tipo_mensagem = "erro";
         }
     }
 }
 
-// Lógica de Deletar Anime (acionada via GET)
-if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
-    $id_para_deletar = (int)$_GET['id'];
+// Lógica de Deletar Anime (acionada via POST com token CSRF)
+if ($_SERVER["REQUEST_METHOD"] == "POST" && ($_POST['action'] ?? '') === 'delete' && isset($_POST['id'])) {
+    $id_para_deletar = (int)$_POST['id'];
 
     $conn->begin_transaction();
     try {
@@ -123,7 +130,8 @@ if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id']))
         $stmt_delete_anime->close();
     } catch (Exception $e) {
         $conn->rollback();
-        $mensagem = "Erro ao excluir anime: " . $e->getMessage();
+        error_log("admin.php (excluir anime {$id_para_deletar}): " . $e->getMessage());
+        $mensagem = "Não foi possível excluir o anime. Tente novamente mais tarde.";
         $tipo_mensagem = "erro";
     }
     // Redireciona de volta para a lista após a operação de exclusão
@@ -297,6 +305,7 @@ if ($result_anos) {
                 
                 <div class="form-wrapper">
                     <form class="form" action="admin.php" method="POST" onsubmit="return enviarDados()">
+                        <?php echo csrf_field(); ?>
                         <?php if ($action == 'edit'): // Campo oculto para o ID do anime em edição ?>
                             <input type="hidden" name="id_anime" value="<?php echo htmlspecialchars($anime_para_editar['id_anime']); ?>">
                         <?php endif; ?>
@@ -483,8 +492,20 @@ if ($result_anos) {
         // Função para confirmar a exclusão de um anime
         function confirmDelete(id, nome) {
             if (confirm(`Tem certeza que deseja deletar o anime "${nome}"? Esta ação é irreversível.`)) {
-                // Redireciona para a página admin.php com a ação de deletar e o ID.
-                window.location.href = `admin.php?action=delete&id=${id}`;
+                                // Envia um POST com o token CSRF (exclusão não é mais feita via link GET).
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = 'admin.php';
+                const campos = { action: 'delete', id: id, csrf_token: <?php echo json_encode(csrf_token()); ?> };
+                for (const [nomeCampo, valor] of Object.entries(campos)) {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = nomeCampo;
+                    input.value = valor;
+                    form.appendChild(input);
+                }
+                document.body.appendChild(form);
+                form.submit();
             }
         }
 

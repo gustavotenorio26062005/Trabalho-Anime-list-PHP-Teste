@@ -179,6 +179,8 @@ A documentação completa do trabalho está em `ANIMALIST_DOCUMENTAÇÃO.pdf`.
   - Todas as consultas com dados do usuário usam *prepared statements* (`mysqli`), evitando SQL Injection.
   - Saídas em HTML passam por `htmlspecialchars`, reduzindo o risco de XSS.
   - Senhas são armazenadas com `password_hash` e verificadas com `password_verify`.
+  - Ações que alteram dados (criar/editar/excluir anime, avaliar, gerenciar lista, editar perfil e excluir conta) são feitas via POST com token CSRF (gerado com `random_bytes` na sessão e validado com `hash_equals`).
+  - Erros de banco/exceções não são exibidos ao usuário: a página mostra uma mensagem genérica e os detalhes vão para o log do servidor (`error_log`).
   - Os usuários de exemplo do `animalist_db.sql` usam a senha `senha123` em texto puro; ela é convertida automaticamente para hash no primeiro login.
 
 -----

@@ -14,6 +14,20 @@ $user_type = $_SESSION['user_type'] ?? null; // Initial check for user_type
 $message = ''; // Initialize message variables
 $message_type = ''; // Initialize message_type
 
+// Toda requisição POST (avaliar, deletar avaliação, manter lista) exige token CSRF válido.
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !csrf_validate()) {
+    if (($_POST['action'] ?? '') === 'manter_lista') {
+        http_response_code(403);
+        header('Content-Type: application/json');
+        echo json_encode(['success' => false, 'message' => 'Sessão expirada. Recarregue a página e tente novamente.']);
+        exit();
+    }
+    $_POST = []; // Descarta a requisição inválida
+    $_SERVER["REQUEST_METHOD"] = 'GET';
+    $message = "Sessão expirada ou requisição inválida. Tente novamente.";
+    $message_type = "error";
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['action'] == 'delete_review') {
     if (isset($id_usuario) && isset($user_type) && $user_type == 1) { // Check if admin (type 1)
         $id_avaliacao_para_deletar = (int)($_POST['id_avaliacao'] ?? 0);
@@ -31,7 +45,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
                 }
                 $stmt_delete_review->close();
             } catch (mysqli_sql_exception $e) {
-                $message = "Erro no servidor ao deletar avaliação: " . $e->getMessage();
+                error_log("anime_detalhes.php (deletar avaliação): " . $e->getMessage());
+                $message = "Não foi possível remover a avaliação. Tente novamente mais tarde.";
                 $message_type = "error";
             }
         } else {
@@ -93,7 +108,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
 
     } catch (mysqli_sql_exception $e) {
         header('Content-Type: application/json');
-        echo json_encode(['success' => false, 'message' => "Erro no servidor: " . $e->getMessage()]);
+        error_log("anime_detalhes.php (manter lista): " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => "Não foi possível atualizar sua lista. Tente novamente mais tarde."]);
         exit();
     }
 }
@@ -128,7 +144,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action']) && $_POST['a
         }
         $message_type = "success"; // Ensure message_type is set for avaliação
     } catch (mysqli_sql_exception $e) {
-        $message = "Erro ao avaliar: " . $e->getMessage();
+        error_log("anime_detalhes.php (avaliar): " . $e->getMessage());
+        $message = "Não foi possível registrar sua avaliação. Tente novamente mais tarde.";
         $message_type = "error"; // Ensure message_type is set for avaliação
     }
 }
@@ -261,6 +278,7 @@ require_once 'includes/header.php';
                 <h3><?php echo $avaliacao_usuario ? 'Editar sua avaliação' : 'Deixe sua avaliação'; ?></h3>
                 <form action="anime_detalhes.php?id=<?php echo $id_anime; ?>" method="POST">
                     <input type="hidden" name="action" value="avaliar">
+                    <?php echo csrf_field(); ?>
                     <textarea name="comentario" placeholder="Escreva seu comentário/review..."><?php echo htmlspecialchars($avaliacao_usuario['comentario'] ?? ''); ?></textarea>
                     <div class="form-actions">
                         <button type="submit" name="nota" value="Recomendo" class="btn-recomendo">Recomendo</button>
@@ -294,6 +312,7 @@ require_once 'includes/header.php';
                             <?php if (isset($user_type) && $user_type == 1): // Verifica se é admin (tipo 1) ?>
                                 <form action="anime_detalhes.php?id=<?php echo $id_anime; ?>" method="POST">
                                     <input type="hidden" name="action" value="delete_review">
+                                    <?php echo csrf_field(); ?>
                                     <input type="hidden" name="id_avaliacao" value="<?php echo $aval['id_avaliacao']; ?>">
                                     <button type="submit" class="btn-delete" title="Deletar avaliação"><i class="fas fa-trash"></i></button>
                                 </form>
@@ -330,6 +349,7 @@ require_once 'includes/header.php';
     async function handleAction(data) {
         const formData = new FormData();
         formData.append('action', 'manter_lista');
+        formData.append('csrf_token', <?php echo json_encode(csrf_token()); ?>);
 
         if (data.hasOwnProperty('status_anime')) { 
             formData.append('status_anime', data.status_anime);

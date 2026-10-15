@@ -20,6 +20,13 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrf_validate()) {
+    http_response_code(403);
+    $response['message'] = 'Sessão expirada ou requisição inválida. Recarregue a página e tente novamente.';
+    echo json_encode($response);
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['password'])) {
         $entered_password = $_POST['password'];
@@ -27,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $stmt_check_password = $conn->prepare("SELECT senha FROM Usuarios WHERE id_usuario = ?");
         if (!$stmt_check_password) {
-            $response['message'] = "Erro ao preparar a consulta de senha: " . $conn->error;
+            $response['message'] = "Ocorreu um erro interno. Tente novamente mais tarde.";
             error_log("Erro SQL (prepare senha): " . $conn->error); // Log para o servidor
             echo json_encode($response);
             exit();
@@ -80,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 } catch (Exception $e) {
                     $conn->rollback();
-                    $response['message'] = "Erro durante a exclusão da conta: " . $e->getMessage();
+                    $response['message'] = "Não foi possível excluir a conta. Tente novamente mais tarde.";
                     error_log("Erro ao excluir conta user_id {$user_id}: " . $e->getMessage()); // Log para o servidor
                 }
             } else {

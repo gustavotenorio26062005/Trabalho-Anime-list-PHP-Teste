@@ -234,6 +234,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                     body: 'password=' + encodeURIComponent(password)
+                        + '&csrf_token=' + encodeURIComponent(deleteAccountModal.dataset.csrf || '')
                 })
                 .then(response => {
                     if (!response.ok) { 

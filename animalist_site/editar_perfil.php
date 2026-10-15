@@ -46,7 +46,10 @@ if ($stmt_fetch) {
 
 
 // --- 3. Processar envio do formulário (POST request) ---
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && !csrf_validate()) {
+    $message = "Sessão expirada ou requisição inválida. Tente novamente.";
+    $message_type = "error";
+} elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Coleta os dados do formulário
     $new_nome = trim($_POST['nome']);
     $new_email = trim($_POST['email']);
@@ -163,12 +166,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             if (strpos($e->getMessage(), 'Duplicate entry') !== false && strpos($e->getMessage(), 'email') !== false) {
                 $message = "Erro: Este e-mail já está em uso por outro usuário.";
             } else {
-                $message = "Erro no banco de dados: " . $e->getMessage();
+                error_log("editar_perfil.php: " . $e->getMessage());
+                $message = "Não foi possível atualizar o perfil. Tente novamente mais tarde.";
             }
             $message_type = "error";
         } catch (Exception $e) {
             $conn->rollback(); // Desfaz a transação em caso de outros erros
-            $message = "Ocorreu um erro inesperado: " . $e->getMessage();
+            error_log("editar_perfil.php: " . $e->getMessage());
+            $message = "Não foi possível atualizar o perfil. Tente novamente mais tarde.";
             $message_type = "error";
         }
     }
@@ -199,6 +204,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php endif; ?>
 
             <form action="editar_perfil.php" method="POST">
+                <?php echo csrf_field(); ?>
                 <div class="form-group">
                     <label for="nome">Nome:</label>
                     <input type="text" id="nome" name="nome" value="<?php echo $nome; ?>" required>
